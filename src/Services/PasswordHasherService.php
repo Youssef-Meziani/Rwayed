@@ -1,7 +1,5 @@
 <?php
 
-// src/Service/PasswordHasherService.php
-
 namespace App\Services;
 
 use App\Entity\Personne;
@@ -20,5 +18,11 @@ class PasswordHasherService
     {
         return $this->passwordHasher->hashPassword($personne, $plainPassword);
     }
+
+    public function isPasswordValid(Personne $personne, string $plainPassword): bool
+    {
+        return $this->passwordHasher->isPasswordValid($personne, $plainPassword);
+    }
 }
+
 
