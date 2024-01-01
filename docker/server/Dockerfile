@@ -6,7 +6,7 @@
 # COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 # RUN install-php-extensions gd pdo_mysql bcmath zip intl opcache
 # COPY --from=composer:2.0 /usr/bin/composer /usr/local/bin/composer
-# RUN apt update 
+# RUN apt update
 # RUN apt install nano
 
 # # install the PHP APCu extension
@@ -53,7 +53,7 @@ RUN a2enmod rewrite \
     && apt-get install -y nodejs npm
 
 WORKDIR /var/www/html
-
+COPY /docker/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions gd pdo_mysql zip opcache
 

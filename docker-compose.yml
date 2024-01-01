@@ -15,6 +15,8 @@ services:
             - .:/var/www/html
             - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
             - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+        extra_hosts:
+            - host.docker.internal:host-gateway
         depends_on:
             - database
         networks:
