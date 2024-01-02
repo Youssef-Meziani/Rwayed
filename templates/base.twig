@@ -5,8 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#1a79ff">
     <title>Rwayed {% block title %}{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.svg')}}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.svg')}}" id="favicon">
+
+    <script>
+        function updateFavicon() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon light.svg')}}");
+            } else {
+                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon.svg')}}");
+            }
+        }
+
+        updateFavicon();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
+    </script>
+
     <!-- fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i" />
     <!-- css -->
@@ -40,7 +56,7 @@
                         </button>
                         <a class="mobile-header__logo" href="">
                             <!-- mobile-logo -->
-                            <img src="{{ asset('images/logo.svg') }}" height="90%"/>
+                            <img src="{{ asset('images/logo.svg') }}" height="80%"/>
                             <!-- mobile-logo / end -->
                         </a>
                         <div class="mobile-header__search mobile-search">
@@ -1195,7 +1211,7 @@
                         </div>
                         <div class="logo__image">
                             <!-- logo -->
-                            <img src="{{ asset('images/logo.svg') }}" height="100%"/>
+                            <img src="{{ asset('images/logo.svg') }}" height="80%"/>
                             <!-- logo / end -->
                         </div>
                     </a>
