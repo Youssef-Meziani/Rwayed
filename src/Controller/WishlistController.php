@@ -6,11 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HomeController extends AbstractController
+class WishlistController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('/wishlist', name: 'wishlist')]
     public function index(): Response
     {
-        return $this->render('Adherent/index.twig');
+        return $this->render('Adherent/wishlist.twig');
     }
 }
