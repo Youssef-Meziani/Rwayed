@@ -5,12 +5,12 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-#[Route('/')]
-class HomeController extends AbstractController
+
+class CheckoutController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('/checkout', name: 'checkout')]
     public function index(): Response
     {
-        return $this->render('Adherent/index.twig');
+        return $this->render('Adherent/checkout.twig');
     }
 }
