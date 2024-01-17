@@ -75,7 +75,7 @@
                         </a>
                     </div>
                     <div class="mobile-indicator">
-                        <a href="cart.html" class="mobile-indicator__button">
+                        <a href="{{ url('cart') }}" class="mobile-indicator__button">
                                     <span class="mobile-indicator__icon">
                                         <svg width="20" height="20">
                                             <circle cx="7" cy="17" r="2" />
@@ -871,7 +871,7 @@
                                         </a>
                                     </li>
                                     <li class="menu__item menu__item--has-submenu">
-                                        <a href="product-full.html" class="menu__link">
+                                        <a href="{{ url('product-details') }}" class="menu__link">
                                             Product
                                             <span class="menu__arrow">
                                                         <svg width="6px" height="9px">
@@ -882,7 +882,7 @@
                                         <div class="menu__submenu">
                                             <ul class="menu">
                                                 <li class="menu__item">
-                                                    <a href="product-full.html" class="menu__link">
+                                                    <a href="{{ url('product-details') }}" class="menu__link">
                                                         Full Width
                                                     </a>
                                                 </li>
@@ -895,12 +895,12 @@
                                         </div>
                                     </li>
                                     <li class="menu__item">
-                                        <a href="cart.html" class="menu__link">
+                                        <a href="{{ url('cart') }}" class="menu__link">
                                             Cart
                                         </a>
                                     </li>
                                     <li class="menu__item">
-                                        <a href="checkout.html" class="menu__link">
+                                        <a href="{{ url('checkout') }}" class="menu__link">
                                             Checkout
                                         </a>
                                     </li>
@@ -1480,7 +1480,7 @@
                 </div>
             </div>
             <div class="indicator indicator--trigger--click">
-                <a href="cart.html" class="indicator__button">
+                <a href="{{ url('cart') }}" class="indicator__button">
                             <span class="indicator__icon">
                                 <svg width="32" height="32">
                                     <circle cx="10.5" cy="27.5" r="2.5" />
@@ -1499,13 +1499,13 @@
                         <ul class="dropcart__list">
                             <li class="dropcart__item">
                                 <div class="dropcart__item-image image image--type--product">
-                                    <a class="image__body" href="product-full.html">
+                                    <a class="image__body" href="{{ url('product-details') }}">
                                         <img class="image__tag" src="{{ asset('images/products/product-4-70x70.jpg') }}" alt="">
                                     </a>
                                 </div>
                                 <div class="dropcart__item-info">
                                     <div class="dropcart__item-name">
-                                        <a href="product-full.html">Glossy Gray 19" Aluminium Wheel AR-19</a>
+                                        <a href="{{ url('product-details') }}">Glossy Gray 19" Aluminium Wheel AR-19</a>
                                     </div>
                                     <ul class="dropcart__item-features">
                                         <li>Color: Yellow</li>
@@ -1526,13 +1526,13 @@
                             <li class="dropcart__divider" role="presentation"></li>
                             <li class="dropcart__item">
                                 <div class="dropcart__item-image image image--type--product">
-                                    <a class="image__body" href="product-full.html">
+                                    <a class="image__body" href="{{ url('product-details') }}">
                                         <img class="image__tag" src="{{ asset('images/products/product-2-70x70.jpg') }}" alt="">
                                     </a>
                                 </div>
                                 <div class="dropcart__item-info">
                                     <div class="dropcart__item-name">
-                                        <a href="product-full.html">Brandix Brake Kit BDX-750Z370-S</a>
+                                        <a href="{{ url('product-details') }}">Brandix Brake Kit BDX-750Z370-S</a>
                                     </div>
                                     <div class="dropcart__item-meta">
                                         <div class="dropcart__item-quantity">1</div>
@@ -1549,13 +1549,13 @@
                             <li class="dropcart__divider" role="presentation"></li>
                             <li class="dropcart__item">
                                 <div class="dropcart__item-image image image--type--product">
-                                    <a class="image__body" href="product-full.html">
+                                    <a class="image__body" href="{{ url('product-details') }}">
                                         <img class="image__tag" src="{{ asset('images/products/product-5-70x70.jpg') }}" alt="">
                                     </a>
                                 </div>
                                 <div class="dropcart__item-info">
                                     <div class="dropcart__item-name">
-                                        <a href="product-full.html">Twin Exhaust Pipe From Brandix Z54</a>
+                                        <a href="{{ url('product-details') }}">Twin Exhaust Pipe From Brandix Z54</a>
                                     </div>
                                     <ul class="dropcart__item-features">
                                         <li>Color: True Red</li>
@@ -1595,8 +1595,8 @@
                             </table>
                         </div>
                         <div class="dropcart__actions">
-                            <a href="cart.html" class="btn btn-secondary">View Cart</a>
-                            <a href="checkout.html" class="btn btn-primary">Checkout</a>
+                            <a href="{{ url('cart') }}" class="btn btn-secondary">View Cart</a>
+                            <a href="{{ url('checkout') }}" class="btn btn-primary">Checkout</a>
                         </div>
                     </div>
                 </div>
