@@ -231,7 +231,7 @@ class Personne implements PasswordAuthenticatedUserInterface,UserInterface
 
     public function getRoles(): array
     {
-        return [$this->role];
+        return ['ROLE_' . strtoupper($this->role)];
     }
 
     public function eraseCredentials(): void

@@ -17,7 +17,8 @@ class CompteController extends AbstractController
         if ($this->getUser()) {
             if (!$this->isGranted('admin')) {
                 $error = 'Accès refusé. Vous n\'êtes pas administrateur.';
-            } else {
+            }
+            else {
                 return $this->redirectToRoute('home');
             }
         }

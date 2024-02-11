@@ -6,7 +6,13 @@
     <h1>Login</h1>
 
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="alert alert-danger">
+            {% if error is iterable %}
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            {% else %}
+                Mot de passe incorrect.
+            {% endif %}
+        </div>
     {% endif %}
 
     <form action="{{ path('app_login') }}" method="post">

@@ -22,7 +22,7 @@ security:
                 path: app_logout
                 target: home
     access_control:
-        - { path: ^/admin, roles: admin }
+        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
