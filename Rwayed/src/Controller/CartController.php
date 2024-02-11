@@ -11,6 +11,6 @@ class CartController extends AbstractController
     #[Route('/cart', name: 'cart')]
     public function index(): Response
     {
-        return $this->render('Adherent/cart.twig');
+        return $this->render('cart.twig');
     }
 }

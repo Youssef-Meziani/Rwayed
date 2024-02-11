@@ -6,11 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class CheckoutController extends AbstractController
+class FAQController extends AbstractController
 {
-    #[Route('/checkout', name: 'checkout')]
+    #[Route('/faq', name: 'faq')]
     public function index(): Response
     {
-        return $this->render('checkout.twig');
+        return $this->render('faq.twig');
     }
 }
