@@ -101,9 +101,9 @@
         <div class="header__topbar-start-bg"></div>
         <div class="header__topbar-start">
             <div class="topbar topbar--spaceship-start">
-                <div class="topbar__item-text d-none d-xxl-flex">Call Us: (800) 060-0730</div>
-                <div class="topbar__item-text"><a class="topbar__link" href="about-us.html">About Us</a></div>
-                <div class="topbar__item-text"><a class="topbar__link" href="contact-us-v1.html">Contacts</a></div>
+                <div class="topbar__item-text d-none d-xxl-flex">Call Us: {{ company_phone }}</div>
+                <div class="topbar__item-text"><a class="topbar__link" href="{{ path('about') }}">About Us</a></div>
+                <div class="topbar__item-text"><a class="topbar__link" href="{{ path('contact') }}">Contacts</a></div>
                 <div class="topbar__item-text"><a class="topbar__link" href="track-order.html">Track Order</a></div>
             </div>
         </div>
@@ -640,7 +640,7 @@
                 <div class="main-menu">
                     <ul class="main-menu__list">
                         <li class="main-menu__item main-menu__item--submenu--menu main-menu__item--has-submenu">
-                            <a href="index.html" class="main-menu__link">
+                            <a href="{{ path('home') }}" class="main-menu__link">
                                 Home
                                 <svg width="7px" height="5px">
                                     <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z" />
@@ -649,7 +649,7 @@
                             <div class="main-menu__submenu">
                                 <ul class="menu">
                                     <li class="menu__item">
-                                        <a href="index.html" class="menu__link">
+                                        <a href="{{ path('home') }}" class="menu__link">
                                             Home One
                                         </a>
                                     </li>
@@ -871,7 +871,7 @@
                                         </a>
                                     </li>
                                     <li class="menu__item menu__item--has-submenu">
-                                        <a href="{{ url('product-details') }}" class="menu__link">
+                                        <a href="{{ path('product') }}" class="menu__link">
                                             Product
                                             <span class="menu__arrow">
                                                         <svg width="6px" height="9px">
@@ -882,7 +882,7 @@
                                         <div class="menu__submenu">
                                             <ul class="menu">
                                                 <li class="menu__item">
-                                                    <a href="{{ url('product-details') }}" class="menu__link">
+                                                    <a href="{{ path('product') }}" class="menu__link">
                                                         Full Width
                                                     </a>
                                                 </li>
@@ -1103,7 +1103,7 @@
                             </div>
                         </li>
                         <li class="main-menu__item main-menu__item--submenu--menu main-menu__item--has-submenu">
-                            <a href="about-us.html" class="main-menu__link">
+                            <a href="{{ path('about') }}" class="main-menu__link">
                                 Pages
                                 <svg width="7px" height="5px">
                                     <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z" />
@@ -1112,12 +1112,12 @@
                             <div class="main-menu__submenu">
                                 <ul class="menu">
                                     <li class="menu__item">
-                                        <a href="about-us.html" class="menu__link">
+                                        <a href="{{ path('about') }}" class="menu__link">
                                             About Us
                                         </a>
                                     </li>
                                     <li class="menu__item">
-                                        <a href="contact-us-v1.html" class="menu__link">
+                                        <a href="{{ path('contact') }}" class="menu__link">
                                             Contact Us v1
                                         </a>
                                     </li>
@@ -1461,7 +1461,7 @@
                             </div>
                             <div class="account-menu__user-info">
                                 <div class="account-menu__user-name">Ryan Ford</div>
-                                <div class="account-menu__user-email">red-parts@example.com</div>
+                                <div class="account-menu__user-email">{{ company_email }}</div>
                             </div>
                         </a>
                         <div class="account-menu__divider"></div>
@@ -1499,13 +1499,13 @@
                         <ul class="dropcart__list">
                             <li class="dropcart__item">
                                 <div class="dropcart__item-image image image--type--product">
-                                    <a class="image__body" href="{{ url('product-details') }}">
+                                    <a class="image__body" href="{{ path('product') }}">
                                         <img class="image__tag" src="{{ asset('images/products/product-4-70x70.jpg') }}" alt="">
                                     </a>
                                 </div>
                                 <div class="dropcart__item-info">
                                     <div class="dropcart__item-name">
-                                        <a href="{{ url('product-details') }}">Glossy Gray 19" Aluminium Wheel AR-19</a>
+                                        <a href="{{ path('product') }}">Glossy Gray 19" Aluminium Wheel AR-19</a>
                                     </div>
                                     <ul class="dropcart__item-features">
                                         <li>Color: Yellow</li>
@@ -1526,13 +1526,13 @@
                             <li class="dropcart__divider" role="presentation"></li>
                             <li class="dropcart__item">
                                 <div class="dropcart__item-image image image--type--product">
-                                    <a class="image__body" href="{{ url('product-details') }}">
+                                    <a class="image__body" href="{{ path('product') }}">
                                         <img class="image__tag" src="{{ asset('images/products/product-2-70x70.jpg') }}" alt="">
                                     </a>
                                 </div>
                                 <div class="dropcart__item-info">
                                     <div class="dropcart__item-name">
-                                        <a href="{{ url('product-details') }}">Brandix Brake Kit BDX-750Z370-S</a>
+                                        <a href="{{ path('product') }}">Brandix Brake Kit BDX-750Z370-S</a>
                                     </div>
                                     <div class="dropcart__item-meta">
                                         <div class="dropcart__item-quantity">1</div>
@@ -1549,13 +1549,13 @@
                             <li class="dropcart__divider" role="presentation"></li>
                             <li class="dropcart__item">
                                 <div class="dropcart__item-image image image--type--product">
-                                    <a class="image__body" href="{{ url('product-details') }}">
+                                    <a class="image__body" href="{{ path('product') }}">
                                         <img class="image__tag" src="{{ asset('images/products/product-5-70x70.jpg') }}" alt="">
                                     </a>
                                 </div>
                                 <div class="dropcart__item-info">
                                     <div class="dropcart__item-name">
-                                        <a href="{{ url('product-details') }}">Twin Exhaust Pipe From Brandix Z54</a>
+                                        <a href="{{ path('product') }}">Twin Exhaust Pipe From Brandix Z54</a>
                                     </div>
                                     <ul class="dropcart__item-features">
                                         <li>Color: True Red</li>

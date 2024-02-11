@@ -1,4 +1,4 @@
-{% extends 'Adherent/base.twig' %}
+{% extends 'base.twig' %}
 
 {% block title %}Cart{% endblock %}
 
@@ -46,7 +46,7 @@
                             <tr class="cart-table__row">
                                 <td class="cart-table__column cart-table__column--image">
                                     <div class="image image--type--product">
-                                        <a href="{{ url('product-details') }}" class="image__body">
+                                        <a href="{{ path('product') }}" class="image__body">
                                             <img class="image__tag" src="{{ asset('images/products/product-4-160x160.jpg') }}" alt="">
                                         </a>
                                     </div>
@@ -80,7 +80,7 @@
                             <tr class="cart-table__row">
                                 <td class="cart-table__column cart-table__column--image">
                                     <div class="image image--type--product">
-                                        <a href="{{ url('product-details') }}" class="image__body">
+                                        <a href="{{ path('product') }}" class="image__body">
                                             <img class="image__tag" src="{{ asset('images/products/product-2-160x160.jpg') }}" alt="">
                                         </a>
                                     </div>
@@ -110,7 +110,7 @@
                             <tr class="cart-table__row">
                                 <td class="cart-table__column cart-table__column--image">
                                     <div class="image image--type--product">
-                                        <a href="{{ url('product-details') }}" class="image__body">
+                                        <a href="{{ path('product') }}" class="image__body">
                                             <img class="image__tag" src="{{ asset('images/products/product-5-160x160.jpg') }}" alt="">
                                         </a>
                                     </div>
