@@ -25,10 +25,3 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-twig:
-    globals:
-        company_email: 'rwayed.support@gmail.com'
-        company_phone: '+212 500-000000'
-        company_location: 'Rue Al Houria Hay Al Hikma, Oujda, Morocco'
-        company_open_times: 'Mon-Fri 9:00pm - 3:00pm'

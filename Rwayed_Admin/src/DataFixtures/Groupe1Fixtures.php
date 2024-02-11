@@ -39,7 +39,7 @@ class Groupe1Fixtures extends Fixture
             $dateNaissance = $faker->dateTimeBetween('-60 years', '-18 years');
             $personne->setDateNaissance($dateNaissance);
 
-            $hashedPassword = $this->passwordHasherService->hashPassword($personne, $faker->password);
+            $hashedPassword = $this->passwordHasherService->hashPassword($personne, "123azert");
             $personne->setMotDePasse($hashedPassword);
 
             $personne->setDerniereConnection($faker->dateTimeThisYear);

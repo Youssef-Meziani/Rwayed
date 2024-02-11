@@ -6,9 +6,10 @@ use App\Repository\PersonneRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
-class Personne implements PasswordAuthenticatedUserInterface
+class Personne implements PasswordAuthenticatedUserInterface,UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -226,5 +227,20 @@ class Personne implements PasswordAuthenticatedUserInterface
     {
         $this->mot_de_passe = $password;
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_' . strtoupper($this->role)];
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }
