@@ -1,5 +1,10 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    globals:
+        company_email: 'rwayed.support@gmail.com'
+        company_phone: '+212 500-000000'
+        company_location: 'Rue Al Houria Hay Al Hikma, Oujda, Morocco'
+        company_open_times: 'Mon-Fri 9:00pm - 3:00pm'
 
 when@test:
     twig:
