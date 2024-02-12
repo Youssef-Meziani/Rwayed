@@ -6,37 +6,23 @@ use App\Repository\AdherentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdherentRepository::class)]
-class Adherent
+class Adherent extends Personne
 {
-    #[ORM\OneToOne(targetEntity: Personne::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id_per", nullable: false)]
-    #[ORM\Id] // Set as primary key
-    private Personne $personne;
-
     #[ORM\Column]
-    private int $point_fidelite = 0;
-
-
-    public function getPointFidelite(): ?int
+    private ?int $points_fidelite;
+    public function __construct()
     {
-        return $this->point_fidelite;
+        $this->points_fidelite = 0;
     }
 
-    public function setPointFidelite(int $point_fidelite): static
+    public function getPointsFidelite(): ?int
     {
-        $this->point_fidelite = $point_fidelite;
-
-        return $this;
+        return $this->points_fidelite;
     }
 
-    public function getPersonne(): ?Personne
+    public function setPointsFidelite(int $points_fidelite): static
     {
-        return $this->personne;
-    }
-
-    public function setPersonne(Personne $personne): static
-    {
-        $this->personne = $personne;
+        $this->points_fidelite = $points_fidelite;
 
         return $this;
     }
