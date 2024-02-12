@@ -7,52 +7,38 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TechnicienRepository::class)]
-class Technicien
+class Technicien extends Personne
 {
-
-    #[ORM\OneToOne(inversedBy: 'technicien', targetEntity: Personne::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id_per", nullable: false)]
-    #[ORM\Id] // Set as primary key
-    private Personne $personne;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private \DateTimeInterface $date_recrutement;
+    private ?\DateTimeInterface $date_recrutement;
 
     #[ORM\Column(length: 20)]
-    private string $statuts;
+    private ?string $status = null;
 
+    public function __construct()
+    {
+        $this->date_recrutement = new \DateTime();
+    }
     public function getDateRecrutement(): ?\DateTimeInterface
     {
         return $this->date_recrutement;
     }
 
-    public function setDateRecrutement(\DateTimeInterface $date_recrutement): self
+    public function setDateRecrutement(\DateTimeInterface $date_recrutement): static
     {
         $this->date_recrutement = $date_recrutement;
 
         return $this;
     }
 
-    public function getStatuts(): ?string
+    public function getStatus(): ?string
     {
-        return $this->statuts;
+        return $this->status;
     }
 
-    public function setStatuts(string $statuts): self
+    public function setStatus(string $status): static
     {
-        $this->statuts = $statuts;
-
-        return $this;
-    }
-
-    public function getPersonne(): ?Personne
-    {
-        return $this->personne;
-    }
-
-    public function setPersonne(Personne $personne): self
-    {
-        $this->personne = $personne;
+        $this->status = $status;
 
         return $this;
     }

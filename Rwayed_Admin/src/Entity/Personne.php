@@ -3,60 +3,52 @@
 namespace App\Entity;
 
 use App\Repository\PersonneRepository;
+use App\Services\PasswordHasherService;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
-class Personne implements PasswordAuthenticatedUserInterface,UserInterface
+#[ORM\InheritanceType("JOINED")]
+#[ORM\DiscriminatorColumn(name: "role",type: "string")]
+#[ORM\DiscriminatorMap(['Adherent' => Adherent::class,'Technicien' => Technicien::class,'Admin' => Admin::class])]
+abstract class Personne implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private int $id_per;
+    #[ORM\Column(type: Types::BIGINT)]
+    protected ?int $id = null;
 
     #[ORM\Column(length: 20)]
-    private string $nom;
+    protected ?string $nom = null;
 
     #[ORM\Column(length: 20)]
-    private string $prenom;
+    protected ?string $prenom = null;
 
-    #[ORM\Column(length: 13)]
-    private string $tele;
+    #[ORM\Column(length: 15)]
+    protected ?string $tele = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private \DateTimeInterface $date_naissance;
+    protected ?\DateTimeInterface $date_naissance = null;
 
-    #[ORM\Column(length: 10)]
-    private string $role;
+//    #[ORM\Column(length: 10)]
+//    protected ?string $role = null;
 
-    #[ORM\Column(length: 60)]
-    private string $email;
+    #[ORM\Column(length: 50,unique: true)]
+    protected ?string $email = null;
 
-    #[ORM\Column(length: 90)]
-    private string $mot_de_passe;
+    #[ORM\Column(length: 120)]
+    protected ?string $mot_de_passe = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $derniere_connection;
-    #[ORM\Column]
-    private bool $locked = false;
+    protected ?\DateTimeInterface $dernier_connection = null;
 
-    #[ORM\OneToOne(mappedBy: 'personne', cascade: ['persist', 'remove'])]
-    private ?Technicien $technicien = null;
+    #[ORM\Column(nullable: true)]
+    protected ?bool $desactive = false;
 
-    #[ORM\OneToOne(mappedBy: 'personne', cascade: ['persist', 'remove'])]
-    private ?Admin $admine = null;
-
-    #[ORM\OneToOne(mappedBy: 'personne', cascade: ['persist', 'remove'])]
-    private ?Adherent $adherent = null;
-    public function __construct()
-    {
-        $this->derniere_connection = new \DateTime();
-    }
     public function getId(): ?int
     {
-        return $this->id_per;
+        return $this->id;
     }
 
     public function getNom(): ?string
@@ -64,7 +56,7 @@ class Personne implements PasswordAuthenticatedUserInterface,UserInterface
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom): static
     {
         $this->nom = $nom;
 
@@ -76,7 +68,7 @@ class Personne implements PasswordAuthenticatedUserInterface,UserInterface
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
 
@@ -88,7 +80,7 @@ class Personne implements PasswordAuthenticatedUserInterface,UserInterface
         return $this->tele;
     }
 
-    public function setTele(string $tele): self
+    public function setTele(string $tele): static
     {
         $this->tele = $tele;
 
@@ -100,21 +92,9 @@ class Personne implements PasswordAuthenticatedUserInterface,UserInterface
         return $this->date_naissance;
     }
 
-    public function setDateNaissance(\DateTimeInterface $date_naissance): self
+    public function setDateNaissance(\DateTimeInterface $date_naissance): static
     {
         $this->date_naissance = $date_naissance;
-
-        return $this;
-    }
-
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
 
         return $this;
     }
@@ -124,123 +104,46 @@ class Personne implements PasswordAuthenticatedUserInterface,UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email): static
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getMotDePasse(): ?string
+    public function getPassword(): ?string
     {
         return $this->mot_de_passe;
     }
 
-    public function setMotDePasse(string $mot_de_passe): self
+    public function setMotDePasse(string $mot_de_passe): static
     {
         $this->mot_de_passe = $mot_de_passe;
 
         return $this;
     }
 
-    public function getDerniereConnection(): ?\DateTimeInterface
+    public function getDernierConnection(): ?\DateTimeInterface
     {
-        return $this->derniere_connection;
+        return $this->dernier_connection;
     }
 
-    public function setDerniereConnection(?\DateTimeInterface $derniere_connection): self
+    public function setDernierConnection(?\DateTimeInterface $dernier_connection): static
     {
-        $this->derniere_connection = $derniere_connection;
+        $this->dernier_connection = $dernier_connection;
 
         return $this;
     }
 
-    public function isLocked(): ?bool
+    public function isDesactive(): ?bool
     {
-        return $this->locked;
+        return $this->desactive;
     }
 
-    public function setLocked(bool $locked): self
+    public function setDesactive(?bool $desactive): static
     {
-        $this->locked = $locked;
+        $this->desactive = $desactive;
 
         return $this;
-    }
-
-    public function getTechnicien(): ?Technicien
-    {
-        return $this->technicien;
-    }
-
-    public function setTechnicien(Technicien $technicien): self
-    {
-        // set the owning side of the relation if necessary
-        if ($technicien->getPersonne() !== $this) {
-            $technicien->setPersonne($this);
-        }
-
-        $this->technicien = $technicien;
-
-        return $this;
-    }
-
-    public function getAdmine(): ?Admin
-    {
-        return $this->admine;
-    }
-
-    public function setAdmine(Admin $admine): self
-    {
-        // set the owning side of the relation if necessary
-        if ($admine->getPersonne() !== $this) {
-            $admine->setPersonne($this);
-        }
-
-        $this->admine = $admine;
-
-        return $this;
-    }
-
-    public function getAdherent(): ?Adherent
-    {
-        return $this->adherent;
-    }
-
-    public function setAdherent(Adherent $adherent): self
-    {
-        // set the owning side of the relation if necessary
-        if ($adherent->getPersonne() !== $this) {
-            $adherent->setPersonne($this);
-        }
-
-        $this->adherent = $adherent;
-
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->mot_de_passe;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->mot_de_passe = $password;
-        return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return ['ROLE_' . strtoupper($this->role)];
-    }
-
-    public function eraseCredentials(): void
-    {
-        // TODO: Implement eraseCredentials() method.
-    }
-
-    public function getUserIdentifier(): string
-    {
-        return $this->email;
     }
 }
