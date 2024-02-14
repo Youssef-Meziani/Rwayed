@@ -46,6 +46,9 @@ final class AdherentFactory extends ModelFactory
             'tele' => self::faker()->randomElement(['06', '07']) . self::faker()->numberBetween(1000000, 9999999),
             'date_naissance' => self::faker()->dateTimeBetween('-60 years', '-18 years'),
             'dernier_connection' => self::faker()->dateTimeBetween('-60 years', '-18 years'),
+            'roles' => $this->faker()->randomElement([
+                ['ROLE_ADHERENT'],
+            ]),
         ];
     }
 
@@ -53,7 +56,7 @@ final class AdherentFactory extends ModelFactory
     {
         return $this->afterInstantiate(function(Adherent $adherent) {
             $hashedPassword = $this->passwordHasherService->hashPassword($adherent, "123azert");
-                $adherent->setMotDePasse($hashedPassword);
+                $adherent->setPassword($hashedPassword);
         });
     }
 

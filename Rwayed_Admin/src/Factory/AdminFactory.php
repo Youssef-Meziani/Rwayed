@@ -47,7 +47,11 @@ final class AdminFactory extends ModelFactory
             'date_naissance' => self::faker()->dateTimeBetween('-60 years', '-18 years'),
             'dernier_connection' => self::faker()->dateTimeBetween('-60 years', '-18 years'),
             'rang' => self::faker()->randomElement($rang),
-            'is_super' => self::faker()->boolean()
+            'is_super' => self::faker()->boolean(),
+            'roles' => $this->faker()->randomElement([
+                ['ROLE_ADMIN'],
+                ['ROLE_ADMIN','ROLE_ADHERENT'],
+            ]),
         ];
     }
 
@@ -56,7 +60,7 @@ final class AdminFactory extends ModelFactory
     {
         return $this->afterInstantiate(function(Admin $admin) {
             $hashedPassword = $this->passwordHasherService->hashPassword($admin, "123azert");
-            $admin->setMotDePasse($hashedPassword);
+            $admin->setPassword($hashedPassword);
         });
     }
 

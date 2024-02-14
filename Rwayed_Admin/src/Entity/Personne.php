@@ -3,16 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\PersonneRepository;
-use App\Services\PasswordHasherService;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
 #[ORM\InheritanceType("JOINED")]
-#[ORM\DiscriminatorColumn(name: "role",type: "string")]
+#[ORM\DiscriminatorColumn(name: "descr",type: "string",length: 10)]
 #[ORM\DiscriminatorMap(['Adherent' => Adherent::class,'Technicien' => Technicien::class,'Admin' => Admin::class])]
-abstract class Personne implements PasswordAuthenticatedUserInterface
+abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -31,11 +31,11 @@ abstract class Personne implements PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     protected ?\DateTimeInterface $date_naissance = null;
 
-//    #[ORM\Column(length: 10)]
-//    protected ?string $role = null;
-
     #[ORM\Column(length: 50,unique: true)]
     protected ?string $email = null;
+
+    #[ORM\Column(type: Types::JSON)]
+    protected array $roles = [];
 
     #[ORM\Column(length: 120)]
     protected ?string $mot_de_passe = null;
@@ -116,7 +116,7 @@ abstract class Personne implements PasswordAuthenticatedUserInterface
         return $this->mot_de_passe;
     }
 
-    public function setMotDePasse(string $mot_de_passe): static
+    public function setPassword(string $mot_de_passe): static
     {
         $this->mot_de_passe = $mot_de_passe;
 

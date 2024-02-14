@@ -40,7 +40,7 @@ class Groupe1Fixtures extends Fixture
             $personne->setDateNaissance($dateNaissance);
 
             $hashedPassword = $this->passwordHasherService->hashPassword($personne, $faker->password);
-            $personne->setMotDePasse($hashedPassword);
+            $personne->setPassword($hashedPassword);
 
             $personne->setDerniereConnection($faker->dateTimeThisYear);
             $personne->setLocked(false);

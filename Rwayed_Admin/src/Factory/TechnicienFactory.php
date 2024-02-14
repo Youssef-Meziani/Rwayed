@@ -47,6 +47,9 @@ final class TechnicienFactory extends ModelFactory
             'date_naissance' => self::faker()->dateTimeBetween('-60 years', '-18 years'),
             'dernier_connection' => self::faker()->dateTimeBetween('-60 years', '-18 years'),
             'status' => self::faker()->randomElement($status),
+            'roles' => $this->faker()->randomElement([
+                ['ROLE_TECHNICIEN'],
+            ]),
         ];
     }
 
@@ -55,7 +58,7 @@ final class TechnicienFactory extends ModelFactory
     {
         return $this->afterInstantiate(function(Technicien $technicien) {
             $hashedPassword = $this->passwordHasherService->hashPassword($technicien, "123azert");
-            $technicien->setMotDePasse($hashedPassword);
+            $technicien->setPassword($hashedPassword);
         });
     }
 

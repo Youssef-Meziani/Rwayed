@@ -13,8 +13,13 @@
                         <div class="card-body pb-0">
                             <div class="d-flex align-items-start">
                                 <div class="flex-grow-1">
-                                    <h5 class="card-title mb-4">Overview</h5>
+                                    <h5 class="card-title mb-4">Overview </h5>
                                 </div>
+                                {% if app.user %}
+                                    <div class="mb-3">
+                                        You are logged in as {{ app.user.nom }} {{ app.user.prenom }}
+                                    </div>
+                                {% endif %}
                                 <div class="flex-shrink-0">
                                     <div class="dropdown">
                                         <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown"

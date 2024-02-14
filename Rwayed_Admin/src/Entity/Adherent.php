@@ -26,4 +26,31 @@ class Adherent extends Personne
 
         return $this;
     }
+
+    public function getRoles(): array
+    {
+        // Vérifie si le tableau $roles est vide avant d'ajouter 'ROLE_USER'
+        if (empty($this->roles)) {
+            return ['ROLE_USER'];
+        }
+
+        return $this->roles;
+    }
+
+    public function setRoles(array $roles):self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
 }
