@@ -1,0 +1,74 @@
+{% extends 'base.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block body %}
+    <div class="authentication-bg min-vh-100">
+        <div class="bg-overlay bg-light"></div>
+        <div class="container">
+            <div class="d-flex flex-column min-vh-100 px-3 pt-4">
+                <div class="row justify-content-center my-auto">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+
+                        <div class="mb-4 pb-2">
+                            <a class="d-block auth-logo">
+                                <img src="{{ asset('images/logo.svg') }}" alt="" height="50" class="auth-logo-dark me-start">
+                                <img src="{{ asset('images/logo light.svg') }}" alt="" height="50" class="auth-logo-light me-start">
+                            </a>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body p-4">
+                                <div class="text-center mt-2">
+                                    <h5>Reset Password</h5>
+                                    <p class="text-muted">Reset Password to continue to RWAYED.</p>
+                                </div>
+                                <div class="p-2 mt-4">
+
+                                    {{ form_start(resetForm, {'attr': {'class': 'form-custom'}}) }}
+                                    <div class="form-group">
+                                        {{ form_label(resetForm.plainPassword.first) }}
+                                        {{ form_widget(resetForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'New Password'}}) }}
+                                        {% if resetForm.plainPassword.first.vars.errors|length %}
+                                            <small  class="form-text text-danger">
+                                                {% for error in resetForm.plainPassword.first.vars.errors %}
+                                                    <p>{{ error.message }}</p>
+                                                {% endfor %}
+                                            </small >
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-group my-2">
+                                        {{ form_label(resetForm.plainPassword.second) }}
+                                        {{ form_widget(resetForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirm Password'}}) }}
+                                        {% if resetForm.plainPassword.second.vars.errors|length %}
+                                            <small  class="form-text text-danger">
+                                                {% for error in resetForm.plainPassword.second.vars.errors %}
+                                                    <p>{{ error.message }}</p>
+                                                {% endfor %}
+                                            </small >
+                                        {% endif %}
+                                    </div>
+
+
+
+                                    <div class="mt-4">
+                                        <button type="submit" class="btn btn-primary w-100 waves-effect waves-light">Reset password</button>
+                                    </div>
+
+                                    {{ form_end(resetForm) }}
+
+                                    <div class="mt-4 text-center">
+                                        <p class="mb-0">Remember It ? <a href="{{ path('app_login') }}" class="fw-medium text-primary"> Log In </a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- end col -->
+                </div><!-- end row -->
+            </div>
+        </div><!-- end container -->
+    </div>
+    <!-- end authentication section -->
+{% endblock %}

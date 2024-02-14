@@ -27,35 +27,56 @@
                                     <p class="text-muted">Sign in to continue to RWAYED.</p>
                                 </div>
                                 <div class="p-2 mt-4">
-                                    <form action="https://themesdesign.in/webadmin/layouts/index.html">
-        
+                                    <form method="post">
+                                        {% if error %}
+                                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                        {% endif %}
+
+                                        {% if app.session.get('authentication_error') %}
+                                            <div class="alert alert-danger">
+                                                {{ app.session.get('authentication_error') }}
+                                            </div>
+                                            {% do app.session.remove('authentication_error') %}
+                                        {% endif %}
+
+                                        {% for message in app.flashes('error') %}
+                                            <div class="alert alert-dange">{{ message }}</div>
+                                        {% endfor %}
+
+                                        {% for message in app.flashes('success') %}
+                                            <div class="alert alert-success">{{ message }}</div>
+                                        {% endfor %}
+
                                         <div class="mb-3">
-                                            <label class="form-label" for="username">Username</label>
+                                            <label class="inputEmail" for="username">Email</label>
                                             <div class="position-relative input-custom-icon">
-                                                <input type="text" class="form-control" id="username" placeholder="Enter username">
-                                                 <span class="bx bx-user"></span>
+                                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" autocomplete="email" class="form-control" placeholder="Enter email" required autofocus>
+                                                <span class="bx bx-user"></span>
                                             </div>
                                         </div>
-                
+
                                         <div class="mb-3">
-                                            <div class="float-end">
-                                                <a href="{{ path('recover-pw') }}" class="text-muted text-decoration-underline">Forgot password?</a>
-                                            </div>
-                                            <label class="form-label" for="password-input">Password</label>
+                                            <label class="password-input" for="password-input">Password</label>
                                             <div class="position-relative auth-pass-inputgroup input-custom-icon">
                                                 <span class="bx bx-lock-alt"></span>
-                                                <input type="password" class="form-control" id="password-input" placeholder="Enter password">
+                                                <input type="password" name="password" class="form-control" id="password-input" placeholder="Enter password" autocomplete="current-password" required>
                                                 <button type="button" class="btn btn-link position-absolute h-100 end-0 top-0" id="password-addon">
                                                     <i class="mdi mdi-eye-outline font-size-18 text-muted"></i>
                                                 </button>
                                             </div>
+                                            <div class="float-end">
+                                                <a href="{{ path('app_forgot_password_request') }}" class="text-muted text-decoration-underline">Forgot password?</a>
+                                            </div>
                                         </div>
-                
+
+                                        <input type="hidden" name="_csrf_token"
+                                               value="{{ csrf_token('authenticate') }}">
+
                                         <div class="form-check py-1">
-                                            <input type="checkbox" class="form-check-input" id="auth-remember-check">
+                                            <input type="checkbox" class="form-check-input"  name="_remember_me" id="auth-remember-check">
                                             <label class="form-check-label" for="auth-remember-check">Remember me</label>
                                         </div>
-                                        
+
                                         <div class="mt-3">
                                             <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log In</button>
                                         </div>

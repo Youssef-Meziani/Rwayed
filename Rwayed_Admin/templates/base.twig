@@ -23,8 +23,8 @@
         window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
     </script>
 
-    {% block stylesheets %} {% endblock %}
-
+    {% block stylesheets %}
+    {% endblock %}
     <!-- Bootstrap Css -->
     <link href="{{ asset('css/bootstrap.min.css')}}" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
@@ -32,10 +32,36 @@
     <!-- App Css-->
     <link href="{{ asset('css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
 
+
+
 </head>
 
 <body>
 
+    {#  pour les alerts    #}
+    <style>
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                max-height: 100px;
+                padding: 15px;
+            }
+            100% {
+                opacity: 0;
+                max-height: 0px;
+                padding: 0px;
+                margin: 0px;
+            }
+        }
+
+        .fade-out {
+            animation-name: fadeOut;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+
+
+    </style>
     {% block body %} {% endblock %}
 
     <!-- JAVASCRIPT -->
@@ -43,6 +69,20 @@
     <script src="{{ asset('libs/metismenujs/metismenujs.min.js')}}"></script>
     <script src="{{ asset('libs/simplebar/simplebar.min.js')}}"></script>
     <script src="{{ asset('libs/eva-icons/eva.min.js')}}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const flashMessages = document.querySelectorAll('.alert-success, .alert-danger');
+                flashMessages.forEach(flashMessage => {
+                    flashMessage.classList.add('fade-out');
+
+                    flashMessage.addEventListener('animationend', () => {
+                        flashMessage.style.display = 'none'; // Masque complètement l'élément après l'animation.
+                    });
+                });
+            }, 5000); // Les alertes commencent à disparaître après 5 secondes.
+        });
+    </script>
 
     {% block javascripts %} {% endblock %}
 

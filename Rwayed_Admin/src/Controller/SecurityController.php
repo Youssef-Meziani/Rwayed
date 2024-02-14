@@ -9,32 +9,29 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route('/', name: 'login')]
+    #[Route(path: '/', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        // if ($this->getUser()) {
+    //     return $this->redirectToRoute('target_path');
+        // }
+
+        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        $lastEmail  = $authenticationUtils->getLastUsername();
-        if ($this->getUser()) {
-            if (!$this->isGranted('admin')) {
-                $error = 'Accès refusé. Vous n\'êtes pas administrateur.';
-            }
-            else {
-                return $this->redirectToRoute('home');
-            }
-        }
-        return $this->render('account/login.twig', ['lastEmail' => $lastEmail, 'error' => $error]);
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('account/login.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route(name: 'logout')]
-    public function logout()
+    #[Route('/logout_success', name: 'logout_success')]
+    public function logoutSuccess(): Response
     {
-        // Le code n'est jamais exécuté, Symfony redirigera vers la page de login
+        return $this->render('account/logout.twig');
+    }
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): void
+    {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
-    }
-
-    #[Route('/recover-password', name: 'recover-pw')]
-    public function recover()
-    {
-        return $this->render('account/recover-pw.twig');
     }
 }

@@ -197,12 +197,16 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="rounded-circle header-profile-user" src="{{ asset('images/users/avatar-3.jpg') }}"
                                 alt="Header Avatar">
-                                <span class="d-none d-xl-inline-block ms-2 fw-medium font-size-15">Martin Gurley</span>
+                                {% if app.user %}
+                                    <span class="d-none d-xl-inline-block ms-2 fw-medium font-size-15">{{ app.user.nom }} {{ app.user.prenom }}</span>
+                                {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-end pt-0">
                                 <div class="p-3 border-bottom">
-                                    <h6 class="mb-0">Martin Gurley</h6>
-                                    <p class="mb-0 font-size-11 text-muted">martin.gurley@email.com</p>
+                                    {% if app.user %}
+                                        <h6 class="mb-0">{{ app.user.nom }} {{ app.user.prenom }}</h6>
+                                        <p class="mb-0 font-size-11 text-muted">{{ app.user.userIdentifier }}</p>
+                                    {% endif %}
                                 </div>
                                 <a class="dropdown-item" href="contacts-profile.html"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Profile</span></a>
                                 <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Messages</span></a>
@@ -210,7 +214,7 @@
                                 <a class="dropdown-item d-flex align-items-center" href="#"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-2"></i> <span class="align-middle me-3">Settings</span><span class="badge bg-success-subtle text-success  ms-auto">New</span></a>
                                 <a class="dropdown-item" href="auth-lock-screen.html"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Lock screen</span></a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="auth-logout.html"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Logout</span></a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Logout</span></a>
                             </div>
                         </div>
                     </div>
@@ -466,7 +470,7 @@
                                     <li><a href="auth-register.html" data-key="t-register">Register</a></li>
                                     <li><a href="auth-recoverpw.html" data-key="t-recover-password">Recover Password</a></li>
                                     <li><a href="auth-lock-screen.html" data-key="t-lock-screen">Lock Screen</a></li>
-                                    <li><a href="auth-logout.html" data-key="t-logout">Logout</a></li>
+                                    <li><a href="{{ path('app_logout') }}" data-key="t-logout">Logout</a></li>
                                     <li><a href="auth-confirm-mail.html" data-key="t-confirm-mail">Confirm Mail</a></li>
                                     <li><a href="auth-email-verification.html" data-key="t-email-verification">Email Verification</a></li>
                                     <li><a href="auth-two-step-verification.html" data-key="t-two-step-verification">Two Step Verification</a></li>
@@ -695,12 +699,16 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="rounded-circle header-profile-user" src="{{ asset('images/users/avatar-3.jpg') }}"
                                 alt="Header Avatar">
-                                <span class="d-none d-xl-inline-block ms-2 fw-medium font-size-15">Martin Gurley</span>
+                                {% if app.user %}
+                                    <span class="d-none d-xl-inline-block ms-2 fw-medium font-size-15">{{ app.user.nom }} {{ app.user.prenom }}</span>
+                                {% endif %}
                             </button>
                             <div class="dropdown-menu dropdown-menu-end pt-0">
                                 <div class="p-3 border-bottom">
-                                    <h6 class="mb-0">Martin Gurley</h6>
-                                    <p class="mb-0 font-size-11 text-muted">martin.gurley@email.com</p>
+                                    {% if app.user %}
+                                    <h6 class="mb-0">{{ app.user.nom }} {{ app.user.prenom }}</h6>
+                                    <p class="mb-0 font-size-11 text-muted">{{ app.user.userIdentifier }}</p>
+                                    {% endif %}
                                 </div>
                                 <a class="dropdown-item" href="contacts-profile.html"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Profile</span></a>
                                 <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Messages</span></a>
@@ -708,7 +716,7 @@
                                 <a class="dropdown-item d-flex align-items-center" href="#"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-2"></i> <span class="align-middle me-3">Settings</span><span class="badge bg-success-subtle text-success  ms-auto">New</span></a>
                                 <a class="dropdown-item" href="auth-lock-screen.html"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Lock screen</span></a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="auth-logout.html"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Logout</span></a>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Logout</span></a>
                             </div>
                         </div>
                     </div>
@@ -942,7 +950,7 @@
                                                     <a href="auth-register.html" class="dropdown-item" data-key="t-register">Register</a>
                                                     <a href="auth-recoverpw.html" class="dropdown-item" data-key="t-recover-password">Recover Password</a>
                                                     <a href="auth-lock-screen.html" class="dropdown-item" data-key="t-lock-screen">Lock Screen</a>
-                                                    <a href="auth-logout.html" class="dropdown-item" data-key="t-logout">Logout</a>
+                                                    <a href="{{ path('app_logout') }}" class="dropdown-item" data-key="t-logout">Logout</a>
                                                     <a href="auth-confirm-mail.html" class="dropdown-item" data-key="t-confirm-mail">Confirm Mail</a>
                                                     <a href="auth-email-verification.html" class="dropdown-item" data-key="t-email-verification">Email Verification</a>
                                                     <a href="auth-two-step-verification.html" class="dropdown-item" data-key="t-two-step-verification">Two Step Verification</a>
