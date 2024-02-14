@@ -15,14 +15,22 @@ security:
         main:
             provider: personne_provider
             lazy: true
-            form_login:
-                login_path: app_login
-                check_path: app_login
+            custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
-                target: home
+                target: logout_success
+
+            remember_me:
+                secret: '%kernel.secret%' # Utilisez un paramètre secret pour générer le cookie
+                lifetime: 604800  # Durée de vie du cookie en secondes (604800 = 7 jours ici)
+                path: /            # Chemin pour lequel le cookie est valide
+                secure: true       # Définissez à true si votre site fonctionne exclusivement en HTTPS
+
+            access_denied_handler: App\Handlers\CustomAccessDeniedHandler
+
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
+#        - { path: ^/admin, roles: ROLE_ADMIN }
+#        - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:
