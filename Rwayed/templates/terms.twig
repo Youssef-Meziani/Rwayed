@@ -9,41 +9,64 @@
             <div class="document">
                 <div class="document__header">
                     <h1 class="document__title">Terms And Conditions</h1>
-                    <div class="document__subtitle">This Agreement was last modified on 27 May 2018.</div>
+                    <div class="document__subtitle">This Agreement was last modified on {{ last_modified|date("d F Y") }}.</div>
                 </div>
                 <div class="document__content card">
                     <div class="typography">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec facilisis neque ut purus fermentum, ac pretium
-                            nibh facilisis. Vivamus venenatis viverra iaculis. Suspendisse tempor orci non sapien ullamcorper dapibus.
-                            Suspendisse at velit diam. Donec pharetra nec enim blandit vulputate. Suspendisse potenti. Pellentesque et
-                            molestie ante. In feugiat ante vitae ultricies malesuada.
+                            Welcome to Rwayed! These terms and conditions outline the rules and regulations for the use of our website.
                         </p>
                         <h2>Definitions</h2>
                         <ol>
                             <li>
-                                <strong>Risus</strong> — Morbi posuere eleifend sollicitudin. Praesent eget ante in enim scelerisque
-                                scelerisque. Donec mi lorem, molestie a sapien non, laoreet convallis felis. In semper felis in lacus
-                                venenatis, sit amet commodo leo interdum. Maecenas congue ut leo et auctor.
+                                <strong>Rwayed</strong> — Refers to Rwayed, a leading provider of automotive products and services, including tires, accessories, and repair solutions, operating in Morocco.
                             </li>
                             <li>
-                                <strong>Praesent</strong> — Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
-                                inceptos himenaeos. Nulla orci ante, viverra in imperdiet in, pharetra et leo
+                                <strong>User</strong> — Any individual who accesses or uses the Rwayed website.
                             </li>
                             <li>
-                                <strong>Vestibulum</strong> — Vestibulum arcu tellus, aliquam vel fermentum vestibulum, lacinia pulvinar
-                                ipsum. In hac habitasse platea dictumst. Integer felis libero, blandit scelerisque mauris eget, porta
-                                elementum sapien. Mauris luctus arcu non enim lobortis gravida.
+                                <strong>Products</strong> — Refers to the various items available for purchase on the Rwayed website, including but not limited to tires, rims, accessories, and repair services.
                             </li>
                         </ol>
-                        <h2>Ornare dolor</h2>
+                        <h2>Acceptance of Terms</h2>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec facilisis neque ut purus fermentum, ac pretium
-                            nibh facilisis. Vivamus venenatis viverra iaculis. Suspendisse tempor orci non sapien ullamcorper dapibus.
-                            Suspendisse at velit diam. Donec pharetra nec enim blandit vulputate. Suspendisse potenti. Pellentesque et
-                            molestie ante. In feugiat ante vitae ultricies malesuada.
+                            By accessing or using the Rwayed website, you agree to be bound by these terms and conditions, all applicable laws, and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site. The materials contained in this website are protected by applicable copyright and trademark law.
                         </p>
-                        <p>For information about how to contact us, please visit our <a href="contact-us.html">contact page</a>.</p>
+                        <h2>Use License</h2>
+                        <p>
+                            Permission is granted to temporarily download one copy of the materials (information or software) on Rwayed's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license, you may not:
+                        </p>
+                        <ol>
+                            <li>modify or copy the materials;</li>
+                            <li>use the materials for any commercial purpose, or for any public display (commercial or non-commercial);</li>
+                            <li>attempt to decompile or reverse engineer any software contained on Rwayed's website;</li>
+                            <li>remove any copyright or other proprietary notations from the materials; or</li>
+                            <li>transfer the materials to another person or "mirror" the materials on any other server.</li>
+                        </ol>
+                        <p>
+                            This license shall automatically terminate if you violate any of these restrictions and may be terminated by Rwayed at any time. Upon terminating your viewing of these materials or upon the termination of this license, you must destroy any downloaded materials in your possession whether in electronic or printed format.
+                        </p>
+                        <h2>Limitations</h2>
+                        <p>
+                            In no event shall Rwayed or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Rwayed's website, even if Rwayed or a Rwayed authorized representative has been notified orally or in writing of the possibility of such damage. Because some jurisdictions do not allow limitations on implied warranties, or limitations of liability for consequential or incidental damages, these limitations may not apply to you.
+                        </p>
+                        <h2>Accuracy of Materials</h2>
+                        <p>
+                            The materials appearing on Rwayed's website could include technical, typographical, or photographic errors. Rwayed does not warrant that any of the materials on its website are accurate, complete, or current. Rwayed may make changes to the materials contained on its website at any time without notice. However, Rwayed does not make any commitment to update the materials.
+                        </p>
+                        <h2>Links</h2>
+                        <p>
+                            Rwayed has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Rwayed of the site. Use of any such linked website is at the user's own risk.
+                        </p>
+                        <h2>Modifications</h2>
+                        <p>
+                            Rwayed may revise these terms of service for its website at any time without notice. By using this website, you are agreeing to be bound by the then-current version of these terms of service.
+                        </p>
+                        <h2>Governing Law</h2>
+                        <p>
+                            These terms and conditions are governed by and construed in accordance with the laws of Morocco and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
+                        </p>
+                        <p>For information about how to contact us, please visit our <a href="{{ path('contact') }}">contact page</a>.</p>
                         <div class="document__signature">
                             <img src="images/signature.jpg" width="160" height="55" alt="">
                         </div>

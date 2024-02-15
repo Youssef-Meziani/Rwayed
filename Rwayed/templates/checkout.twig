@@ -1,6 +1,6 @@
 {% extends 'base.twig' %}
 
-{% block title %}Checkout{% endblock %}
+{% block title %} - Checkout{% endblock %}
 
 {% block body %}
     <!-- site__body -->
@@ -15,10 +15,10 @@
                                 <a href="{{ url('home') }}" class="breadcrumb__item-link">Home</a>
                             </li>
                             <li class="breadcrumb__item breadcrumb__item--parent">
-                                <a href="" class="breadcrumb__item-link">Breadcrumb</a>
+                                <a href="{{ path('cart') }}" class="breadcrumb__item-link">Cart</a>
                             </li>
                             <li class="breadcrumb__item breadcrumb__item--current breadcrumb__item--last" aria-current="page">
-                                <span class="breadcrumb__item-link">Current Page</span>
+                                <span class="breadcrumb__item-link">Checkout</span>
                             </li>
                             <li class="breadcrumb__title-safe-area" role="presentation"></li>
                         </ol>
