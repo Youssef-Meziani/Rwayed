@@ -42,7 +42,37 @@ services:
             - database
         networks:
             - inner_net
-
+    www_api:
+        build:
+            context: ./Rwayed_API
+            dockerfile: ../docker/server/Dockerfile
+        expose:
+            - "9000"
+            - "9003"
+        ports:
+            - "82:80" # Le port 82 est utilisé ici comme exemple, assurez-vous qu'il ne soit pas en conflit
+        working_dir: /var/www/html
+        volumes:
+            - ./Rwayed_API:/var/www/html # Chemin vers le dossier de votre API
+            - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
+            - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+        extra_hosts:
+            - host.docker.internal:host-gateway
+        depends_on:
+            - database
+        networks:
+            - inner_net
+#    elasticsearch:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0 # Utilisez la version qui convient à vos besoins
+#        environment:
+#            - discovery.type=single-node # Pour le développement, en production considérez une configuration de cluster
+#        ports:
+#            - "9200:9200" # Port par défaut d'Elasticsearch
+#            - "9300:9300" # Port pour la communication entre les nœuds
+#        networks:
+#            - inner_net
+#        volumes:
+#            - es_data:/usr/share/elasticsearch/data # Persiste les données d'Elasticsearch
     mailcatcher:
         networks:
             - inner_net
@@ -84,6 +114,7 @@ services:
             - db_admin_data:/var/www/html
 
 volumes:
+    es_data:
     db_data:
     db_admin_data:
 
