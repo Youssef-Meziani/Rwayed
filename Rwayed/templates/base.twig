@@ -9,19 +9,10 @@
     <title>Rwayed{% block title %}{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.svg')}}" id="favicon">
 
-    <script>
-        function updateFavicon() {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon light.svg')}}");
-            } else {
-                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon.svg')}}");
-            }
-        }
+    <!-- for technician use the header's variante threee css for pc and variant two for mobile-->
+    <!-- and use the logo light -->
 
-        updateFavicon();
-
-        window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
-    </script>
+    <script src="{{ asset('vendor/turbo/turbo.index.js') }}"></script>
 
     <!-- fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i" />
@@ -33,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-one.css') }}" media="(min-width: 1200px)">
-    <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-one.css') }}" media="(max-width: 1199px)">
+    <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-one.css') }}" media="(max-width: 1200px)">
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
 
@@ -70,9 +61,9 @@
                         <div class="mobile-menu__setting" data-mobile-menu-item>
                             <button class="mobile-menu__setting-button" title="Language" data-mobile-menu-trigger>
                                 <span class="mobile-menu__setting-icon">
-                                    <img src="{{ asset('images/languages/language-5.png') }}" alt="">
+                                    <img src="{{ asset('images/languages/language-1.png') }}" alt="">
                                 </span>
-                                <span class="mobile-menu__setting-title">Italian</span>
+                                <span class="mobile-menu__setting-title">English</span>
                                 <span class="mobile-menu__setting-arrow"><svg width="6px" height="9px">
                                         <path d="M0.3,7.4l3-2.9l-3-2.9c-0.4-0.3-0.4-0.9,0-1.3l0,0c0.4-0.3,0.9-0.4,1.3,0L6,4.5L1.6,8.7c-0.4,0.4-0.9,0.4-1.3,0l0,0C-0.1,8.4-0.1,7.8,0.3,7.4z" />
                                     </svg>
@@ -135,54 +126,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mobile-menu__setting" data-mobile-menu-item>
-                            <button class="mobile-menu__setting-button" title="Currency" data-mobile-menu-trigger>
-                                <span class="mobile-menu__setting-icon mobile-menu__setting-icon--currency">
-                                    $
-                                </span>
-                                <span class="mobile-menu__setting-title">US Dollar</span>
-                                <span class="mobile-menu__setting-arrow"><svg width="6px" height="9px">
-                                        <path d="M0.3,7.4l3-2.9l-3-2.9c-0.4-0.3-0.4-0.9,0-1.3l0,0c0.4-0.3,0.9-0.4,1.3,0L6,4.5L1.6,8.7c-0.4,0.4-0.9,0.4-1.3,0l0,0C-0.1,8.4-0.1,7.8,0.3,7.4z" />
-                                    </svg>
-                                </span>
-                            </button>
-                            <div class="mobile-menu__setting-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Currency</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    € Euro
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    £ Pound Sterling
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    $ US Dollar
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    ₽ Russian Ruble
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="mobile-menu__divider"></div>
                     <div class="mobile-menu__indicators">
@@ -234,706 +177,51 @@
                     <div class="mobile-menu__divider"></div>
                     <ul class="mobile-menu__links">
                         <li data-mobile-menu-item>
-                            <a href="{{ path('home') }}" class="" data-mobile-menu-trigger>
+                            <a href="{{ path('home') }}" data-mobile-menu-trigger>
                                 Home
-                                <svg width="7" height="11">
-                                    <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                </svg>
                             </a>
-                            <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Home</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <a href="{{ path('home') }}" class="" data-mobile-menu-trigger>
-                                                    Home One
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="index2.html" class="" data-mobile-menu-trigger>
-                                                    Home Two
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="header-spaceship-variant-one.html" class="" data-mobile-menu-trigger>
-                                                    Header Spaceship
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Header Spaceship</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-spaceship-variant-one.html" class="" data-mobile-menu-trigger>
-                                                                        Variant One
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-spaceship-variant-two.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Two
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-spaceship-variant-three.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Three
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="header-classic-variant-one.html" class="" data-mobile-menu-trigger>
-                                                    Header Classic
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Header Classic</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-classic-variant-one.html" class="" data-mobile-menu-trigger>
-                                                                        Variant One
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-classic-variant-two.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Two
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-classic-variant-three.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Three
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-classic-variant-four.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Four
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="header-classic-variant-five.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Five
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="mobile-header-variant-one.html" class="" data-mobile-menu-trigger>
-                                                    Mobile Header
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Mobile Header</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="mobile-header-variant-one.html" class="" data-mobile-menu-trigger>
-                                                                        Variant One
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="mobile-header-variant-two.html" class="" data-mobile-menu-trigger>
-                                                                        Variant Two
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                         <li data-mobile-menu-item>
-                            <a href="shop-grid-4-columns-sidebar.html" class="" data-mobile-menu-trigger>
+                            <a href="{{ path('shop') }}" data-mobile-menu-trigger>
                                 Shop
-                                <svg width="7" height="11">
-                                    <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                </svg>
                             </a>
-                            <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Shop</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <a href="category.html" class="" data-mobile-menu-trigger>
-                                                    Category
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Category</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-3-columns-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        3 Columns Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-4-columns-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        4 Columns Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-5-columns-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        5 Columns Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-4-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        4 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-5-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        5 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-6-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        6 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-7-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        7 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="category-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="shop-grid-4-columns-sidebar.html" class="" data-mobile-menu-trigger>
-                                                    Shop Grid
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Shop Grid</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="shop-grid-6-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        6 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="shop-grid-5-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        5 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="shop-grid-4-columns-full.html" class="" data-mobile-menu-trigger>
-                                                                        4 Columns Full
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="shop-grid-4-columns-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        4 Columns Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="shop-grid-3-columns-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        3 Columns Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="shop-list.html" class="" data-mobile-menu-trigger>
-                                                    Shop List
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="shop-table.html" class="" data-mobile-menu-trigger>
-                                                    Shop Table
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="shop-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                    Shop Right Sidebar
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="product-full.html" class="" data-mobile-menu-trigger>
-                                                    Product
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Product</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="product-full.html" class="" data-mobile-menu-trigger>
-                                                                        Full Width
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="product-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Left Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="cart.html" class="" data-mobile-menu-trigger>
-                                                    Cart
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="checkout.html" class="" data-mobile-menu-trigger>
-                                                    Checkout
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="order-success.html" class="" data-mobile-menu-trigger>
-                                                    Order Success
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="wishlist.html" class="" data-mobile-menu-trigger>
-                                                    Wishlist
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="compare.html" class="" data-mobile-menu-trigger>
-                                                    Compare
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="track-order.html" class="" data-mobile-menu-trigger>
-                                                    Track Order
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                         <li data-mobile-menu-item>
-                            <a href="blog-classic-right-sidebar.html" class="" data-mobile-menu-trigger>
+                            <a href="{{ path('blog') }}" data-mobile-menu-trigger>
                                 Blog
-                                <svg width="7" height="11">
-                                    <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                </svg>
                             </a>
-                            <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Blog</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <a href="blog-classic-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                    Blog Classic
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Blog Classic</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="blog-classic-left-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Left Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="blog-classic-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="blog-list-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                    Blog List
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Blog List</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="blog-list-left-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Left Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="blog-list-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="blog-grid-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                    Blog Grid
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Blog Grid</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="blog-grid-left-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Left Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="blog-grid-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="post-full-width.html" class="" data-mobile-menu-trigger>
-                                                    Post Page
-                                                    <svg width="7" height="11">
-                                                        <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                                    </svg>
-                                                </a>
-                                                <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                                    <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                                        <div class="mobile-menu__panel-header">
-                                                            <button class="mobile-menu__panel-back" type="button">
-                                                                <svg width="7" height="11">
-                                                                    <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                                                </svg>
-                                                            </button>
-                                                            <div class="mobile-menu__panel-title">Post Page</div>
-                                                        </div>
-                                                        <div class="mobile-menu__panel-body">
-                                                            <ul class="mobile-menu__links">
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="post-full-width.html" class="" data-mobile-menu-trigger>
-                                                                        Full Width
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="post-left-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Left Sidebar
-                                                                    </a>
-                                                                </li>
-                                                                <li data-mobile-menu-item>
-                                                                    <a href="post-right-sidebar.html" class="" data-mobile-menu-trigger>
-                                                                        Right Sidebar
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="post-without-image.html" class="" data-mobile-menu-trigger>
-                                                    Post Without Image
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                         <li data-mobile-menu-item>
-                            <a href="account-login.html" class="" data-mobile-menu-trigger>
-                                Account
-                                <svg width="7" height="11">
-                                    <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                </svg>
+                            <a href="{{ path('track-order') }}" data-mobile-menu-trigger>
+                                Track Order
                             </a>
-                            <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Account</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <a href="account-login.html" class="" data-mobile-menu-trigger>
-                                                    Login & Register
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-dashboard.html" class="" data-mobile-menu-trigger>
-                                                    Dashboard
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-garage.html" class="" data-mobile-menu-trigger>
-                                                    Garage
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-profile.html" class="" data-mobile-menu-trigger>
-                                                    Edit Profile
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-orders.html" class="" data-mobile-menu-trigger>
-                                                    Order History
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-order-details.html" class="" data-mobile-menu-trigger>
-                                                    Order Details
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-addresses.html" class="" data-mobile-menu-trigger>
-                                                    Address Book
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-edit-address.html" class="" data-mobile-menu-trigger>
-                                                    Edit Address
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="account-password.html" class="" data-mobile-menu-trigger>
-                                                    Change Password
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                         <li data-mobile-menu-item>
-                            <a href="{{ path('about') }}" class="" data-mobile-menu-trigger>
-                                Pages
-                                <svg width="7" height="11">
-                                    <path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-	C-0.1,9.8-0.1,10.4,0.3,10.7z" />
-                                </svg>
+                            <a href="{{ path('about') }}" data-mobile-menu-trigger>
+                                About Us
                             </a>
-                            <div class="mobile-menu__links-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Pages</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <a href="{{ path('about') }}" class="" data-mobile-menu-trigger>
-                                                    About Us
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="{{ path('contact') }}" class="" data-mobile-menu-trigger>
-                                                    Contact Us v1
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="contact-us-v2.html" class="" data-mobile-menu-trigger>
-                                                    Contact Us v2
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="404.html" class="" data-mobile-menu-trigger>
-                                                    404
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="terms.html" class="" data-mobile-menu-trigger>
-                                                    Terms And Conditions
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="faq.html" class="" data-mobile-menu-trigger>
-                                                    FAQ
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="components.html" class="" data-mobile-menu-trigger>
-                                                    Components
-                                                </a>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <a href="typography.html" class="" data-mobile-menu-trigger>
-                                                    Typography
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
                         </li>
                         <li data-mobile-menu-item>
-                            <a href="https://themeforest.net/item/redparts-auto-parts-html-template/24735474" class="highlight" target="_blank" data-mobile-menu-trigger>
-                                Buy Theme
+                            <a href="{{ path('contact') }}" data-mobile-menu-trigger>
+                                Contact Us
+                            </a>
+                        </li>
+                        <li data-mobile-menu-item>
+                            <a href="{{ path('terms') }}" data-mobile-menu-trigger>
+                                Terms
+                            </a>
+                        </li>
+                        <li data-mobile-menu-item>
+                            <a href="{{ path('faq') }}" data-mobile-menu-trigger>
+                                FAQ
                             </a>
                         </li>
                     </ul>
                     <div class="mobile-menu__spring"></div>
                     <div class="mobile-menu__divider"></div>
-                    <a class="mobile-menu__contacts" href="">
-                        <div class="mobile-menu__contacts-subtitle">Free call 24/7</div>
-                        <div class="mobile-menu__contacts-title">800 060-0730</div>
+                    <a class="mobile-menu__contacts" href="tel:{{ company_phone }}">
+                        <div class="mobile-menu__contacts-subtitle">Call US</div>
+                        <div class="mobile-menu__contacts-title">{{ company_phone }}</div>
                     </a>
                 </div>
             </div>
@@ -1173,6 +461,38 @@
         </div>
     </div>
     <!-- photoswipe / end -->
+
+    <!-- back to top -->
+    <div class="rbt-progress-parent">
+        <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
+            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+        </svg>
+        <i class="fas fa-arrow-up" id="top-arrow"></i>
+    </div>
+    <!-- back to top / end -->
+
+    <button class="chatbot-toggler">
+        <span class="fas fa-comment-dots"></span>
+        <span class="fas fa-times"></span>
+    </button>
+    <div class="chatbot">
+        <header>
+            <h2>Chatbot</h2>
+            <span class="close-btn fas fa-times"></span>
+        </header>
+        <ul class="chatbox">
+            <li class="chat incoming">
+                <span class="fas fa-robot"></span>
+                <p>Hi there 👋<br>How can I help you today?</p>
+            </li>
+        </ul>
+        <div class="chat-input">
+            <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
+            <span id="send-btn" class="fas fa-paper-plane"></span>
+        </div>
+    </div>
+
+
     <!-- scripts -->
     <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -1183,7 +503,24 @@
     <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
     <script src="{{ asset('js/number.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
-    <script src="{{ asset('vendor/turbo/turbo.index.js') }}"></script>
+
+    <script>
+        document.querySelectorAll('a').forEach(function(link) {
+            link.dataset.turboPrefetch = 'false'; // Add data-prefetch="false" attribute
+        });
+
+        function updateFavicon() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon light.svg')}}");
+            } else {
+                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon.svg')}}");
+            }
+        }
+
+        updateFavicon();
+
+        window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
+    </script>
 
     {% block javascripts %} {% endblock %}
 

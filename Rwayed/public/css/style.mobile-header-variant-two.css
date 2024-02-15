@@ -13,7 +13,7 @@
 // .mobile-header
 */
 .mobile-header {
-  background: #1a79ff;
+  background: #333;
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
   position: relative;
@@ -400,8 +400,10 @@
   border: none;
   padding: 0;
   fill: currentColor;
-  -webkit-transition: background-color .15s, color .15s;
-  transition: background-color .15s, color .15s;
+  -webkit-transition: background-color .15s,
+ color .15s;
+  transition: background-color .15s,
+ color .15s;
   background-color: #fff;
   color: #ccc;
 }
@@ -505,8 +507,10 @@
   padding-top: 0;
   padding-bottom: 0;
   fill: currentColor;
-  -webkit-transition: background-color .15s, color .15s;
-  transition: background-color .15s, color .15s;
+  -webkit-transition: background-color .15s,
+ color .15s;
+  transition: background-color .15s,
+ color .15s;
   background-color: #fff;
   color: #ccc;
 }
@@ -1014,8 +1018,12 @@
   bottom: 0;
   pointer-events: none;
   z-index: -1;
-  -webkit-transition: color .2s, background .2s, border-color .2s;
-  transition: color .2s, background .2s, border-color .2s;
+  -webkit-transition: color .2s,
+ background .2s,
+ border-color .2s;
+  transition: color .2s,
+ background .2s,
+ border-color .2s;
 }
 
 .mobile-search__button {
@@ -1061,8 +1069,10 @@
       -ms-flex-pack: center;
           justify-content: center;
   border: none;
-  -webkit-transition: color .15s, background-color .15s;
-  transition: color .15s, background-color .15s;
+  -webkit-transition: color .15s,
+ background-color .15s;
+  transition: color .15s,
+ background-color .15s;
 }
 
 .mobile-search__vehicle-picker:hover {
@@ -1098,8 +1108,12 @@
     border-radius: 3px;
     border-width: 1px;
     border-style: solid;
-    -webkit-transition: color .2s, background .2s, border-color .2s;
-    transition: color .2s, background .2s, border-color .2s;
+    -webkit-transition: color .2s,
+ background .2s,
+ border-color .2s;
+    transition: color .2s,
+ background .2s,
+ border-color .2s;
     color: #262626;
     background-color: #fff;
     border-color: #fff;
