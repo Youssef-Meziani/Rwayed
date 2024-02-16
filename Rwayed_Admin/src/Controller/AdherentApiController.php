@@ -22,6 +22,12 @@ class AdherentApiController extends AbstractController
         dd($adherents);
     }
 
+    #[Route('/adherents/{id}', name: 'get_adherent')]
+    public function getAdherent(int $id): Response {
+        $adherent = $this->apiClient->get('adherents/'.$id, Adherent::class);
+        dd($adherent);
+    }
+
     #[Route('/adherents/create', name: 'create_adherents')]
     public function createPersonne() {
         $adherent = new Adherent();
@@ -32,11 +38,9 @@ class AdherentApiController extends AbstractController
         $adherent->setDernierConnection(new \DateTime());
         $adherent->setEmail("test@example.com");
         $adherent->setPassword("123azert");
-        // Plus de setters selon votre entité Personne
 
-        $createdAdherente = $this->apiClient->post('adherents', $adherent);
-        // $createdPersonne est l'objet Personne créé, retourné par l'API
-        dd($createdAdherente);
+        $createdAdherent = $this->apiClient->post('adherents', $adherent, []);
+        dd($createdAdherent);
     }
 
     #[Route('/adherents/update/{id}', name: 'update_aadherents')]

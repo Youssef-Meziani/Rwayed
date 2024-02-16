@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Personne;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
+use App\Services\ReCaptchaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,15 +29,18 @@ class ResetPasswordController extends AbstractController
     private ResetPasswordHelperInterface $resetPasswordHelper;
     private EntityManagerInterface $entityManager;
     private $mailerFromAddress;
+    private ReCaptchaService $reCaptchaService;
 
     public function __construct(
         string $mailerFromAddress,
         ResetPasswordHelperInterface $resetPasswordHelper,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ReCaptchaService $reCaptchaService
     ){
         $this->mailerFromAddress = $mailerFromAddress;
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->entityManager = $entityManager;
+        $this->reCaptchaService = $reCaptchaService;
     }
 
     /**
@@ -47,8 +51,17 @@ class ResetPasswordController extends AbstractController
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
+        # !!!!! A FIXER  !!!!!!!!
+//        $allRequestData = $request->request->all();
+//        $formData = $allRequestData['reset_password_request_form'] ?? [];
+//        $recaptchaResponse = $formData['captcha'] ?? '';
+//        if($recaptchaResponse !== '' && !$this->reCaptchaService->validate($recaptchaResponse)) {
+//            $this->addFlash('reset_password_error','The CAPTCHA was invalid. Please try again.');
+//        }
+        # !!!!! A FIXER  !!!!!!!!
 
         if ($form->isSubmitted() && $form->isValid()) {
+//            $recaptchaResponse = $form->get('captcha')->getData();
             return $this->processSendingPasswordResetEmail(
                 $form->get('email')->getData(),
                 $mailer,
@@ -113,6 +126,15 @@ class ResetPasswordController extends AbstractController
         // The token is valid; allow the user to change their password.
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
+
+        # !!!!! A FIXER  !!!!!!!!
+//        $allRequestData = $request->request->all();
+//        $formData = $allRequestData['reset_password_request_form'] ?? [];
+//        $recaptchaResponse = $formData['captcha'] ?? '';
+//        if($recaptchaResponse !== '' && !$this->reCaptchaService->validate($recaptchaResponse)) {
+//            $this->addFlash('reset_password_error','The CAPTCHA was invalid. Please try again.');
+//        }
+        # !!!!! A FIXER  !!!!!!!!
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->resetPasswordHelper->removeResetRequest($token);
