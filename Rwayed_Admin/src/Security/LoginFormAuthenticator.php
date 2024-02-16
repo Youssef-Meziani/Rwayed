@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use App\Services\ReCaptchaService;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,10 +23,12 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator implements A
     use TargetPathTrait;
 
     private $router;
+    private $recaptchaService;
 
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router,ReCaptchaService $reCaptchaService)
     {
         $this->router = $router;
+        $this->recaptchaService = $reCaptchaService;
     }
 
     protected function getLoginUrl(Request $request): string
@@ -35,8 +39,16 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator implements A
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email', '');
-        $password = $request->request->get('password', '');
+        $allRequestData = $request->request->all();
+        $formData = $allRequestData['login_form'] ?? [];
+        // Accéder aux valeurs spécifiques
+        $email = $formData['email'] ?? '';
+        $password = $formData['password'] ?? '';
+        $recaptchaResponse = $formData['captcha'] ?? '';
+        // Vérifiez du reCAPTCHA
+        if (!$this->recaptchaService->validate($recaptchaResponse)) {
+            $request->getSession()->set('authentication_error', 'The CAPTCHA was invalid. Please try again.');
+        }
         return new Passport(
             new UserBadge($email),
             new PasswordCredentials($password)

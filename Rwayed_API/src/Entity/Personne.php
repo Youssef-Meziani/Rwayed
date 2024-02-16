@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
@@ -48,9 +49,9 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
     #[ORM\Column(nullable: true)]
     protected ?bool $desactive = false;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     public function getNom(): ?string

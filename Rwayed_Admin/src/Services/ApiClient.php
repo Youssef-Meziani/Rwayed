@@ -18,20 +18,12 @@ class ApiClient {
     }
 
     public function get(string $entityPath, string $responseClassType, array $options = []): mixed {
-        $responseArray = $this->request('GET', $entityPath, $options);
-        if (isset($responseArray['error'])) {
-            return $responseArray; // Retourne l'erreur si présente
+        $response = $this->request('GET', $entityPath, $options);
+        dd($this->serializer->deserialize(json_encode($response), $responseClassType, 'json'));
+        if (array_key_exists('error', $response)) {
+            return $response; // Retourne l'erreur si présente
         }
-
-        if (isset($responseArray['hydra:member'])) {
-            // Pour une collection d'objets
-            return array_map(function ($item) use ($responseClassType) {
-                return $this->serializer->deserialize(json_encode($item), $responseClassType, 'json');
-            }, $responseArray['hydra:member']);
-        } else {
-            // Pour un objet unique
-            return $this->serializer->deserialize(json_encode($responseArray), $responseClassType, 'json');
-        }
+        return $this->serializer->deserialize(json_encode($response), $responseClassType, 'json');
     }
 
     public function post(string $entityPath, object $entity, array $options = []): mixed {
@@ -53,11 +45,7 @@ class ApiClient {
     }
 
     public function delete(string $entityPath, array $options = []): mixed {
-        $response = $this->request('DELETE', $entityPath, $options);
-        if (array_key_exists('error', $response)) {
-            return $response; // Retourne l'erreur si présente
-        }
-        return $response; // Retourne la réponse directement, généralement pas d'entité à désérialiser
+        return $this->request('DELETE', $entityPath, $options);
     }
 
     private function request(string $method, string $uri, array $options = []): array {
