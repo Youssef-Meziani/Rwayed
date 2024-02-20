@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -20,56 +21,57 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
     public const LOGIN_ROUTE = 'app_login';
+    private const CSRF_TOKEN_ID = 'authenticate';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator,AuthorizationCheckerInterface $authorizationChecker)
     {
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function authenticate(Request $request): Passport
     {
         $allRequestData = $request->request->all();
-        $loginOrigin = $request->request->get('login_origin', 'default');
-        // Stocker l'origine dans la session pour l'utiliser plus tard
-        $request->getSession()->set('login_origin', $loginOrigin);
-//        dd($loginOrigin);
+        $request->getSession()->set('login_origin', $request->request->get('login_origin', 'default'));
         $formData = $allRequestData['login_form'] ?? [];
-        // Accéder aux valeurs spécifiques
         $email = $formData['email'] ?? '';
         $password = $formData['password'] ?? '';
         $token = $formData['_csrf_token'] ?? '';
-        $rememberMe = $formData['remember_me'] ?? '';
+        $rememberMe = isset($formData['remember_me']);
+
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
+        // Initialiser le tableau de badges avec les badges obligatoires
+        $badges = [
+            new CsrfTokenBadge(self::CSRF_TOKEN_ID, $token),
+        ];
 
-        $passport = new Passport(
+        // Ajouter conditionnellement le badge RememberMe
+        if ($rememberMe) {
+            $badges[] = new RememberMeBadge();
+        }
+
+        return new Passport(
             new UserBadge($email),
             new PasswordCredentials($password),
-            [
-                new CsrfTokenBadge('authenticate', $token),
-            ]
+            $badges // Passer le tableau de badges
         );
-        if ($rememberMe) {
-            $passport->addBadge(new RememberMeBadge());
-        }
-
-        return $passport;
     }
-
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $user = $token->getUser();
-
-        if (in_array('ROLE_TECHNICIEN', $user->getRoles(), true)) {
-            return new RedirectResponse($this->urlGenerator->generate('technicien_home'));    # ? a changer la redirection du technicien
+        // Exemple de redirection basée sur des rôles avec support pour les rôles hérités
+        if ($this->authorizationChecker->isGranted('ROLE_TECHNICIEN')) {
+            return new RedirectResponse($this->urlGenerator->generate('technicien_home'));
         }
 
-        if (in_array('ROLE_ADHERENT', $user->getRoles(), true)) {
+        if ($this->authorizationChecker->isGranted('ROLE_ADHERENT')) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
         }
-# !!!!   // fixe that  (inhirted roles in security.yml)
-//        return new RedirectResponse($this->urlGenerator->generate('default_home'));
+
+        $request->getSession()->getFlashBag()->add('error', 'Your account does not have the necessary permissions to access this resource');
+        return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
@@ -79,6 +81,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         // Rediriger l'utilisateur vers la page appropriée
         if ($loginOrigin === 'login_page_header') {
+            // Stocker un message d'erreur dans la session pour le form login qui se trouve dans le header
             $request->getSession()->set('authentication_error_header', $exception->getMessage());
             $url = $request->headers->get('referer') ?? $this->urlGenerator->generate('home');
             return new RedirectResponse($url);
