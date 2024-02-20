@@ -27,6 +27,10 @@ security:
                 secure: true       # Définissez à true si votre site fonctionne exclusivement en HTTPS
 
             access_denied_handler: App\Handlers\CustomAccessDeniedHandler
+    role_hierarchy:
+        ROLE_ADHERENT: ~
+        ROLE_TECHNICIEN: ROLE_ADHERENT
+        ROLE_ADMIN: [ ROLE_TECHNICIEN, ROLE_ADHERENT ]
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
