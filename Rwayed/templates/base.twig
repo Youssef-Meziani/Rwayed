@@ -28,6 +28,30 @@
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
 
+    {#  pour les alerts    #}
+    <style>
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                max-height: 100px;
+                padding: 15px;
+            }
+            100% {
+                opacity: 0;
+                max-height: 0px;
+                padding: 0px;
+                margin: 0px;
+            }
+        }
+
+        .fade-out {
+            animation-name: fadeOut;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+
+
+    </style>
     {% block stylesheets %} {% endblock %}
 
 </head>
@@ -521,7 +545,34 @@
 
         window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const flashMessages = document.querySelectorAll('.alert-success, .alert-danger');
+                flashMessages.forEach(flashMessage => {
+                    flashMessage.classList.add('fade-out');
 
+                    flashMessage.addEventListener('animationend', () => {
+                        flashMessage.style.display = 'none'; // Masque complètement l'élément après l'animation.
+                    });
+                });
+            }, 7000); // Les alertes commencent à disparaître après 5 secondes.
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var showModal = document.body.getAttribute('data-show-modal') === 'true';
+            if (showModal) {
+                $('#loginMessageModal').modal('show');
+            }
+
+            // Optionnel : Nettoyer la session après l'affichage du modal
+            if (showModal) {
+                fetch('/nettoyer-modal'); // Assurez-vous que cette route nettoie `show_login_modal` de la session
+            }
+        });
+    </script>
     {% block javascripts %} {% endblock %}
 
 </body>

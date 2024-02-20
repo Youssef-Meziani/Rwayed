@@ -6,38 +6,51 @@ use App\Repository\AdherentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdherentRepository::class)]
-class Adherent
+class Adherent extends Personne
 {
-    #[ORM\OneToOne(targetEntity: Personne::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id_per", nullable: false)]
-    #[ORM\Id] // Set as primary key
-    private Personne $personne;
-
     #[ORM\Column]
-    private int $point_fidelite = 0;
-
-
-    public function getPointFidelite(): ?int
+    private ?int $points_fidelite;
+    public function __construct()
     {
-        return $this->point_fidelite;
+        $this->points_fidelite = 0;
     }
 
-    public function setPointFidelite(int $point_fidelite): static
+    public function getPointsFidelite(): ?int
     {
-        $this->point_fidelite = $point_fidelite;
+        return $this->points_fidelite;
+    }
+
+    public function setPointsFidelite(int $points_fidelite): static
+    {
+        $this->points_fidelite = $points_fidelite;
 
         return $this;
     }
 
-    public function getPersonne(): ?Personne
+    public function getRoles(): array
     {
-        return $this->personne;
+        // Vérifie si le tableau $roles est vide avant d'ajouter 'ROLE_USER'
+        if (empty($this->roles)) {
+            return ['ROLE_USER'];
+        }
+
+        return $this->roles;
     }
 
-    public function setPersonne(Personne $personne): static
+    public function setRoles(array $roles):self
     {
-        $this->personne = $personne;
+        $this->roles = $roles;
 
         return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

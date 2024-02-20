@@ -8,29 +8,28 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AdminRepository::class)]
 #[ORM\Table(name: '`admin`')]
-class Admin
+class Admin extends Personne
 {
 
-    #[ORM\OneToOne(inversedBy: 'admin', targetEntity: Personne::class, cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id_per", nullable: false)]
-    #[ORM\Id] // Set as primary key
-    private Personne $personne;
-
     #[ORM\Column(length: 50)]
-    private string $rang;
+    private ?string $rang = null;
 
     #[ORM\Column]
-    private bool $is_super;
+    private ?bool $is_super = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private \DateTimeInterface $date_embauche;
+    private ?\DateTimeInterface $date_embauche;
 
+    public function __construct()
+    {
+        $this->date_embauche = new \DateTime();
+    }
     public function getRang(): ?string
     {
         return $this->rang;
     }
 
-    public function setRang(string $rang): self
+    public function setRang(string $rang): static
     {
         $this->rang = $rang;
 
@@ -42,7 +41,7 @@ class Admin
         return $this->is_super;
     }
 
-    public function setIsSuper(bool $is_super): self
+    public function setIsSuper(bool $is_super): static
     {
         $this->is_super = $is_super;
 
@@ -54,22 +53,37 @@ class Admin
         return $this->date_embauche;
     }
 
-    public function setDateEmbauche(\DateTimeInterface $date_embauche): self
+    public function setDateEmbauche(\DateTimeInterface $date_embauche): static
     {
         $this->date_embauche = $date_embauche;
 
         return $this;
     }
 
-    public function getPersonne(): ?Personne
+    public function getRoles(): array
     {
-        return $this->personne;
+        // Vérifie si le tableau $roles est vide avant d'ajouter 'ROLE_USER'
+        if (empty($this->roles)) {
+            return ['ROLE_USER'];
+        }
+
+        return $this->roles;
     }
 
-    public function setPersonne(Personne $personne): self
+    public function setRoles(array $roles):self
     {
-        $this->personne = $personne;
+        $this->roles = $roles;
 
         return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

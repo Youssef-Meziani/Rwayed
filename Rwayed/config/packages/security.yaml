@@ -4,14 +4,29 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        personne_provider:
+            entity:
+                class: App\Entity\Personne
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            provider: personne_provider
             lazy: true
-            provider: users_in_memory
+            custom_authenticator: App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                target: home
+
+            remember_me:
+                secret: '%kernel.secret%' # Utilisez un paramètre secret pour générer le cookie
+                lifetime: 604800  # Durée de vie du cookie en secondes (604800 = 7 jours ici)
+                path: /            # Chemin pour lequel le cookie est valide
+                secure: true       # Définissez à true si votre site fonctionne exclusivement en HTTPS
+
+            access_denied_handler: App\Handlers\CustomAccessDeniedHandler
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

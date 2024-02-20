@@ -941,55 +941,96 @@
 	C26,18.5,30,23.8,30,30h-2C28,23.4,22.6,18,16,18z M22,10c0-3.3-2.7-6-6-6s-6,2.7-6,6s2.7,6,6,6S22,13.3,22,10z" />
                                 </svg>
                             </span>
+                    {% if not app.user %}
                     <span class="indicator__title">Hello, Log In</span>
                     <span class="indicator__value">My Account</span>
+                    {% endif %}
                 </a>
                 <div class="indicator__content">
                     <div class="account-menu">
-                        <form class="account-menu__form">
+                        {% if not app.user %}
+                            {% set form = login_form() %}
+
+                            {{ form_start(form, {'attr': {'class': 'account-menu__form', 'action': path('app_login')}}) }}
+                            <input type="hidden" name="login_origin" value="login_page_header">
                             <div class="account-menu__form-title">
-                                Log In to Your Account
+                                {% if login_error %}
+                                    <div class="alert alert-danger">{{ login_error.messageKey|trans(error.messageData, 'security') }}</div>
+                                {% endif %}
+
+                                {% if app.session.get('authentication_error_header') %}
+                                    <div class="alert alert-danger">
+                                        {{ app.session.get('authentication_error_header') }}
+                                    </div>
+                                    {% do app.session.remove('authentication_error_header') %}
+                                {% endif %}
+
+                                {% for message in app.flashes('error') %}
+                                    <div class="alert alert-dange">{{ message }}</div>
+                                {% endfor %}
+
+                                {% for message in app.flashes('success') %}
+                                    <div class="alert alert-success">{{ message }}</div>
+                                {% endfor %}
+                            Log In to Your Account</div>
+                            <div class="form-group">
+                                {{ form_widget(form.email) }}
                             </div>
                             <div class="form-group">
-                                <label for="header-signin-email" class="sr-only">Email address</label>
-                                <input id="header-signin-email" type="email" class="form-control form-control-sm" placeholder="Email address">
-                            </div>
-                            <div class="form-group">
-                                <label for="header-signin-password" class="sr-only">Password</label>
                                 <div class="account-menu__form-forgot">
-                                    <input id="header-signin-password" type="password" class="form-control form-control-sm" placeholder="Password">
+                                    {{ form_widget(form.password) }}
                                     <a href="" class="account-menu__form-forgot-link">Forgot?</a>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <span class="input-check form-check-input">
+                                        <span class="input-check__body">
+                                            {{ form_widget(form.remember_me) }}
+                                            <span class="input-check__box"></span>
+                                            <span class="input-check__icon">
+                                                <svg width="9px" height="7px">
+                                                    <path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z" />
+                                                </svg>
+                                            </span>
+                                        </span>
+                                    </span>
+                                    <label class="form-check-label" for="login_form_remember_me">Remember Me</label>
+                                </div>
+                            </div>
+
                             <div class="form-group account-menu__form-button">
-                                <button type="submit" class="btn btn-primary btn-sm">Login</button>
+                                <button type="submit" class="btn btn-primary mt-3">Login</button>
                             </div>
                             <div class="account-menu__form-link">
                                 <a href="account-login.html">Create An Account</a>
                             </div>
-                        </form>
-                        <div class="account-menu__divider"></div>
-                        <a href="" class="account-menu__user">
-                            <div class="account-menu__user-avatar">
-                                <img src="{{ asset('images/avatars/avatar-4.jpg') }}" alt="">
-                            </div>
-                            <div class="account-menu__user-info">
-                                <div class="account-menu__user-name">Ryan Ford</div>
-                                <div class="account-menu__user-email">{{ company_email }}</div>
-                            </div>
-                        </a>
-                        <div class="account-menu__divider"></div>
-                        <ul class="account-menu__links">
-                            <li><a href="account-dashboard.html">Dashboard</a></li>
-                            <li><a href="account-dashboard.html">Garage</a></li>
-                            <li><a href="account-profile.html">Edit Profile</a></li>
-                            <li><a href="account-orders.html">Order History</a></li>
-                            <li><a href="account-addresses.html">Addresses</a></li>
-                        </ul>
-                        <div class="account-menu__divider"></div>
-                        <ul class="account-menu__links">
-                            <li><a href="account-login.html">Logout</a></li>
-                        </ul>
+                            {{ form_end(form) }}
+                        {% else %}
+{#                            <div class="account-menu__divider"></div>#}
+                            <a href="" class="account-menu__user">
+                                <div class="account-menu__user-avatar">
+                                    <img src="{{ asset('images/avatars/avatar-4.jpg') }}" alt="">
+                                </div>
+                                <div class="account-menu__user-info">
+                                    <div class="account-menu__user-name">{{ app.user.nom }} {{ app.user.prenom }}</div>
+                                    <div class="account-menu__user-email">{{ app.user.email }}</div>
+{#                                    <div class="account-menu__user-email">{{ company_email }}</div>#}
+                                </div>
+                            </a>
+                            <div class="account-menu__divider"></div>
+                            <ul class="account-menu__links">
+                                <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
+                                <li><a href="{{ path('dashboard') }}">Garage</a></li>
+                                <li><a href="{{ path('profile') }}">Edit Profile</a></li>
+                                <li><a href="{{ path('acount-orders') }}">Order History</a></li>
+                                <li><a href="{{ path('addresses') }}">Addresses</a></li>
+                            </ul>
+                            <div class="account-menu__divider"></div>
+                            <ul class="account-menu__links">
+                                <li><a href="{{ path('app_logout') }}">Logout</a></li>
+                            </ul>
+                        {% endif %}
                     </div>
                 </div>
             </div>

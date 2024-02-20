@@ -6,14 +6,26 @@
 parameters:
 
 services:
+    App\EventSubscriber\AuthenticationEventSubscriber:
+        arguments:
+            $authenticationUtils: '@security.authentication_utils'
+            $twig: '@twig'
+        tags:
+            - { name: 'kernel.event_subscriber' }
     # default configuration for services in *this* file
     App\Services\PasswordHasherService:
         arguments:
             $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
     _defaults:
+        bind:
+            $csrfTokenManager: '@security.csrf.token_manager'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    # Enregistrement manuel de l'extension Twig comme service
+    App\Twig\AppExtension:
+        tags:
+            - { name: twig.extension }
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
