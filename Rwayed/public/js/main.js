@@ -1327,7 +1327,7 @@ try{
     }
 
     const generateResponse = (chatElement) => {
-        const API_URL = "https://api.openai.com/v1/chat/completions";
+        const API_URL = "https://api.together.xyz/inference";
         const messageElement = chatElement.querySelector("p");
 
         // Define the properties and message for the API request
@@ -1335,17 +1335,31 @@ try{
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
+                "Authorization": `Bearer e4a3b9048fe55d6fd6de8f7879ae271b1a0efe408554affef5b566164db58981`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [{role: "user", content: userMessage}],
+                model: "togethercomputer/llama-2-70b-chat",
+                max_tokens: 512,
+                prompt: `<s>[INST]\n
+Rwayed emerges as a distinguished force in the automotive industry, anchoring its presence in Oujda and redefining the car service experience with unparalleled dedication to quality and customer satisfaction. Operating from the heart of Oujda, Rwayed offers a seamless integration of automotive solutions showcased in their extensive selection of tires and optional repair services.Rwayed's commitment to excellence is further exemplified by its robust service offerings. From tire sales and delivery services across Morocco to optional repair services available exclusively in Oujda, Rwayed ensures that every customer receives the highest level of care and attention.The foundation of Rwayed is deeply rooted in its core values of authenticity and dedication, ensuring that every client's voice is heard and valued. This client-centric approach is supported by a team of highly skilled technicians, including MEZIANI Youssef, BENNANI DOSSE Omar, ABBAOUI Khalil, and HASHAS Jad El Mawla, who are steadfast in their commitment to delivering unparalleled service and expertise. In addition to its impressive range of products and services, Rwayed is committed to maintaining the privacy and security of its clients. The company's Privacy Policy is a testament to its dedication to safeguarding personal information, employing industry-standard security measures, and respecting the confidentiality of user data. Furthermore, the Terms of Service and the comprehensive FAQ section reflect Rwayed's transparency and its endeavor to address client inquiries and concerns promptly and efficiently. With a vision that transcends the ordinary, Rwayed invites customers to explore the myriad of automotive solutions it offers. From tire sales and delivery services to optional repair services, Rwayed stands as a beacon of excellence and innovation in the automotive sector. The journey with Rwayed is not just about obtaining automotive products and services; it's about embarking on a journey defined by quality, trust, and an unwavering commitment to customer satisfaction. Frequently Asked Questions: What shipping methods are available? Standard and express shipping options. Do you ship internationally? Currently within Morocco only. How might I obtain an estimated date of delivery? Confirmation email with tracking information. Can I split my order to ship to different locations? No, single shipping address required. What payments methods are available? Credit/debit cards, bank transfers, cash on delivery. Can I split my payment? Currently not available. How do I return or exchange an item? Within 30 days of delivery, contact customer service. How do I cancel an order? Contact us immediately. How can I track my order? Tracking number provided via email. What should I do if my order arrives damaged? Contact customer service immediately.The project was created on 18 december 2023 \n
+act like a costumer support working at CarCrafter and your name is Hamza and ( DON'T greet users only if THEY greets you ) and answer any question from this text and never mention you are reading from a text and if they ask you about money give ranges and in Moroccan DIRHAM , always tell the user to search on the website if user asks for precise price and  don't give additional information answer just what the user ask for direcly without additional introductions\n
+        user :\n
+        ${userMessage}\n
+        Hamza: [/INST]\n`,
+                request_type: "language-model-inference",
+                temperature: 0.7,
+                top_p: 0.7,
+                top_k: 50,
+                repetition_penalty: 1,
+                stop: ["[/INST]", "</s>"],
+                negative_prompt: "",
+                type: "chat"
             })
         }
 
         // Send POST request to API, get response and set the reponse as paragraph text
         fetch(API_URL, requestOptions).then(res => res.json()).then(data => {
-            messageElement.textContent = data.choices[0].message.content.trim();
+            messageElement.textContent = data.output.choices[0].text.trim();
         }).catch(() => {
             messageElement.classList.add("error");
             messageElement.textContent = "Oops! Something went wrong. Please try again.";
