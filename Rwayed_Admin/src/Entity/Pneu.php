@@ -29,7 +29,7 @@ class Pneu
     private ?File $imageFile = null;
 
     #[ORM\Column(length: 255)]
-    private string $image;
+    private string $image = '';
 
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ["marque", "typeVehicule"])]

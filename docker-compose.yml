@@ -81,9 +81,9 @@ services:
             - "9000:9000"
             - "9001:9001"
         environment:
-            MINIO_ROOT_USER: rwayed123  #!!! a les maitres dans .env.local
+            MINIO_ROOT_USER: rwayed123       #!!! a les maitres dans .env.local
             MINIO_ROOT_PASSWORD: rwayed123   #!!! a les maitres dans .env.local
-        command: server /data --console-address ":9001"
+        command: server /data
         networks:
             - inner_net
     mailcatcher:

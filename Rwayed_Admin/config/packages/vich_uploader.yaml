@@ -6,3 +6,4 @@ vich_uploader:
         pneus:
             uri_prefix: /uploads
             upload_destination: aws.storage
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
