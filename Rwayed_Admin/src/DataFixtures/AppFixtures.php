@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Factory\AdherentFactory;
 use App\Factory\AdminFactory;
+use App\Factory\CaracteristiqueFactory;
 use App\Factory\TechnicienFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -17,5 +18,6 @@ class AppFixtures extends Fixture
         AdherentFactory::createMany(30);
         AdminFactory::createMany(5);
         TechnicienFactory::createMany(20);
+        CaracteristiqueFactory::createMany(10);
     }
 }

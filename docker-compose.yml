@@ -73,6 +73,19 @@ services:
 #            - inner_net
 #        volumes:
 #            - es_data:/usr/share/elasticsearch/data # Persiste les données d'Elasticsearch
+    minio:
+        image: minio/minio
+        volumes:
+            - minio_data:/data
+        ports:
+            - "9000:9000"
+            - "9001:9001"
+        environment:
+            MINIO_ROOT_USER: rwayed123  #!!! a les maitres dans .env.local
+            MINIO_ROOT_PASSWORD: rwayed123   #!!! a les maitres dans .env.local
+        command: server /data --console-address ":9001"
+        networks:
+            - inner_net
     mailcatcher:
         networks:
             - inner_net
@@ -117,6 +130,7 @@ volumes:
     es_data:
     db_data:
     db_admin_data:
+    minio_data:
 
 networks:
     inner_net:
