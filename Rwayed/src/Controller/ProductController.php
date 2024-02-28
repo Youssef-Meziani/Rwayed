@@ -23,6 +23,6 @@ class ProductController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('partials/quickview.twig');
+        return $this->render('partials/_quickview.twig');
     }
 }
