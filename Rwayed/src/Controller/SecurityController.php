@@ -29,6 +29,13 @@ class SecurityController extends AbstractController
         return $this->render('account/login.twig', ['loginForm' => $form->createView(),'last_email' => $last_email, 'error' => $error]);
     }
 
+
+    #[Route(path: '/signup', name: 'signup')]
+    public function signup(): Response
+    {
+        return $this->render('account/signup.twig');
+    }
+
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
