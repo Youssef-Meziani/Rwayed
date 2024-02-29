@@ -2,59 +2,74 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PneuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 #[ORM\Entity(repositoryClass: PneuRepository::class)]
-#[Vich\Uploadable]
+#[ApiResource(
+    normalizationContext: ['groups' => ['pneu:read']],
+    denormalizationContext: ['groups' => ['pneu:write']]
+)]
 class Pneu
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['pneu:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 70)]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private string $marque;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private string $typeVehicule;
 
-    #[Vich\UploadableField(mapping: "pneus",fileNameProperty:"image")]
-    private ?File $imageFile = null;
-
     #[ORM\Column(length: 255)]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private string $image = '';
 
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ["marque", "typeVehicule"])]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private string $slug;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private string $saison;
 
     #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private float $prixUnitaire;
 
     #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private int $quantiteStock;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private string $description;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['pneu:read', 'pneu:write'])]
     private \DateTimeInterface $dateAjout;
 
-    #[ORM\ManyToOne(inversedBy: 'pneus')]
+    #[ORM\ManyToOne(targetEntity: Caracteristique::class, inversedBy: 'pneus')]
     #[ORM\JoinColumn(name: "id_cara", referencedColumnName: "id", nullable: false)]
+    #[Groups(['pneu:read'])]
     private ?Caracteristique $caracteristique = null;
 
+
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
+    #[Groups(['pneu:read'])]
     private Collection $photos;
 
     public function __construct()
@@ -76,15 +91,6 @@ class Pneu
     public function setImage(string $image): void
     {
         $this->image = $image;
-    }
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(?File $imageFile): void
-    {
-        $this->imageFile = $imageFile;
     }
 
     public function getMarque(): ?string
@@ -109,15 +115,6 @@ class Pneu
         $this->typeVehicule = $typeVehicule;
 
         return $this;
-    }
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): void
-    {
-        $this->path = $path;
     }
     public function getSlug(): ?string
     {
@@ -179,6 +176,15 @@ class Pneu
         return $this;
     }
 
+    public function getCaracteristique(): ?Caracteristique
+    {
+        return $this->caracteristique;
+    }
+
+    public function setCaracteristique(?Caracteristique $caracteristique): void
+    {
+        $this->caracteristique = $caracteristique;
+    }
     public function getDateAjout(): ?\DateTimeInterface
     {
         return $this->dateAjout;
@@ -187,18 +193,6 @@ class Pneu
     public function setDateAjout(\DateTimeInterface $dateAjout): static
     {
         $this->dateAjout = $dateAjout;
-
-        return $this;
-    }
-
-    public function getIdCara(): ?Caracteristique
-    {
-        return $this->caracteristique;
-    }
-
-    public function setIdCara(?Caracteristique $caracteristique): static
-    {
-        $this->caracteristique = $caracteristique;
 
         return $this;
     }
@@ -232,4 +226,5 @@ class Pneu
 
         return $this;
     }
+
 }

@@ -2,43 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PhotoRepository;
-use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PhotoRepository::class)]
-#[Vich\Uploadable]
+#[ApiResource(normalizationContext: ['groups' => ['photo:read']])]
 class Photo
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['photo:read', 'pneu:read'])]
     private int $id;
 
-    #[Vich\UploadableField(mapping: "pneus",fileNameProperty:"path")]
-    private ?File $imageFile = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['photo:read', 'pneu:read'])]
     private string $path;
 
     #[ORM\ManyToOne(targetEntity: Pneu::class, inversedBy: 'photos')]
     #[ORM\JoinColumn(name: "id_pneu", referencedColumnName: "id", nullable: false)]
+    #[Groups(['photo:read'])]
     private ?Pneu $pneu = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageFile(?File $imageFile): void
-    {
-        $this->imageFile = $imageFile;
     }
 
     public function getPath(): ?string

@@ -13,6 +13,7 @@
             <th>Prix Unitaire</th>
             <th>Quantité en Stock</th>
             <th>Description</th>
+            <th>Image</th>
             <th>Date d'Ajout</th>
             <th>Taille</th>
             <th>Indice de Charge</th>
@@ -29,6 +30,8 @@
                 <td>{{ pneu.prixUnitaire }} €</td>
                 <td>{{ pneu.quantiteStock }}</td>
                 <td>{{ pneu.description }}</td>
+                <td><img src="http://localhost:9000/uploads/{{ pneu.image }}" width="70px" height="70px" alt="Image du pneu"></td>
+
                 <td>{{ pneu.dateAjout|date('Y-m-d') }}</td>
                 <td>{{ pneu.getIdCara().taille }}</td>
                 <td>{{ pneu.getIdCara().indiceCharge }}</td>
