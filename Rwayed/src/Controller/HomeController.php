@@ -15,11 +15,4 @@ class HomeController extends AbstractController
     {
         return $this->render('index.twig');
     }
-    #[Route('/nettoyer-modal', name:'nettoyer_modal')]
-    public function nettoyerModal(Request $request): JsonResponse
-    {
-        $request->getSession()->remove('show_login_modal');
-        $request->getSession()->remove('authentication_error');
-        return new JsonResponse(['status' => 'success']);
-    }
 }

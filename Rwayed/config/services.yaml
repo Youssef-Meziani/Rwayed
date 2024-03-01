@@ -6,6 +6,14 @@
 parameters:
 
 services:
+    # Configuration HttpClient pour consommer l'API Platform
+    my.api.platform.client:
+        class: Symfony\Contracts\HttpClient\HttpClientInterface
+        factory: [ 'Symfony\Component\HttpClient\HttpClient', 'create' ]
+        arguments:
+            $defaultOptions:
+                base_uri: '%env(API_BASE_URL)%'
+
     App\EventSubscriber\AuthenticationEventSubscriber:
         arguments:
             $authenticationUtils: '@security.authentication_utils'
@@ -19,6 +27,7 @@ services:
     _defaults:
         bind:
             $csrfTokenManager: '@security.csrf.token_manager'
+            $apiPlatformClient: '@my.api.platform.client'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 

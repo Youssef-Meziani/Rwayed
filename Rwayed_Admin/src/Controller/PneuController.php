@@ -35,7 +35,7 @@ class PneuController extends AbstractController
                     $entityManager->persist($photo);
                 }
             }
-            // Assurez-vous que l'entité Pneu et les entités Photo associées sont correctement configurées
+            // Assurez-vous que l'entité PneuDTO et les entités Photo associées sont correctement configurées
             // pour être persistées avec Doctrine (si nécessaire).
 
             $entityManager->persist($pneu);

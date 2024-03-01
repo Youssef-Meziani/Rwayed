@@ -1,5 +1,7 @@
 <?php
 
+// src/Controller/PneuController.php
+
 namespace App\Controller;
 
 use App\Services\ApiPlatformConsumerService;
@@ -7,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class ShopController extends AbstractController
+class PneuController extends AbstractController
 {
     private ApiPlatformConsumerService $apiService;
 
@@ -15,12 +17,10 @@ class ShopController extends AbstractController
     {
         $this->apiService = $apiService;
     }
-    #[Route('/shop', name: 'shop')]
+    #[Route('/catalogue-pneus', name: 'app_catalogue_pneus')]
     public function index(): Response
     {
         $pneus = $this->apiService->fetchPneus();
-        return $this->render('shop.twig', [
-            'pneus' => $pneus,
-        ]);
+        return $this->render('pneu/index.html.twig');
     }
 }
