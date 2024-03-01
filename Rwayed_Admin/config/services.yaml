@@ -9,7 +9,6 @@ services:
     _defaults:
         bind:
             $mailerFromAddress: 'rwayed-admin@test.com'
-            $apiBaseUrl: '%env(API_BASE_URL)%'
             $secretKey: '%env(RECAPTCHA3_SECRET)%'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

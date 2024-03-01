@@ -33,9 +33,9 @@
                 <td><img src="http://localhost:9000/uploads/{{ pneu.image }}" width="70px" height="70px" alt="Image du pneu"></td>
 
                 <td>{{ pneu.dateAjout|date('Y-m-d') }}</td>
-                <td>{{ pneu.getIdCara().taille }}</td>
-                <td>{{ pneu.getIdCara().indiceCharge }}</td>
-                <td>{{ pneu.getIdCara().indiceVitesse }}</td>
+                <td>{{ pneu.caracteristique.taille }}</td>
+                <td>{{ pneu.caracteristique.indiceCharge }}</td>
+                <td>{{ pneu.caracteristique.indiceVitesse }}</td>
                 <!-- Afficher d'autres propriétés si nécessaire -->
             </tr>
         {% endfor %}
