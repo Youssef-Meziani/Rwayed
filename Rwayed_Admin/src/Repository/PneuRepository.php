@@ -22,7 +22,7 @@ class PneuRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return PneuDTO[] Returns an array of PneuDTO objects
+//     * @return Pneu[] Returns an array of Pneu objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class PneuRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?PneuDTO
+//    public function findOneBySomeField($value): ?Pneu
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

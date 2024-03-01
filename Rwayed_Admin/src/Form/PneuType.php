@@ -30,7 +30,7 @@ class PneuType extends AbstractType
                 'allow_delete' => true,
                 'download_uri' => false,
             ])
-            ->add('id_cara', EntityType::class, [
+            ->add('caracteristique', EntityType::class, [
                 'class' => Caracteristique::class,
                 'choice_label' => function (Caracteristique $caracteristique) {
                     return sprintf('%s - Charge: %d, Vitesse: %s',
