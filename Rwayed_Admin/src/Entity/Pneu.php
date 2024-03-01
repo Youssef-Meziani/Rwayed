@@ -199,6 +199,7 @@ class Pneu
     public function setCaracteristique(?Caracteristique $caracteristique): void
     {
         $this->caracteristique = $caracteristique;
+
     }
 
     /**
