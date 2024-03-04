@@ -23,7 +23,7 @@ class Photo
     private string $path;
 
     #[ORM\ManyToOne(targetEntity: Pneu::class, inversedBy: 'photos')]
-    #[ORM\JoinColumn(name: "id_pneu", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: "id", referencedColumnName: "id", nullable: false)]
     private ?Pneu $pneu = null;
 
     public function getId(): ?int

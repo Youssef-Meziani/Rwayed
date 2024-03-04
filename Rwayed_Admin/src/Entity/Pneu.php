@@ -51,7 +51,7 @@ class Pneu
     private \DateTimeInterface $dateAjout;
 
     #[ORM\ManyToOne(inversedBy: 'pneus')]
-    #[ORM\JoinColumn(name: "id_cara", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: "id", referencedColumnName: "id", nullable: false)]
     private ?Caracteristique $caracteristique = null;
 
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
