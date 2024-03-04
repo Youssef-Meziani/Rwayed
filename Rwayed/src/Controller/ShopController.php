@@ -19,7 +19,6 @@ class ShopController extends AbstractController
     public function index(): Response
     {
         $pneus = $this->apiService->fetchPneus();
-        dd($pneus);  # ! a suuprimer
         return $this->render('shop.twig', [
             'pneus' => $pneus,
         ]);
