@@ -85,7 +85,7 @@ class Caracteristique
     {
         if (!$this->pneus->contains($pneu)) {
             $this->pneus->add($pneu);
-            $pneu->setIdCara($this);
+            $pneu->setCaracteristique($this);
         }
 
         return $this;
@@ -95,8 +95,8 @@ class Caracteristique
     {
         if ($this->pneus->removeElement($pneu)) {
             // set the owning side to null (unless already changed)
-            if ($pneu->getIdCara() === $this) {
-                $pneu->setIdCara(null);
+            if ($pneu->getCaracteristique() === $this) {
+                $pneu->setCaracteristique(null);
             }
         }
 
