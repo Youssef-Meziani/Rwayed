@@ -4,6 +4,7 @@
 {% block stylesheets %}
     <!-- plugin css -->
     <link href="{{ asset('libs/jsvectormap/css/jsvectormap.min.css')}}" rel="stylesheet" type="text/css" />
+
 {% endblock %}
 
 
@@ -288,7 +289,7 @@
                             <li class="menu-title" data-key="t-products">Products</li>
 
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ path('pneu_index') }}">
                                     <i class="bx bx-buoy icon nav-icon"></i>
                                     <span class="menu-item" data-key="t-tires">Tires</span>
                                 </a>

@@ -1,0 +1,233 @@
+{% extends 'base-sidebar.twig' %}
+
+{% block title %}Modifier un pneu{% endblock %}
+
+{% block stylesheets %}
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
+    <!-- gridjs css -->
+    <link rel="stylesheet" href="{{ asset('libs/gridjs/theme/mermaid.min.css') }}">
+    <!-- Bootstrap Css -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{ asset('css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+    <style>
+        .image-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: red;
+            border: none;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Modifier un pneu</h4>
+                        </div>
+                        <div class="card-body">
+
+                            {{ form_start(form) }}
+
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.marque.vars.id }}" class="col-md-2 col-form-label">Marque</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.marque, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.marque) }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.typeVehicule.vars.id }}" class="col-md-2 col-form-label">Type de véhicule</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.typeVehicule, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.typeVehicule) }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.saison.vars.id }}" class="col-md-2 col-form-label">Saison</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.saison, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.saison) }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.prixUnitaire.vars.id }}" class="col-md-2 col-form-label">Prix unitaire</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.prixUnitaire, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.prixUnitaire) }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.quantiteStock.vars.id }}" class="col-md-2 col-form-label">Quantité en stock</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.quantiteStock, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.quantiteStock) }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.description.vars.id }}" class="col-md-2 col-form-label">Description</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.description) }}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="photo_files" class="col-md-2 col-form-label">Image</label>
+                                    <div class="col-md-10">
+                                        <div id="existing-images-container" class="mt-3">
+                                            {% if photo %}
+                                                <div class="image-container">
+                                                    <img src="{{ asset(uploads_base_url ~ photo) }}" class="img-thumbnail mb-2" style="width: 150px; height: 150px;">
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3 row">
+                                    <label for="{{ form.imageFile.vars.id }}" class="col-md-2 col-form-label">Image updated</label>
+                                    <div class="col-md-10">
+                                        {{ form_widget(form.imageFile, { 'attr': {'class': 'form-control'} }) }}
+                                        {{ form_errors(form.imageFile) }}
+                                    </div>
+                                </div>
+
+
+                            <div class="mb-3 row">
+                                <label for="photo_files" class="col-md-2 col-form-label">Photos</label>
+                                <div class="col-md-10">
+                                    <div id="existing-images-container" class="mt-3">
+                                        {% if images %}
+                                            {% for image in images %}
+                                                <div class="image-container">
+                                                    <img src="{{ asset(uploads_base_url ~ image.path) }}" class="img-thumbnail mb-2" style="width: 150px; height: 150px;">
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="photo_files" class="col-md-2 col-form-label">Updated Photos</label>
+                                <div class="col-md-10">
+                                    <div id="new-image-preview-container" class="mt-3"></div>
+                                    <p id="no-new-image-text" style="text-align: center;">Aucune nouvelle image sélectionnée</p>
+                                    <input type="file" class="form-control" id="photo_files" name="photo_files[]" multiple onchange="previewNewImages(event)">
+                                    <span id="new-file-error-message" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="{{ form.caracteristique.vars.id }}" class="col-md-2 col-form-label">Caractéristique</label>
+                                <div class="col-md-10">
+                                    {{ form_widget(form.caracteristique, { 'attr': {'class': 'form-control'} }) }}
+                                    {{ form_errors(form.caracteristique) }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <div class="col-md-2"></div>
+                                    <div class="col-md-10 text-md-end">
+                                        <a href="{{ path('pneu_index') }}" type="submit" class="btn btn-primary waves-effect waves-light">Go back</a>
+                                        <button id="edit-button" type="submit" class="btn btn-success waves-effect waves-light">Edit</button>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Ce script est uniquement pour les nouvelles images ajoutées
+        function previewNewImages(event) {
+            var previewContainer = document.getElementById('new-image-preview-container');
+            var noImageText = document.getElementById('no-new-image-text');
+            var errorSpan = document.getElementById('new-file-error-message');
+            previewContainer.innerHTML = ''; // Effacer les prévisualisations existantes
+            var fileList = event.target.files;
+
+            if (fileList.length > 0) {
+                noImageText.style.display = 'none'; // Cacher le texte si des images sont présentes
+                Array.from(fileList).forEach(file => {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var imgContainer = document.createElement('div');
+                        imgContainer.classList.add('image-container');
+
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.classList.add('img-thumbnail', 'mb-2');
+                        img.style.width = '150px';
+                        img.style.height = '150px';
+
+                        var deleteButton = document.createElement('button');
+                        deleteButton.innerHTML = '&times;';
+                        deleteButton.classList.add('delete-button');
+                        deleteButton.onclick = function() {
+                            imgContainer.remove(); // Suppression de la prévisualisation
+                            checkForEmptyPreview(); // Vérifier si le texte "Aucune nouvelle image sélectionnée" doit être affiché
+                        };
+
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(deleteButton);
+                        previewContainer.appendChild(imgContainer);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                noImageText.style.display = 'block'; // Afficher le texte si aucune image n'est présente
+            }
+        }
+
+        function checkForEmptyPreview() {
+            var previewContainer = document.getElementById('new-image-preview-container');
+            var noImageText = document.getElementById('no-new-image-text');
+            noImageText.style.display = previewContainer.children.length === 0 ? 'block' : 'none';
+        }
+
+        // Appel initial pour gérer les images existantes
+        document.addEventListener('DOMContentLoaded', checkForEmptyPreview);
+    </script>
+
+
+
+{% endblock %}
