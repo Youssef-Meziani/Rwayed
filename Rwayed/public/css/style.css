@@ -21143,3 +21143,28 @@ header h2 {
     display: block;
   }
 }
+
+
+
+
+
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    max-height: 100px;
+    padding: 15px;
+  }
+  100% {
+    opacity: 0;
+    max-height: 0px;
+    padding: 0px;
+    margin: 0px;
+  }
+}
+
+.fade-out {
+  animation-name: fadeOut;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}

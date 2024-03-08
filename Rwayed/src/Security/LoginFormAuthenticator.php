@@ -63,7 +63,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
         // Exemple de redirection basée sur des rôles avec support pour les rôles hérités
         if ($this->authorizationChecker->isGranted('ROLE_TECHNICIEN')) {
-            return new RedirectResponse($this->urlGenerator->generate('technicien_home'));
+            return new RedirectResponse($this->urlGenerator->generate('home'));
         }
 
         if ($this->authorizationChecker->isGranted('ROLE_ADHERENT')) {
