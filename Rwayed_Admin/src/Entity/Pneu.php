@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: PneuRepository::class)]
 #[Vich\Uploadable]
 class Pneu
@@ -20,41 +22,49 @@ class Pneu
     private ?int $id = null;
 
     #[ORM\Column(length: 70)]
+    #[Assert\NotBlank(message: "La marque est obligatoire.")]
     private string $marque;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Le type de véhicule est obligatoire.")]
     private string $typeVehicule;
 
     #[Vich\UploadableField(mapping: "pneus",fileNameProperty:"image")]
+//    #[Assert\Image(maxSize: "3M", mimeTypes: ["image/jpeg", "image/png"], mimeTypesMessage: "Veuillez télécharger une image valide (JPEG, PNG).")]
     private ?File $imageFile = null;
 
     #[ORM\Column(length: 255)]
-    private string $image = '';
+    private ?string $image = null;
 
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ["marque", "typeVehicule"])]
     private string $slug;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "La saison est obligatoire.")]
     private string $saison;
 
     #[ORM\Column]
+    #[Assert\Type(type: "float", message: "Le prix unitaire doit être un nombre.")]
     private float $prixUnitaire;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "La quantité en stock est obligatoire.")]
+    #[Assert\Type(type: "integer", message: "La quantité en stock doit être un nombre entier.")]
     private int $quantiteStock;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
     private string $description;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private \DateTimeInterface $dateAjout;
 
-    #[ORM\ManyToOne(inversedBy: 'pneus')]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id", nullable: false)]
+    #[ORM\ManyToOne(fetch: 'EAGER', inversedBy: 'pneus')]
+    #[ORM\JoinColumn(name: "id_cara", referencedColumnName: "id", nullable: false)]
     private ?Caracteristique $caracteristique = null;
 
-    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
 
     public function __construct()
@@ -68,15 +78,9 @@ class Pneu
         return $this->id;
     }
 
-    public function getImage(): string
-    {
-        return $this->image;
-    }
 
-    public function setImage(string $image): void
-    {
-        $this->image = $image;
-    }
+
+
     public function getImageFile(): ?File
     {
         return $this->imageFile;
@@ -98,6 +102,18 @@ class Pneu
 
         return $this;
     }
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+
 
     public function getTypeVehicule(): ?string
     {
@@ -109,15 +125,6 @@ class Pneu
         $this->typeVehicule = $typeVehicule;
 
         return $this;
-    }
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): void
-    {
-        $this->path = $path;
     }
     public function getSlug(): ?string
     {

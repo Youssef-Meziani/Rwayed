@@ -1,44 +1,447 @@
-{% extends 'base.twig' %}
+{% extends 'base-sidebar.twig' %}
 
-{% block title %}Liste des pneus{% endblock %}
+{% block title %}List des pneus{% endblock %}
 
-{% block body %}
-    <h1>Liste des pneus</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>Marque</th>
-            <th>Type de Véhicule</th>
-            <th>Saison</th>
-            <th>Prix Unitaire</th>
-            <th>Quantité en Stock</th>
-            <th>Description</th>
-            <th>Image</th>
-            <th>Date d'Ajout</th>
-            <th>Taille</th>
-            <th>Indice de Charge</th>
-            <th>Indice de Vitesse</th>
-            <!-- Ajouter d'autres colonnes si nécessaire -->
-        </tr>
-        </thead>
-        <tbody>
-        {% for pneu in pneus %}
-            <tr>
-                <td>{{ pneu.marque }}</td>
-                <td>{{ pneu.typeVehicule }}</td>
-                <td>{{ pneu.saison }}</td>
-                <td>{{ pneu.prixUnitaire }} €</td>
-                <td>{{ pneu.quantiteStock }}</td>
-                <td>{{ pneu.description }}</td>
-                <td><img src="http://localhost:9000/uploads/{{ pneu.image }}" width="70px" height="70px" alt="Image du pneu"></td>
+{% block stylesheets %}
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
+    <!-- gridjs css -->
+    <link rel="stylesheet" href="{{ asset('libs/gridjs/theme/mermaid.min.css') }}">
+    <!-- Bootstrap Css -->
+    <link href="{{ asset('css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{{ asset('css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
 
-                <td>{{ pneu.dateAjout|date('Y-m-d') }}</td>
-                <td>{{ pneu.caracteristique.taille }}</td>
-                <td>{{ pneu.caracteristique.indiceCharge }}</td>
-                <td>{{ pneu.caracteristique.indiceVitesse }}</td>
-                <!-- Afficher d'autres propriétés si nécessaire -->
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <style>
+        .image-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: red;
+            border: none;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <h3 class="mb-0">Tire list</h3>
+                                </div>
+                                <div class="col-12 col-md-6 text-end">
+                                    <button type="button" class="btn btn-success waves-effect" data-bs-toggle="modal" data-bs-target=".bs-example-modal-lg">Add tire</button>
+                                </div>
+                            </div>
+
+                            <div>
+
+                                <!--  Large modal example -->
+                                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="myLargeModalLabel">Add tire</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+
+
+                                                {{ form_start(form) }}
+
+                                                <div id="addproduct-accordion" class="custom-accordion">
+                                                    <div class="card">
+                                                        <a href="#addproduct-productinfo-collapse" class="text-body" data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-productinfo-collapse">
+                                                            <div class="p-4">
+
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="flex-shrink-0 me-3">
+                                                                        <div class="avatar">
+                                                                            <div class="avatar-title rounded-circle bg-primary-subtle  text-primary">
+                                                                                <h5 class="text-primary font-size-17 mb-0">01</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 overflow-hidden">
+                                                                        <h5 class="font-size-16 mb-1">Tire Info</h5>
+                                                                        <p class="text-muted text-truncate mb-0">Fill all information below</p>
+                                                                    </div>
+                                                                    <div class="flex-shrink-0">
+                                                                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </a>
+
+                                                        <div id="addproduct-productinfo-collapse" class="collapse show" data-bs-parent="#addproduct-accordion">
+                                                            <div class="p-4 border-top">
+                                                                <div class="mb-3">
+                                                                    <label for="{{ form.marque.vars.id }}" class="col-md-2 col-form-label">Marque</label>
+                                                                    {{ form_widget(form.marque, { 'attr': {'class': 'form-control'} }) }}
+                                                                    {{ form_errors(form.marque) }}
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+
+                                                                        <div class="mb-3">
+                                                                            <label for="{{ form.typeVehicule.vars.id }}" class="col-md-5 col-form-label">Type de véhicule</label>
+                                                                            {{ form_widget(form.typeVehicule, { 'attr': {'class': 'form-control'} }) }}
+                                                                            {{ form_errors(form.typeVehicule) }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+
+                                                                        <div class="mb-4">
+                                                                            <label for="{{ form.saison.vars.id }}" class="col-md-5 col-form-label">Saison</label>
+                                                                            {{ form_widget(form.saison, { 'attr': {'class': 'form-control'} }) }}
+                                                                            {{ form_errors(form.saison) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <label for="{{ form.prixUnitaire.vars.id }}" class="col-md-5 col-form-label">Prix unitaire</label>
+                                                                            {{ form_widget(form.prixUnitaire, { 'attr': {'class': 'form-control'} }) }}
+                                                                            {{ form_errors(form.prixUnitaire) }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="mb-3">
+                                                                            <label for="{{ form.quantiteStock.vars.id }}" class="col-md-5 col-form-label">Quantité en stock</label>
+                                                                            {{ form_widget(form.quantiteStock, { 'attr': {'class': 'form-control'} }) }}
+                                                                            {{ form_errors(form.quantiteStock) }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-0">
+                                                                    <label for="{{ form.description.vars.id }}" class="col-md-5 col-form-label">Description</label>
+                                                                    {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
+                                                                    {{ form_errors(form.description) }}
+                                                                </div>
+                                                                <div class="mb-0">
+                                                                    <label for="{{ form.caracteristique.vars.id }}" class="col-md-5 col-form-label">Caractéristique</label>
+                                                                    {{ form_widget(form.caracteristique, { 'attr': {'class': 'form-control'} }) }}
+                                                                    {{ form_errors(form.caracteristique) }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card">
+                                                        <a href="#addproduct-img-collapse" class="text-body collbodyd" data-bs-toggle="collapse" aria-haspopup="true" aria-expanded="false" aria-haspopup="true" aria-controls="addproduct-img-collapse">
+                                                            <div class="p-4">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="flex-shrink-0 me-3">
+                                                                        <div class="avatar">
+                                                                            <div class="avatar-title rounded-circle bg-primary-subtle  text-primary">
+                                                                                <h5 class="text-primary font-size-17 mb-0">02</h5>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="flex-grow-1 overflow-hidden">
+                                                                        <h5 class="font-size-16 mb-1">Tire Image</h5>
+                                                                        <p class="text-muted text-truncate mb-0">Fill all information below</p>
+                                                                    </div>
+                                                                    <div class="flex-shrink-0">
+                                                                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+
+                                                        <div id="addproduct-img-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
+                                                            <div class="p-4 border-top">
+                                                                <div class="dz-message needsclick">
+                                                                    <div class="mb-3 row">
+                                                                        <label for="{{ form.imageFile.vars.id }}" class="col-md-2 col-form-label">Image</label>
+                                                                        <div class="col-md-10">
+                                                                            {{ form_widget(form.imageFile, { 'attr': {'class': 'form-control'} }) }}
+                                                                            {{ form_errors(form.imageFile) }}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="mb-3 row">
+                                                                        <label for="photo_files" class="col-md-2 col-form-label">Photos</label>
+                                                                        <div class="col-md-10">
+                                                                            <div id="image-preview-container" class="mt-3"></div>
+                                                                            <p id="no-image-text" style="text-align: center;">Aucune image sélectionnée</p>
+                                                                            <input type="file" class="form-control" id="photo_files" name="photo_files[]" multiple onchange="previewImages(event)">
+                                                                            <span id="file-error-message" class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 row">
+                                                        <div class="col-md-2"></div>
+                                                        <div class="col-md-10 text-md-end">
+                                                            <button id="add-button" type="submit" class="btn btn-primary waves-effect waves-light">Ajouter</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{ form_end(form) }}
+
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div>
+                                <!-- /.modal -->
+                            </div>
+                        </div><!-- end card header -->
+                        <div class="card-body">
+                            {% for message in app.flashes('success') %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+
+                            {% for error in app.flashes('error') %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                            <div id="table-gridjs"></div>
+                        </div>
+                        <!-- end card body -->
+                    </div>
+                    <!-- end card -->
+                </div>
+                <!-- end col -->
+
+            </div>
+        </div>
+        <!-- container-fluid -->
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+    <!-- gridjs js -->
+    <script src="{{ asset('libs/gridjs/gridjs.umd.js') }}"></script>
+    <script>
+        function loadGridData() {
+            new gridjs.Grid({
+                columns: [
+                    {
+                        name: 'Image',
+                        width: '100px',
+                        formatter: (cell) => gridjs.html(`<img src="${cell}" alt="Pneu" class="avatar-lg rounded p-1">`)
+                    },
+                    { name: 'Marque', width: '130px' },
+                    { name: 'Type de véhicule', width: '170px' },
+                    { name: 'Saison', width: '100px' },
+                    { name: 'Prix unitaire', width: '150px' },
+                    { name: 'Quantité en stock', width: '170px' },
+                    { name: 'Caracteristique', width: '280px' },
+                    {
+                        name: 'Actions',
+                        width: '100px',
+                        formatter: (cell, row) => {
+                            console.log(row);
+                            const pneuSlug = row.cells[7].data;
+                            return gridjs.html(`
+                        <td>
+                            <ul class="list-inline mb-0 d-flex">
+                                <li class="list-inline-item">
+                                    <a href="javascript:void(0);" id="delete_${pneuSlug}" class="px-2 text-danger delete-btn" data-id="${pneuSlug}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="bx bx-trash-alt font-size-18"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="/pneu/edit/${pneuSlug}" class="px-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="bx bx-edit font-size-18"></i></a>
+                                </li>
+                            </ul>
+                        </td>
+                    `);
+                        }
+                    }
+                ],
+                pagination: {limit: 10},
+                sort: true,
+                search: true,
+                server: {
+                    url: '{{ path('pneus_json') }}',
+                    then: data => data.map(pneu => [
+                        pneu.image,
+                        pneu.marque,
+                        pneu.typeVehicule,
+                        pneu.saison,
+                        `${pneu.prixUnitaire}DH`,
+                        pneu.quantiteStock,
+                        pneu.caracteristique,
+                        pneu.slugPneu,
+                    ])
+                }
+            }).render(document.getElementById('table-gridjs'));
+        }
+
+        document.addEventListener('click', function(e) {
+            let target = e.target;
+            while (target != null) {
+                if (target.id && target.id.startsWith('delete_')) {
+                    const pneuSlug = target.getAttribute('data-id');
+                    console.log(pneuSlug)
+                    SweetAlert.fire({
+                        title: 'Êtes-vous sûr?',
+                        text: "Vous ne pourrez pas revenir en arrière!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Oui, supprimez-le!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/pneu/delete/${pneuSlug}`, { method: 'POST' })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if(data.success) {
+                                        SweetAlert.fire(
+                                            'Supprimé!',
+                                            'Le pneu a été supprimé.',
+                                            'success'
+                                        ).then(() => {
+                                            loadGridData(); // Rafraîchir la grille après suppression
+                                        });
+                                    } else {
+                                        SweetAlert.fire(
+                                            'Erreur!',
+                                            data.message,
+                                            'error'
+                                        );
+                                    }
+                                });
+                        }
+                    });
+                    break;
+                }
+                target = target.parentNode;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGridData(); // Charger les données de la grille au chargement de la page
+        });
+
+
+        function previewImages(event) {
+            var previewContainer = document.getElementById('image-preview-container');
+            var noImageText = document.getElementById('no-image-text');
+            var addButton = document.getElementById('add-button');
+            var errorSpan = document.getElementById('file-error-message');
+            previewContainer.innerHTML = '';
+            var fileList = event.target.files; // Liste des fichiers sélectionnés
+            var newFileList = []; // Liste des fichiers restants
+
+            // Vérifier le nombre maximal de fichiers sélectionnés
+            if (fileList.length > 5) {
+                addButton.disabled = true; // Désactiver le bouton d'ajout
+                errorSpan.textContent = 'You can only upload a maximum of 5 images.'; // Afficher le message d'erreur
+                errorSpan.style.display = 'block'; // Afficher le span d'erreur
+            } else {
+                addButton.disabled = false; // Activer le bouton d'ajout
+                errorSpan.style.display = 'none'; // Cacher le span d'erreur s'il n'y a pas d'erreur
+            }
+
+            if (fileList.length > 0) {
+                noImageText.style.display = 'none';
+                for (var i = 0; i < fileList.length; i++) {
+                    var imgContainer = document.createElement('div');
+                    imgContainer.classList.add('image-container');
+
+                    var img = document.createElement('img');
+                    img.src = URL.createObjectURL(fileList[i]);
+                    img.classList.add('img-thumbnail', 'mb-2');
+                    img.style.width = '150px';
+                    img.style.height = '150px';
+
+                    // Créer un bouton de suppression (avec une icône "X") pour chaque image
+                    var deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.innerHTML = '&times;'; // Icône "X"
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', function (index) {
+                        return function () {
+                            // Supprimer l'image parente lorsque le bouton est cliqué
+                            this.parentNode.removeChild(this.previousSibling);
+                            this.parentNode.removeChild(this);
+                            // Supprimer le fichier correspondant de la sélection
+                            newFileList.splice(index, 1);
+                            // Mettre à jour l'input de type fichier avec les fichiers restants
+                            updateFileInput(newFileList);
+                            // Afficher le texte "Aucune image sélectionnée" si toutes les images sont supprimées
+                            if (previewContainer.children.length === 0) {
+                                noImageText.style.display = 'block';
+                            }
+                        };
+                    }(i)); // Passez l'index comme paramètre à la fonction d'événement
+
+                    // Ajouter l'image et le bouton de suppression à la zone d'aperçu
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(deleteButton);
+                    previewContainer.appendChild(imgContainer);
+
+                    // Ajouter le fichier à la liste des fichiers restants
+                    newFileList.push(fileList[i]);
+                }
+            } else {
+                noImageText.style.display = 'block';
+            }
+        }
+
+
+        function updateFileInput(newFileList) {
+            // Récupérer l'ancien input de type fichier
+            var oldInput = document.getElementById('photo_files');
+
+            // Créer un nouvel input de type fichier avec les mêmes attributs de classe CSS
+            var newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.id = 'photo_files';
+            newInput.name = 'photo_files[]';
+            newInput.multiple = true;
+            newInput.className = oldInput.className;
+
+            // Mettre à jour l'input de type fichier avec les fichiers restants
+            newInput.files = newFileList;
+
+            // Ajouter le gestionnaire d'événement onchange au nouvel input
+            newInput.addEventListener('change', function(event) {
+                previewImages(event);
+            });
+
+            // Remplacer l'ancien input par le nouvel input
+            oldInput.parentNode.replaceChild(newInput, oldInput);
+        }
+
+    </script>
+{#    <script src="{{ asset('js/pages/gridjs.init.js') }}"></script>#}
+
+
+
 {% endblock %}
