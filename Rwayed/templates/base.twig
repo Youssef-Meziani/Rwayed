@@ -12,7 +12,7 @@
     <!-- for technician use the header's variante threee css for pc and variant two for mobile-->
     <!-- and use the logo light -->
 
-    <script src="{{ asset('vendor/turbo/turbo.index.js') }}"></script>
+    <!--<script src="{{ asset('vendor/turbo/turbo.index.js') }}"></script>-->
 
     <!-- fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i" />
@@ -23,33 +23,17 @@
     <link rel="stylesheet" href="{{ asset('vendor/photoswipe/default-skin/default-skin.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-one.css') }}" media="(min-width: 1200px)">
-    <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-one.css') }}" media="(max-width: 1200px)">
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+        <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-three.css') }}" media="(min-width: 1200px)">
+        <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-two.css') }}" media="(max-width: 1200px)">
+    {% else %}
+        <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-one.css') }}" media="(min-width: 1200px)">
+        <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-one.css') }}" media="(max-width: 1200px)">
+    {% endif %}
+
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
-
-    {#  pour les alerts    #}
-    <style>
-        @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                max-height: 100px;
-                padding: 15px;
-            }
-            100% {
-                opacity: 0;
-                max-height: 0px;
-                padding: 0px;
-                margin: 0px;
-            }
-        }
-
-        .fade-out {
-            animation-name: fadeOut;
-            animation-duration: 1s;
-            animation-fill-mode: forwards;
-        }
-    </style>
     {% block stylesheets %} {% endblock %}
 
 </head>
@@ -69,7 +53,11 @@
                         </button>
                         <a class="mobile-header__logo" href="{{ path('home') }}">
                             <!-- mobile-logo -->
-                            <img src="{{ asset('images/logo.svg') }}" height="80%"/>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+                                <img src="{{ asset('images/logo light.svg') }}" height="80%"/>
+                            {% else %}
+                                <img src="{{ asset('images/logo.svg') }}" height="80%"/>
+                            {% endif %}
                             <!-- mobile-logo / end -->
                         </a>
                         <div class="mobile-header__search mobile-search">
@@ -262,7 +250,11 @@
                         </div>
                         <div class="logo__image">
                             <!-- logo -->
-                            <img src="{{ asset('images/logo.svg') }}" height="80%" alt="logo rwayed"/>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+                                <img src="{{ asset('images/logo light.svg') }}" height="80%" alt="logo rwayed"/>
+                            {% else %}
+                                <img src="{{ asset('images/logo.svg') }}" height="80%" alt="logo rwayed"/>
+                            {% endif %}
                             <!-- logo / end -->
                         </div>
                     </a>
@@ -586,7 +578,7 @@
                                         <button type="submit" class="btn btn-primary mt-3">Login</button>
                                     </div>
                                     <div class="account-menu__form-link">
-                                        <a href="{{ path('app_login') }}">Create An Account</a>
+                                        <a href="{{ path('signup') }}">Create An Account</a>
                                     </div>
                                     {{ form_end(form) }}
                                 {% else %}
@@ -815,11 +807,17 @@
                                     <div class="footer-newsletter__text">
                                         Enter your email address below to subscribe to our newsletter and keep up to date with discounts and special offers.
                                     </div>
-                                    <form action="" class="footer-newsletter__form">
+                                    {% set form = newsletter_form() %}
+                                    {{ form_start(form, {'attr': {'id': 'newsletter-form', 'class': 'footer-newsletter__form', 'action': path('news_letter')}}) }}
+                                        {{ form_widget(form.letter_email) }}
+                                        <button type="submit" class="footer-newsletter__form-button">Subscribe</button>
+                                    {{ form_end(form) }}
+                                    <div id="subscription-message" class="alert mt-1" style="display:none;"></div>
+                                    <!--<form action="" class="footer-newsletter__form">
                                         <label class="sr-only" for="footer-newsletter-address">Email Address</label>
                                         <input type="text" class="footer-newsletter__form-input" id="footer-newsletter-address" placeholder="Email Address...">
                                         <button class="footer-newsletter__form-button">Subscribe</button>
-                                    </form>
+                                    </form>-->
                                     <div class="footer-newsletter__text footer-newsletter__text--social">
                                         Follow us on social networks
                                     </div>
@@ -1311,49 +1309,10 @@
     <script src="{{ asset('js/main.js') }}"></script>
 
     <script>
-        document.querySelectorAll('a').forEach(function(link) {
+        // disable prefetch for ux-turbo on link hover
+        /*document.querySelectorAll('a').forEach(function(link) {
             link.dataset.turboPrefetch = 'false'; // Add data-prefetch="false" attribute
-        });
-
-        function updateFavicon() {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon light.svg')}}");
-            } else {
-                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon.svg')}}");
-            }
-        }
-
-        updateFavicon();
-
-        window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const flashMessages = document.querySelectorAll('.alert-success, .alert-danger');
-                flashMessages.forEach(flashMessage => {
-                    flashMessage.classList.add('fade-out');
-
-                    flashMessage.addEventListener('animationend', () => {
-                        flashMessage.style.display = 'none'; // Masque complètement l'élément après l'animation.
-                    });
-                });
-            }, 7000); // Les alertes commencent à disparaître après 5 secondes.
-        });
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var showModal = document.body.getAttribute('data-show-modal') === 'true';
-            if (showModal) {
-                $('#loginMessageModal').modal('show');
-            }
-
-            // Optionnel : Nettoyer la session après l'affichage du modal
-            if (showModal) {
-                fetch('/nettoyer-modal'); // Assurez-vous que cette route nettoie `show_login_modal` de la session
-            }
-        });
+        });*/
     </script>
     {% block javascripts %} {% endblock %}
 
