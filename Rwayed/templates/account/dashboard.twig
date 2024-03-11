@@ -7,7 +7,7 @@
     <div class="block">
         <div class="container container--max--xl">
             <div class="row">
-                {% include 'partials/_account-nav.twig' with { activeNavItem: 'dashboard' } %}
+                {{ include('partials/_account-nav.twig', { activeNavItem: 'dashboard' }) }}
                 <div class="col-12 col-lg-9 mt-4 mt-lg-0">
                     <div class="dashboard">
                         <div class="dashboard__profile card profile-card">

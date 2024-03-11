@@ -50,10 +50,10 @@
             <div class="block-teammates__subtitle">This is our professional team.</div>
             <div class="block-teammates__list">
                 <div class="owl-carousel">
-                    {% include 'partials/_team-member.twig' with {name: 'ABBAOUI Khalil', occupation: 'Engineer'} %}
-                    {% include 'partials/_team-member.twig' with {name: 'HASHAS Jad El Mawla', occupation: 'Engineer'} %}
-                    {% include 'partials/_team-member.twig' with {name: 'MEZIANI Youssef', occupation: 'Engineer'} %}
-                    {% include 'partials/_team-member.twig' with {name: 'BENNANI DOSSE Omar', occupation: 'Engineer'} %}
+                    {{ include('partials/_team-member.twig', {name: 'ABBAOUI Khalil', occupation: 'Engineer'}) }}
+                    {{ include('partials/_team-member.twig', {name: 'HASHAS Jad El Mawla', occupation: 'Engineer'}) }}
+                    {{ include('partials/_team-member.twig', {name: 'MEZIANI Youssef', occupation: 'Engineer'}) }}
+                    {{ include('partials/_team-member.twig', {name: 'BENNANI DOSSE Omar', occupation: 'Engineer'}) }}
                 </div>
             </div>
         </div>
@@ -65,9 +65,9 @@
             <div class="block-reviews__subtitle">During our work we have accumulated<br>hundreds of positive reviews.</div>
             <div class="block-reviews__list">
                 <div class="owl-carousel">
-                    {% include 'partials/_testimonial.twig' with {name: 'Fatima El Amrani', occupation: 'Engineer', message: "Rwayed exceeded my expectations! Their tire selection is top-notch, and the repair service was quick and efficient. I highly recommend them to anyone looking for quality automotive solutions.", stars: 5} %}
-                    {% include 'partials/_testimonial.twig' with {name: 'Ahmed Ben Salah', occupation: 'Business Owner', message: "I've been a loyal customer of Rwayed for years, and they never disappoint. Their staff is friendly, knowledgeable, and always willing to go the extra mile. Trust me, you won't regret choosing Rwayed for all your automotive needs!", stars: 4} %}
-                    {% include 'partials/_testimonial.twig' with {name: 'Jamal El Haddadi', occupation: 'Driver', message: "Finding a reliable tire shop can be daunting, but Rwayed made it easy. From their wide range of products to their expert advice, I couldn't be happier with my experience. Rwayed is definitely my go-to for everything automotive!", stars: 5} %}
+                    {{ include('partials/_testimonial.twig', {name: 'Fatima El Amrani', occupation: 'Engineer', message: "Rwayed exceeded my expectations! Their tire selection is top-notch, and the repair service was quick and efficient. I highly recommend them to anyone looking for quality automotive solutions.", stars: 5}) }}
+                    {{ include('partials/_testimonial.twig', {name: 'Ahmed Ben Salah', occupation: 'Business Owner', message: "I've been a loyal customer of Rwayed for years, and they never disappoint. Their staff is friendly, knowledgeable, and always willing to go the extra mile. Trust me, you won't regret choosing Rwayed for all your automotive needs!", stars: 4}) }}
+                    {{ include('partials/_testimonial.twig', {name: 'Jamal El Haddadi', occupation: 'Driver', message: "Finding a reliable tire shop can be daunting, but Rwayed made it easy. From their wide range of products to their expert advice, I couldn't be happier with my experience. Rwayed is definitely my go-to for everything automotive!", stars: 5}) }}
                 </div>
             </div>
         </div>
