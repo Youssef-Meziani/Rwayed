@@ -313,7 +313,9 @@
                                     <div class="account-menu__divider"></div>
                                     <ul class="account-menu__links">
                                         <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
-                                        <li><a href="{{ path('dashboard') }}">Garage</a></li>
+                                        {% if is_granted('ROLE_TECHNICIEN') %}
+                                            <li><a href="{{ path('garage') }}">Garage</a></li>
+                                        {% endif %}
                                         <li><a href="{{ path('profile') }}">Edit Profile</a></li>
                                         <li><a href="{{ path('acount-orders') }}">Order History</a></li>
                                         <li><a href="{{ path('addresses') }}">Addresses</a></li>

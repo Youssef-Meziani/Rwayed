@@ -40,9 +40,9 @@
                             </tr>
                             </thead>
                             <tbody class="cart-table__body">
-                                {% include 'partials/_cart-item.twig' with {price: 299.99, quantity: 2} %}
-                                {% include 'partials/_cart-item.twig' with {price: 299.99, quantity: 2} %}
-                                {% include 'partials/_cart-item.twig' with {price: 299.99, quantity: 2} %}
+                                {{ include('partials/_cart-item.twig', {price: 299.99, quantity: 2}) }}
+                                {{ include('partials/_cart-item.twig', {price: 299.99, quantity: 2}) }}
+                                {{ include('partials/_cart-item.twig', {price: 299.99, quantity: 2}) }}
                             </tbody>
                             <tfoot class="cart-table__foot">
                             <tr>

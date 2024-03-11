@@ -7,7 +7,7 @@
     <div class="block">
         <div class="container container--max--xl">
             <div class="row">
-                {% include 'partials/_account-nav.twig' with { activeNavItem: 'acount-orders' } %}
+                {{ include('partials/_account-nav.twig', { activeNavItem: 'acount-orders' }) }}
                 <div class="col-12 col-lg-9 mt-4 mt-lg-0">
                     <div class="card">
                         <div class="order-header">
