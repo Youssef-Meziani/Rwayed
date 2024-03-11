@@ -125,7 +125,7 @@
                                             <div class="products-list__column products-list__column--price">Price</div>
                                         </div>
                                         <div class="products-list__content">
-                                            {% include 'partials/_product-card.twig' with {image: 'product-1-245x245.jpg', price: '199.99' } %}
+                                            {{ include('partials/_product-card.twig', {image: 'product-1-245x245.jpg', price: '199.99' }) }}
                                         </div>
                                     </div>
                                     <div class="products-view__pagination">

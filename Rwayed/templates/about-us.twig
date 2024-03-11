@@ -50,42 +50,10 @@
             <div class="block-teammates__subtitle">This is our professional team.</div>
             <div class="block-teammates__list">
                 <div class="owl-carousel">
-                    <div class="block-teammates__item teammate">
-                        <div class="teammate__avatar">
-                            <img src="images/teammates/ABBAOUI Khalil.jpg" alt="">
-                        </div>
-                        <div class="teammate__info">
-                            <div class="teammate__name">ABBAOUI Khalil</div>
-                            <div class="teammate__position">Engineer</div>
-                        </div>
-                    </div>
-                    <div class="block-teammates__item teammate">
-                        <div class="teammate__avatar">
-                            <img src="images/teammates/HASHAS Jad El Mawla.jpg" alt="">
-                        </div>
-                        <div class="teammate__info">
-                            <div class="teammate__name">HASHAS Jad El Mawla</div>
-                            <div class="teammate__position">Engineer</div>
-                        </div>
-                    </div>
-                    <div class="block-teammates__item teammate">
-                        <div class="teammate__avatar">
-                            <img src="images/teammates/MEZIANI Youssef.jpg" alt="">
-                        </div>
-                        <div class="teammate__info">
-                            <div class="teammate__name">MEZIANI Youssef</div>
-                            <div class="teammate__position">Engineer</div>
-                        </div>
-                    </div>
-                    <div class="block-teammates__item teammate">
-                        <div class="teammate__avatar">
-                            <img src="images/teammates/BENNANI DOSSE Omar.jpg" alt="">
-                        </div>
-                        <div class="teammate__info">
-                            <div class="teammate__name">BENNANI DOSSE Omar</div>
-                            <div class="teammate__position">Engineer</div>
-                        </div>
-                    </div>
+                    {{ include('partials/_team-member.twig', {name: 'ABBAOUI Khalil', occupation: 'Engineer'}) }}
+                    {{ include('partials/_team-member.twig', {name: 'HASHAS Jad El Mawla', occupation: 'Engineer'}) }}
+                    {{ include('partials/_team-member.twig', {name: 'MEZIANI Youssef', occupation: 'Engineer'}) }}
+                    {{ include('partials/_team-member.twig', {name: 'BENNANI DOSSE Omar', occupation: 'Engineer'}) }}
                 </div>
             </div>
         </div>
@@ -97,78 +65,9 @@
             <div class="block-reviews__subtitle">During our work we have accumulated<br>hundreds of positive reviews.</div>
             <div class="block-reviews__list">
                 <div class="owl-carousel">
-                    <div class="block-reviews__item">
-                        <div class="block-reviews__item-avatar">
-                            <img src="images/testimonials/testimonial-1.jpg" alt="">
-                        </div>
-                        <div class="block-reviews__item-content">
-                            <div class="block-reviews__item-text">Rwayed exceeded my expectations! Their tire selection is top-notch, and the repair service was quick and efficient. I highly recommend them to anyone looking for quality automotive solutions.</div>
-                            <div class="block-reviews__item-meta">
-                                <div class="block-reviews__item-rating">
-                                    <div class="rating">
-                                        <div class="rating__body">
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="block-reviews__item-author">
-                                    Fatima El Amrani, Engineer
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-reviews__item">
-                        <div class="block-reviews__item-avatar">
-                            <img src="images/testimonials/testimonial-2.jpg" alt="">
-                        </div>
-                        <div class="block-reviews__item-content">
-                            <div class="block-reviews__item-text">I've been a loyal customer of Rwayed for years, and they never disappoint. Their staff is friendly, knowledgeable, and always willing to go the extra mile. Trust me, you won't regret choosing Rwayed for all your automotive needs!</div>
-                            <div class="block-reviews__item-meta">
-                                <div class="block-reviews__item-rating">
-                                    <div class="rating">
-                                        <div class="rating__body">
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="block-reviews__item-author">
-                                    Ahmed Ben Salah, Business Owner
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="block-reviews__item">
-                        <div class="block-reviews__item-avatar">
-                            <img src="images/testimonials/testimonial-3.jpg" alt="">
-                        </div>
-                        <div class="block-reviews__item-content">
-                            <div class="block-reviews__item-text">Finding a reliable tire shop can be daunting, but Rwayed made it easy. From their wide range of products to their expert advice, I couldn't be happier with my experience. Rwayed is definitely my go-to for everything automotive!</div>
-                            <div class="block-reviews__item-meta">
-                                <div class="block-reviews__item-rating">
-                                    <div class="rating">
-                                        <div class="rating__body">
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                            <div class="rating__star rating__star--active"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="block-reviews__item-author">
-                                    Jamal El Haddadi, Driver
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{ include('partials/_testimonial.twig', {name: 'Fatima El Amrani', occupation: 'Engineer', message: "Rwayed exceeded my expectations! Their tire selection is top-notch, and the repair service was quick and efficient. I highly recommend them to anyone looking for quality automotive solutions.", stars: 5}) }}
+                    {{ include('partials/_testimonial.twig', {name: 'Ahmed Ben Salah', occupation: 'Business Owner', message: "I've been a loyal customer of Rwayed for years, and they never disappoint. Their staff is friendly, knowledgeable, and always willing to go the extra mile. Trust me, you won't regret choosing Rwayed for all your automotive needs!", stars: 4}) }}
+                    {{ include('partials/_testimonial.twig', {name: 'Jamal El Haddadi', occupation: 'Driver', message: "Finding a reliable tire shop can be daunting, but Rwayed made it easy. From their wide range of products to their expert advice, I couldn't be happier with my experience. Rwayed is definitely my go-to for everything automotive!", stars: 5}) }}
                 </div>
             </div>
         </div>

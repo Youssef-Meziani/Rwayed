@@ -1,0 +1,31 @@
+<div class="col-12 col-lg-3 d-flex">
+    <div class="account-nav flex-grow-1">
+        <h4 class="account-nav__title">Navigation</h4>
+        <ul class="account-nav__list">
+            <li class="account-nav__item {% if activeNavItem == 'dashboard' %}account-nav__item--active{% endif %}">
+                <a href="{{ path('dashboard') }}">Dashboard</a>
+            </li>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+                <li class="account-nav__item {% if activeNavItem == 'garage' %}account-nav__item--active{% endif %}">
+                    <a href="{{ path('garage') }}">Garage</a>
+                </li>
+            {% endif %}
+            <li class="account-nav__item {% if activeNavItem == 'profile' %}account-nav__item--active{% endif %}">
+                <a href="{{ path('profile') }}">Edit Profile</a>
+            </li>
+            <li class="account-nav__item {% if activeNavItem == 'acount-orders' %}account-nav__item--active{% endif %}">
+                <a href="{{ path('acount-orders') }}">Order History</a>
+            </li>
+            <li class="account-nav__item {% if activeNavItem == 'addresses' %}account-nav__item--active{% endif %}">
+                <a href="{{ path('addresses') }}">Addresses</a>
+            </li>
+            <li class="account-nav__item {% if activeNavItem == 'change-password' %}account-nav__item--active{% endif %}">
+                <a href="{{ path('change-password') }}">Password</a>
+            </li>
+            <li class="account-nav__divider" role="presentation"></li>
+            <li class="account-nav__item">
+                <a href="{{ path('app_logout') }}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</div>
