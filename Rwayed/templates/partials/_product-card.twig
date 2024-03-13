@@ -1,7 +1,7 @@
 <div class="products-list__item">
     <div class="product-card">
         <div class="product-card__actions-list">
-            <button class="product-card__action product-card__action--quickview" type="button" aria-label="Quick view">
+            <button class="product-card__action product-card__action--quickview" type="button" aria-label="Quick view" id="{{ pneu.id }}">
                 <svg width="16" height="16">
                     <path d="M14,15h-4v-2h3v-3h2v4C15,14.6,14.6,15,14,15z M13,3h-3V1h4c0.6,0,1,0.4,1,1v4h-2V3z M6,3H3v3H1V2c0-0.6,0.4-1,1-1h4V3z
 	 M3,13h3v2H2c-0.6,0-1-0.4-1-1v-4h2V13z" />
@@ -23,8 +23,8 @@
         </div>
         <div class="product-card__image">
             <div class="image image--type--product">
-                <a href="product-full.html" class="image__body">
-                    <img class="image__tag" src="images/products/{{ image }}" alt="">
+                <a href="{{ path('product') }}" class="image__body">
+                    <img class="image__tag" src="{{ asset(uploads_base_url ~ pneu.image) }}" alt="">
                 </a>
             </div>
             <div class="status-badge status-badge--style--success product-card__fit status-badge--has-icon status-badge--has-text">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="product-card__info">
-            <div class="product-card__meta"><span class="product-card__meta-title">SKU:</span> 140-10440-B</div>
+            <div class="product-card__meta"><span class="product-card__meta-title">UGP:</span> 140-10440-B</div>
             <div class="product-card__name">
                 <div>
                     <div class="product-card__badges">
@@ -47,7 +47,7 @@
                         <div class="tag-badge tag-badge--new">new</div>
                         <div class="tag-badge tag-badge--hot">hot</div>
                     </div>
-                    <a href="product-full.html">Brandix Spark Plug Kit ASR-400</a>
+                    <a href="{{ path('product') }}">{{pneu.marque ~ ' | ' ~ pneu.caracteristique.taille}}</a>
                 </div>
             </div>
             <div class="product-card__rating">
@@ -65,10 +65,9 @@
             <div class="product-card__features">
                 <ul>
                     <li>Speed: 750 RPM</li>
-                    <li>Power Source: Cordless-Electric</li>
-                    <li>Battery Cell Type: Lithium</li>
-                    <li>Voltage: 20 Volts</li>
-                    <li>Battery Capacity: 2 Ah</li>
+                    <li>Load rating: {{pneu.caracteristique.indiceCharge}}</li>
+                    <li>Speed rating: {{pneu.caracteristique.indiceVitesse}}</li>
+                    <li>Lifetime: 2 years</li>
                 </ul>
             </div>
         </div>

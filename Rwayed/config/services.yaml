@@ -4,8 +4,23 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    uploads_base_url: '%env(UPLOADS_BASE_URL)%'
 
 services:
+    # Définition des stratégies comme services
+    # Alias pour CaracteristiqueTransformationStrategy
+    App\Strategy\CaracteristiqueStrategyInterface: '@App\Strategy\CaracteristiqueTransformationStrategy'
+    
+    # Alias pour PhotoTransformationStrategy
+    App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
+    
+    # Définition de PneuTransformationStrategy avec injection des stratégies spécifiques
+    App\Strategy\PneuTransformationStrategy:
+        arguments:
+            $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
+            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
+
+
     # Configuration HttpClient pour consommer l'API Platform
     my.api.platform.client:
         class: Symfony\Contracts\HttpClient\HttpClientInterface
@@ -28,6 +43,9 @@ services:
         bind:
             $csrfTokenManager: '@security.csrf.token_manager'
             $apiPlatformClient: '@my.api.platform.client'
+            $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
+            $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
+            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
@@ -44,5 +62,5 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+
+    # the last definitions always *replace* previous ones
