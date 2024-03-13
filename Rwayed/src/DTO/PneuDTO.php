@@ -10,10 +10,34 @@ class PneuDTO
     public string $image;
     public string $slug;
     public string $saison;
-    public float $prixUnitaire;
+    public ?float $prixUnitaire = null;
     public int $quantiteStock;
     public string $description;
     public \DateTimeInterface $dateAjout; // Ajoutée
     public ?CaracteristiqueDTO $caracteristique = null;
+
+    /**
+     * @var PhotoDTO[] 
+     */
     public array $photos = [];
+
+    public function addPhoto(PhotoDTO $photo): void {
+        $this->photos[] = $photo;
+    }
+
+    /**
+     * @return PhotoDTO[]
+     */
+    public function getPhotos(): array {
+        return $this->photos;
+    }
+
+    public function setPhotos(array $photos): void {
+        foreach ($photos as $photo) {
+            if (!$photo instanceof PhotoDTO) {
+                throw new \InvalidArgumentException('All photos must be instances of PhotoDTO');
+            }
+        }
+        $this->photos = $photos;
+    }
 }

@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 #[ORM\Entity(repositoryClass: PneuRepository::class)]
 #[Vich\Uploadable]
 class Pneu
@@ -25,7 +26,7 @@ class Pneu
     #[ORM\Column(length: 50)]
     private string $typeVehicule;
 
-    #[Vich\UploadableField(mapping: "pneus",fileNameProperty:"image")]
+    #[Vich\UploadableField(mapping: "pneus", fileNameProperty: "image")]
     private ?File $imageFile = null;
 
     #[ORM\Column(length: 255)]
@@ -38,8 +39,8 @@ class Pneu
     #[ORM\Column(length: 20)]
     private string $saison;
 
-    #[ORM\Column]
-    private float $prixUnitaire;
+    #[ORM\Column(nullable: true)]
+    private ?float $prixUnitaire;
 
     #[ORM\Column]
     private int $quantiteStock;
@@ -66,6 +67,11 @@ class Pneu
     public function getId(): ?int
     {
         return $this->id;
+    }
+    public function setId(?int $id): static
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getImage(): string
@@ -198,6 +204,11 @@ class Pneu
     public function getPhotos(): Collection
     {
         return $this->photos;
+    }
+
+    public function setPhotos(Collection $photos): void
+    {
+        $this->photos = $photos;
     }
 
     public function addPhoto(Photo $photo): static

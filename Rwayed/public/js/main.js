@@ -724,19 +724,22 @@
             button.addClass('product-card__action--loading');
 
             let xhr = null;
-            // timeout ONLY_FOR_DEMO!
             const timeout = setTimeout(function() {
+                const id = button.attr('id');////
                 xhr = $.ajax({
-                    url: '/quickview',
+                    url: '/quickview/'+id,
+                    type: 'GET',
                     success: function(data) {
                         quickview.cancelPreviousModal = function() {};
                         button.removeClass('product-card__action--loading');
-
                         modal.html(data);
                         modal.find('.quickview__close').on('click', function() {
                             modal.modal('hide');
                         });
                         modal.modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
                 });
             }, 1000);
@@ -747,8 +750,6 @@
                 if (xhr) {
                     xhr.abort();
                 }
-
-                // timeout ONLY_FOR_DEMO!
                 clearTimeout(timeout);
             };
         }
