@@ -15,7 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: PneuRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['pneu:read']],
-    denormalizationContext: ['groups' => ['pneu:write']]
+    denormalizationContext: ['groups' => ['pneu:write']],
+    paginationItemsPerPage: 16
 )]
 class Pneu
 {
