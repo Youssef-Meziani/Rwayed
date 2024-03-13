@@ -5,8 +5,21 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     uploads_base_url: '%env(UPLOADS_BASE_URL)%'
+    admin_email_address: '%env(ADMIN_EMAIL_ADDRESS)%'
 
 services:
+
+    _defaults:
+        bind:
+            $csrfTokenManager: '@security.csrf.token_manager'
+            $apiPlatformClient: '@my.api.platform.client'
+            $adminEmail: '%env(ADMIN_EMAIL_ADDRESS)%'
+            $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
+            $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
+            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
     # Définition des stratégies comme services
     # Alias pour CaracteristiqueTransformationStrategy
     App\Strategy\CaracteristiqueStrategyInterface: '@App\Strategy\CaracteristiqueTransformationStrategy'
@@ -19,8 +32,6 @@ services:
         arguments:
             $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
             $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
-
-
     # Configuration HttpClient pour consommer l'API Platform
     my.api.platform.client:
         class: Symfony\Contracts\HttpClient\HttpClientInterface
@@ -39,15 +50,6 @@ services:
     App\Services\PasswordHasherService:
         arguments:
             $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
-    _defaults:
-        bind:
-            $csrfTokenManager: '@security.csrf.token_manager'
-            $apiPlatformClient: '@my.api.platform.client'
-            $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
-            $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
-            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
     # Enregistrement manuel de l'extension Twig comme service
     App\Twig\AppExtension:

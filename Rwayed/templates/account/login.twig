@@ -27,6 +27,10 @@
                                 <div class="alert alert-dange">{{ message }}</div>
                             {% endfor %}
 
+                            {% for message in app.flashes('verify_email_error') %}
+                                <div class="alert alert-dange">{{ message }}</div>
+                            {% endfor %}
+
                             {% for message in app.flashes('success') %}
                                 <div class="alert alert-success">{{ message }}</div>
                             {% endfor %}

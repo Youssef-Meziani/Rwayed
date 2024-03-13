@@ -1,0 +1,26 @@
+<div class="block-reviews__item">
+    <div class="block-reviews__item-avatar">
+        <img src="{{ asset('images/testimonials/'~name~'.jpg') }}" alt="{{ name }}">
+    </div>
+    <div class="block-reviews__item-content">
+        <div class="block-reviews__item-text">{{ message }}</div>
+        <div class="block-reviews__item-meta">
+            <div class="block-reviews__item-rating">
+                <div class="rating">
+                    <div class="rating__body">
+                        {% for star in 1..5 %}
+                            {% if star <= stars %}
+                                <div class="rating__star rating__star--active"></div>
+                            {% else %}
+                                <div class="rating__star"></div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="block-reviews__item-author">
+                {{ name }}, {{ occupation }}
+            </div>
+        </div>
+    </div>
+</div>

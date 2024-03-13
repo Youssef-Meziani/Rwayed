@@ -6,6 +6,8 @@ namespace App\Form;
 use App\Entity\Pneu;
 use App\Enum\SaisonEnum;
 use App\Enum\TypeVehiculeEnum;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -72,6 +74,10 @@ class PneuType extends AbstractType
                 'label' => 'Characteristic',
                 'required' => true,
                 'placeholder' => 'Select a characteristic',
+            ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'change_password_captcha',
             ]);
     }
 

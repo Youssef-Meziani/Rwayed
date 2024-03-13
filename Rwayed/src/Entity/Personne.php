@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PersonneRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -12,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "descr",type: "string",length: 10)]
 #[ORM\DiscriminatorMap(['Adherent' => Adherent::class,'Technicien' => Technicien::class,'Admin' => Admin::class])]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterface
 {
     #[ORM\Id]
@@ -45,6 +47,9 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
 
     #[ORM\Column(nullable: true)]
     protected ?bool $desactive = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function getId(): ?int
     {
@@ -143,6 +148,18 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
     public function setDesactive(?bool $desactive): static
     {
         $this->desactive = $desactive;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
