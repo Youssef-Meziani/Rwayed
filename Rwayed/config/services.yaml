@@ -17,7 +17,9 @@ services:
             $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-
+    App\Services\EmailService:
+        arguments:
+            $adminEmail: '%admin_email%'
     # Définition des stratégies comme services
     # Alias pour CaracteristiqueTransformationStrategy
     App\Strategy\CaracteristiqueStrategyInterface: '@App\Strategy\CaracteristiqueTransformationStrategy'

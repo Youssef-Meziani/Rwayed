@@ -6,6 +6,7 @@ use App\Entity\Personne;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Security\EmailVerifier;
+use App\Services\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,14 +26,14 @@ use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 class ResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
-    private $adminEmail;
+    private EmailService $emailService;
 
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
         private EntityManagerInterface $entityManager,
-        string $adminEmail
+        EmailService $emailService
     ) {
-        $this->adminEmail = $adminEmail;
+        $this->emailService = $emailService;
     }
 
     /**
@@ -166,17 +167,15 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        $email = (new TemplatedEmail())
-            ->from(new Address($this->adminEmail, 'Rwayed Admin'))
-            ->to($user->getEmail())
-            ->subject('Your password reset request')
-            ->htmlTemplate('reset_password/email.html.twig')
-            ->context([
+        $this->emailService->sendEmail([
+            'from_name' => 'Rwayed Admin',
+            'to' => $user->getEmail(),
+            'subject' => 'Your password reset request',
+            'template' => 'reset_password/email.html.twig',
+            'context' => [
                 'resetToken' => $resetToken,
-            ])
-        ;
-
-        $mailer->send($email);
+            ]
+        ]);
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
