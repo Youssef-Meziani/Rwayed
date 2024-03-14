@@ -1,0 +1,30 @@
+
+<div style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #333;">
+    <div style="max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; box-shadow: 0 2px 4px rgba(0,0,0,0.1); background-color: #ffffff;">
+        <!-- Logo -->
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="{{ asset('images/logo.svg') }}" alt="Logo" style="max-width: 100px;">
+        </div>
+
+        <h1 style="color: #007bff; text-align: center;">Reset Your Password</h1>
+
+        <p>Hello,</p>
+
+        <p>You have requested to reset your password on <strong>Rwayed</strong>. To proceed, please click on the following link:</p>
+
+        <!-- Button -->
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" style="background-color: #007bff; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset My Password</a>
+        </div>
+
+        <p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+
+        <p>If you did not request a password reset, please ignore this email.</p>
+
+        <!-- Footer -->
+        <p style="text-align: center; margin-top: 50px; font-size: small; color: #666;">
+            Thank you for using Rwayed!<br>The Rwayed Team
+        </p>
+    </div>
+</div>
+

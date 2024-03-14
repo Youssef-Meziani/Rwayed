@@ -68,30 +68,32 @@
                                         <span class="text-danger">{{ error.message }}</span>
                                     {% endfor %}
                                 {% endif %}
+
                             </div>
 
                             <div class="form-group">
                                 {{ form_label(registrationForm.plainPassword.first) }}
                                 {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Password'}}) }}
-                                {% if registrationForm.plainPassword.vars.errors|length > 0 %}
-{#                                     !! a fixer avec mr khadiri , le msg d'erreur ne veux pas s'afficher#}
-                                    {% for error in registrationForm.plainPassword.vars.errors %}
-                                        <div class="alert alert-danger" role="alert">
+                                {% if registrationForm.plainPassword.first.vars.errors|length > 0 %}
+                                    <span class="text-danger">
+                                        {% for error in registrationForm.plainPassword.first.vars.errors %}
                                             {{ error.message }}
-                                        </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    </span>
                                 {% endif %}
+
+
                             </div>
 
                             <div class="form-group">
                                 {{ form_label(registrationForm.plainPassword.second) }}
                                 {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Repeat Password'}}) }}
-                                {% if registrationForm.plainPassword.vars.errors|length > 0 %}
-                                    {% for error in registrationForm.plainPassword.vars.errors %}
-                                        <div class="alert alert-danger" role="alert">
+                                {% if registrationForm.plainPassword.first.vars.errors|length > 0 %}
+                                    <span class="text-danger">
+                                        {% for error in registrationForm.plainPassword.first.vars.errors %}
                                             {{ error.message }}
-                                        </div>
-                                    {% endfor %}
+                                        {% endfor %}
+                                    </span>
                                 {% endif %}
                             </div>
                             <div class="form-check">
