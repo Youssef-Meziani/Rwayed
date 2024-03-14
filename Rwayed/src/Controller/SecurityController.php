@@ -8,6 +8,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\PersonneRepository;
 use App\Security\EmailVerifier;
 use App\Security\LoginFormAuthenticator;
+use App\Services\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,16 +21,15 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 class SecurityController extends AbstractController
 {
-    private EmailVerifier $emailVerifier;
-    private $adminEmail;
+    private EmailService $emailService;
 
-    public function __construct(EmailVerifier $emailVerifier, string $adminEmail)
+    public function __construct( EmailService $emailService, private EmailVerifier $emailVerifier,private VerifyEmailHelperInterface $verifyEmailHelper)
     {
-        $this->emailVerifier = $emailVerifier;
-        $this->adminEmail = $adminEmail;
+        $this->emailService = $emailService;
     }
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
@@ -70,14 +70,25 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address($this->adminEmail, 'Rwayed Admin'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+            $signatureComponents = $this->verifyEmailHelper->generateSignature(
+                'app_verify_email',
+                $user->getId(),
+                $user->getEmail(),
+                ['id' => $user->getId()]
             );
+
+            $this->emailService->sendEmail([
+                'from_name' => 'Rwayed admin',
+                'to' => $user->getEmail(),
+                'subject' => 'Please confirm your email address',
+                'template' => 'registration/confirmation_email.html.twig',
+                'context' => [
+                    'signedUrl' => $signatureComponents->getSignedUrl(),
+                    'expiresAtMessageKey' => $signatureComponents->getExpirationMessageKey(),
+                    'expiresAtMessageData' => $signatureComponents->getExpirationMessageData(),
+                    'userId' => $user->getId(),
+                ]
+            ]);
             return $this->redirectToRoute('msg_confirmation_email');
         }
 
