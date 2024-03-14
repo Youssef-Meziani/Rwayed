@@ -6,9 +6,7 @@
 parameters:
     uploads_base_url: '%env(UPLOADS_BASE_URL)%'
     admin_email_address: '%env(ADMIN_EMAIL_ADDRESS)%'
-
 services:
-
     _defaults:
         bind:
             $csrfTokenManager: '@security.csrf.token_manager'
