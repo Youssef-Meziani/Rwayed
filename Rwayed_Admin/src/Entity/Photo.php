@@ -26,6 +26,9 @@ class Photo
     #[ORM\JoinColumn(name: "id_pneu", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
     private ?Pneu $pneu = null;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -39,6 +42,10 @@ class Photo
     public function setImageFile(?File $imageFile): void
     {
         $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getPath(): ?string

@@ -89,6 +89,8 @@ class SecurityController extends AbstractController
                     'userId' => $user->getId(),
                 ]
             ]);
+
+            $request->getSession()->set('isVerifiedEmailSent', true);
             return $this->redirectToRoute('msg_confirmation_email');
         }
 
@@ -98,8 +100,11 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/signup/email-verification', name: 'msg_confirmation_email')]
-    public function msgConfirmationEmail(): Response
+    public function msgConfirmationEmail(Request $request): Response
     {
+        if (!$request->getSession()->get('isVerifiedEmailSent')) {
+            return $this->redirectToRoute('signup');
+        }
         return $this->render('registration/check_email.html.twig');
     }
 
@@ -126,6 +131,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
         $request->getSession()->start();
+        $request->getSession()->remove('isVerifiedEmailSent');
         $message = 'Your email address has been verified. You can now log in.';
         $this->addFlash('success', $message);
         $this->addFlash('success_header', $message);

@@ -19,21 +19,19 @@ class Photo
     #[Vich\UploadableField(mapping: "pneus",fileNameProperty:"path")]
     private ?File $imageFile = null;
 
-    #[ORM\Column(length: 255)]
-    private string $path;
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private ?string $path = null;
 
-    #[ORM\ManyToOne(targetEntity: Pneu::class, inversedBy: 'photos')]
-    #[ORM\JoinColumn(name: "id_pneu", referencedColumnName: "id", nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Pneu::class, fetch: 'EAGER', inversedBy: 'photos')]
+    #[ORM\JoinColumn(name: "id_pneu", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
     private ?Pneu $pneu = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $updatedAt = null;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-    public function setId(?int $id): static
-    {
-        $this->id = $id;
-        return $this;
     }
 
     public function getImageFile(): ?File
@@ -44,6 +42,10 @@ class Photo
     public function setImageFile(?File $imageFile): void
     {
         $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getPath(): ?string
@@ -51,7 +53,7 @@ class Photo
         return $this->path;
     }
 
-    public function setPath(string $path): static
+    public function setPath(?string $path): static
     {
         $this->path = $path;
 

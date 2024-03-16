@@ -4,6 +4,7 @@
 namespace App\Form;
 
 use App\Entity\Pneu;
+use App\Enum\IndiceVitesseEnum;
 use App\Enum\SaisonEnum;
 use App\Enum\TypeVehiculeEnum;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
@@ -11,6 +12,7 @@ use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -62,18 +64,40 @@ class PneuType extends AbstractType
                 'download_label' => false, // Ne pas afficher le label de téléchargement
                 'image_uri' => false, // Ne pas afficher l'image existante
             ])
-            ->add('caracteristique', EntityType::class, [
-                'class' => Caracteristique::class,
-                'choice_label' => function (Caracteristique $caracteristique) {
-                    return sprintf('%s - Charge: %d, Speed: %s',
-                        $caracteristique->getTaille(),
-                        $caracteristique->getIndiceCharge(),
-                        $caracteristique->getIndiceVitesse()
-                    );
-                },
-                'label' => 'Characteristic',
+//            ->add('photos', CollectionType::class, [
+//                'entry_type' => PhotoType::class,
+//                'entry_options' => ['label' => false],
+//                'allow_add' => false,
+//                'allow_delete' => false,
+//                'by_reference' => false, // Important for Doctrine to recognize each photo as a separate entity
+//                'prototype' => true, // Allows form to know how to create a new Photo form
+//                'required' => false,
+//            ])
+            ->add('taille', TextType::class, [
+                'label' => 'Taille',
                 'required' => true,
-                'placeholder' => 'Select a characteristic',
+                'attr' => [
+                    'placeholder' => 'format requis : \'nnn/nnRnn\'',
+                    'class' => 'form-control',
+                    'id' => 'taille-mask'
+                ],
+            ])
+            ->add('indiceCharge', NumberType::class, [
+                'label' => 'Charge',
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control',
+                    'id' => 'number-input',
+                ],
+            ])
+            ->add('indiceVitesse', ChoiceType::class, [
+                'label' => 'Vitesse',
+                'choices' => IndiceVitesseEnum::getChoices(),
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control',
+                    'id' => 'choices-multiple-default'
+                ],
             ])
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(),

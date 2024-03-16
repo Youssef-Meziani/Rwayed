@@ -7,12 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class PneuTransformationStrategy implements TransformationStrategyInterface
 {
-    private $caracteristiqueStrategy;
     private $photoStrategy;
 
-    public function __construct(TransformationStrategyInterface $caracteristiqueStrategy, TransformationStrategyInterface $photoStrategy)
+    public function __construct(TransformationStrategyInterface $photoStrategy)
     {
-        $this->caracteristiqueStrategy = $caracteristiqueStrategy;
         $this->photoStrategy = $photoStrategy;
     }
 
@@ -33,11 +31,9 @@ class PneuTransformationStrategy implements TransformationStrategyInterface
         $pneu->setQuantiteStock($dto->quantiteStock);
         $pneu->setDescription($dto->description);
         $pneu->setDateAjout($dto->dateAjout);
-        // Transformation de CaracteristiqueDTO en Caracteristique
-        if ($dto->caracteristique !== null) {
-            $caracteristique = $this->caracteristiqueStrategy->transform($dto->caracteristique);
-            $pneu->setCaracteristique($caracteristique);
-        }
+        $pneu->setIndiceCharge($dto->indiceCharge);
+        $pneu->setTaille($dto->taille);
+        $pneu->setIndiceVitesse($dto->indiceVitesse);
 
         // Transformation des PhotoDTO en Photo et ajout à la collection de photos de Pneu
         foreach ($dto->photos as $photoDTO) {
