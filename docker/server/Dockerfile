@@ -3,11 +3,9 @@ FROM lavoweb/php-8.3
 # Mise à jour des paquets et installation des dépendances nécessaires
 RUN apt-get update \
     && apt-get install -y --fix-missing \
-        git \
         unzip \
         zip \
         nano \
-        cron \
         libxslt-dev \
         librabbitmq-dev \
         libssl-dev \

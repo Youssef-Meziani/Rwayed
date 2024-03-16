@@ -47,12 +47,12 @@ class SecurityController extends AbstractController
             'email' => $last_email,
         ]);
 
-        return $this->render('account/login.twig', ['loginForm' => $form->createView(),'last_email' => $last_email, 'error' => $error]);
+        return $this->render('security/login.twig', ['loginForm' => $form->createView(),'last_email' => $last_email, 'error' => $error]);
     }
 
 
     #[Route(path: '/signup', name: 'signup')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new Adherent();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -94,7 +94,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('msg_confirmation_email');
         }
 
-        return $this->render('account/signup.twig', [
+        return $this->render('security/signup.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
