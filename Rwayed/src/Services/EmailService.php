@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 
@@ -17,6 +18,9 @@ class EmailService
         $this->adminEmail = $adminEmail;
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function sendEmail(array $emailDetails): void
     {
         $email = (new TemplatedEmail())

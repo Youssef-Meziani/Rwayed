@@ -47,7 +47,7 @@
                         <div class="tag-badge tag-badge--new">new</div>
                         <div class="tag-badge tag-badge--hot">hot</div>
                     </div>
-                    <a href="{{ path('product') }}">{{pneu.marque ~ ' | ' ~ pneu.caracteristique.taille}}</a>
+                    <a href="{{ path('product') }}">{{pneu.marque ~ ' | ' ~ pneu.taille}}</a>
                 </div>
             </div>
             <div class="product-card__rating">
@@ -65,8 +65,8 @@
             <div class="product-card__features">
                 <ul>
                     <li>Speed: 750 RPM</li>
-                    <li>Load rating: {{pneu.caracteristique.indiceCharge}}</li>
-                    <li>Speed rating: {{pneu.caracteristique.indiceVitesse}}</li>
+                    <li>Load rating: {{pneu.indiceCharge}}</li>
+                    <li>Speed rating: {{pneu.indiceVitesse}}</li>
                     <li>Lifetime: 2 years</li>
                 </ul>
             </div>

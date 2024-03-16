@@ -8,6 +8,7 @@ final class SaisonEnum
     public const SUMMER = 'Summer';
     public const AUTUMN = 'Autumn';
     public const WINTER = 'Winter';
+    public const ALL_SEASON = 'All Season';
 
     public static function getAll(): array
     {
@@ -16,6 +17,7 @@ final class SaisonEnum
             self::SUMMER,
             self::AUTUMN,
             self::WINTER,
+            self::ALL_SEASON,
         ];
     }
 }

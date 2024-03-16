@@ -33,6 +33,7 @@ class PneuManager implements PneuManagerInterface
 
     public function editPneu(Pneu $pneu): void
     {
+
         $this->entityManager->flush();
     }
 

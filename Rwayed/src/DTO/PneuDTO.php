@@ -14,7 +14,9 @@ class PneuDTO
     public int $quantiteStock;
     public string $description;
     public \DateTimeInterface $dateAjout; // Ajoutée
-    public ?CaracteristiqueDTO $caracteristique = null;
+    public string $taille;
+    public int $indiceCharge;
+    public string $indiceVitesse;
 
     /**
      * @var PhotoDTO[] 

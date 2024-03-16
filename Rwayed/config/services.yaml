@@ -13,7 +13,6 @@ services:
             $apiPlatformClient: '@my.api.platform.client'
             $adminEmail: '%env(ADMIN_EMAIL_ADDRESS)%'
             $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
-            $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
             $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
@@ -21,16 +20,12 @@ services:
         arguments:
             $adminEmail: '%admin_email%'
     # Définition des stratégies comme services
-    # Alias pour CaracteristiqueTransformationStrategy
-    App\Strategy\CaracteristiqueStrategyInterface: '@App\Strategy\CaracteristiqueTransformationStrategy'
-    
     # Alias pour PhotoTransformationStrategy
     App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
     
     # Définition de PneuTransformationStrategy avec injection des stratégies spécifiques
     App\Strategy\PneuTransformationStrategy:
         arguments:
-            $caracteristiqueStrategy: '@App\Strategy\CaracteristiqueStrategyInterface'
             $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
     # Configuration HttpClient pour consommer l'API Platform
     my.api.platform.client:

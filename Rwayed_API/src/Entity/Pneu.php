@@ -63,10 +63,17 @@ class Pneu
     #[Groups(['pneu:read', 'pneu:write'])]
     private \DateTimeInterface $dateAjout;
 
-    #[ORM\ManyToOne(targetEntity: Caracteristique::class, inversedBy: 'pneus')]
-    #[ORM\JoinColumn(name: "id_cara", referencedColumnName: "id", nullable: false)]
-    #[Groups(['pneu:read'])]
-    private ?Caracteristique $caracteristique = null;
+    #[ORM\Column(length: 50)]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private string $taille;
+
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $indiceCharge;
+
+    #[ORM\Column(length: 10)]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private string $indiceVitesse;
 
 
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
@@ -194,6 +201,42 @@ class Pneu
     public function setDateAjout(\DateTimeInterface $dateAjout): static
     {
         $this->dateAjout = $dateAjout;
+
+        return $this;
+    }
+
+    public function getTaille(): ?string
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(string $taille): static
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getIndiceCharge(): ?int
+    {
+        return $this->indiceCharge;
+    }
+
+    public function setIndiceCharge(int $indiceCharge): static
+    {
+        $this->indiceCharge = $indiceCharge;
+
+        return $this;
+    }
+
+    public function getIndiceVitesse(): ?string
+    {
+        return $this->indiceVitesse;
+    }
+
+    public function setIndiceVitesse(string $indiceVitesse): static
+    {
+        $this->indiceVitesse = $indiceVitesse;
 
         return $this;
     }

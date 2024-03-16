@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 
+use App\Entity\Photo;
 use App\Entity\Pneu;
 use App\Form\PneuType;
 use App\Repository\PneuRepository;
 use App\Services\PneuManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,55 +28,6 @@ class PneuController extends AbstractController
     {
         $this->uploadsBaseUrl = $uploadsBaseUrl;
     }
-//    #[Route('/new', name: 'pneu_new', methods: ['GET', 'POST'])]
-//    public function new(Request $request, ValidatorInterface $validator, EntityManagerInterface $entityManager): Response
-//    {
-//        $pneu = new Pneu();
-//        $form = $this->createForm(PneuType::class, $pneu);
-//        $form->handleRequest($request);
-//
-//        $pneuAddedSuccessfully = false;
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $photoFiles = $request->files->get('photo_files');
-//            // Vérifiez s'il y a plus de 5 fichiers téléchargés
-//            if ($photoFiles && count($photoFiles) > 5) {
-//                // Ajoutez une erreur de validation
-//                $form->get('photo_files')->addError(new FormError('Vous ne pouvez télécharger que 5 images au maximum.'));
-//            } else {
-//                // Traitez les fichiers téléchargés et persistez-les
-//                foreach ($photoFiles as $file) {
-//                    $photo = new Photo();
-//                    $photo->setImageFile($file);
-//                    $photo->setPneu($pneu);
-//                    $entityManager->persist($photo);
-//                }
-//
-//                $caracteristique = $entityManager->getRepository(Caracteristique::class)->find($pneu->getCaracteristique());
-//                $pneu->setCaracteristique($caracteristique);
-//                // Persistez l'entité Pneu
-//                $entityManager->persist($pneu);
-//                $entityManager->flush();
-//                $pneuAddedSuccessfully = true;
-//
-//                $pneu = new Pneu();
-//                $form = $this->createForm(PneuType::class, $pneu);
-//            }
-//        }
-//
-//        // Récupérez les erreurs de validation
-//        $errors = $validator->validate($pneu);
-//        $errorMessages = [];
-//        foreach ($errors as $error) {
-//            $errorMessages[] = $error->getMessage();
-//        }
-//
-//        return $this->render('pneu/edit.html.twig', [
-//            'pneu' => $pneu,
-//            'form' => $form->createView(),
-//            'errors' => $errorMessages,
-//            'pneuAddedSuccessfully' => $pneuAddedSuccessfully
-//        ]);
-//    }
 
     #[Route('', name: 'pneu_index', methods: ['GET', 'POST'])]
     public function index(Request $request, PneuManager $pneuManager): Response
@@ -101,12 +55,28 @@ class PneuController extends AbstractController
     }
 
     #[Route('/edit/{slug}', name: 'pneu_edit')]
-    public function edit(Request $request, Pneu $pneu,PneuManager $pneuManager): Response
+    public function edit(Request $request, Pneu $pneu,PneuManager $pneuManager, EntityManagerInterface $entityManager): Response
     {
+
         $form = $this->createForm(PneuType::class, $pneu);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($pneu->getPhotos() as $oldPhoto) {
+                $entityManager->remove($oldPhoto); // Supprime l'entité de la base de données
+                $pneu->removePhoto($oldPhoto); // Optionnel : supprime la relation entre le pneu et l'ancienne photo
+            }
+            $entityManager->flush();
+            $files = $request->files->get('photo_files');
+            if ($files) {
+                foreach ($files as $file) {
+                    $photo = new Photo();
+                    $photo->setImageFile($file);
+                    $photo->setPneu($pneu); // Associe la nouvelle photo au pneu
+                    $entityManager->persist($photo); // Prépare la nouvelle photo pour la persistance
+                }
+            }
             $pneuManager->editPneu($pneu);
             $this->addFlash('success', 'The tire has been successfully modified.');
             return $this->redirectToRoute('pneu_index');
@@ -139,7 +109,7 @@ class PneuController extends AbstractController
                 'prixUnitaire' => $pneu->getPrixUnitaire(),
                 'quantiteStock' => $pneu->getQuantiteStock(),
                 'description' => $pneu->getDescription(),
-                'caracteristique' => $pneu->getCaracteristique()->getTaille().' - Charge: '.$pneu->getCaracteristique()->getIndiceCharge().', Vitesse: '.$pneu->getCaracteristique()->getIndiceVitesse()
+                'caracteristique' => $pneu->getTaille().' - Charge: '.$pneu->getIndiceCharge().', Vitesse: '.$pneu->getIndiceVitesse()
             ];
         }
         return new JsonResponse($data);

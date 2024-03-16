@@ -7,13 +7,6 @@
     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
     <!-- gridjs css -->
     <link rel="stylesheet" href="{{ asset('libs/gridjs/theme/mermaid.min.css') }}">
-    <!-- Bootstrap Css -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-    <!-- Icons Css -->
-    <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-    <!-- App Css-->
-    <link href="{{ asset('css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
-
     <style>
         .image-container {
             position: relative;
@@ -103,7 +96,11 @@
                                                                 <div class="mb-3">
                                                                     <label for="{{ form.marque.vars.id }}" class="col-md-2 col-form-label">Marque</label>
                                                                     {{ form_widget(form.marque, { 'attr': {'class': 'form-control'} }) }}
-                                                                    {{ form_errors(form.marque) }}
+                                                                    {% if form.marque.vars.errors %}
+                                                                        {% for error in form.marque.vars.errors %}
+                                                                            <span class="text-danger">{{ error.message }}</span>
+                                                                        {% endfor %}
+                                                                    {% endif %}
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-lg-6">
@@ -111,7 +108,11 @@
                                                                         <div class="mb-3">
                                                                             <label for="{{ form.typeVehicule.vars.id }}" class="col-md-5 col-form-label">Type de véhicule</label>
                                                                             {{ form_widget(form.typeVehicule, { 'attr': {'class': 'form-control'} }) }}
-                                                                            {{ form_errors(form.typeVehicule) }}
+                                                                            {% if form.typeVehicule.vars.errors %}
+                                                                                {% for error in form.typeVehicule.vars.errors %}
+                                                                                    <span class="text-danger">{{ error.message }}</span>
+                                                                                {% endfor %}
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-6">
@@ -119,7 +120,11 @@
                                                                         <div class="mb-4">
                                                                             <label for="{{ form.saison.vars.id }}" class="col-md-5 col-form-label">Saison</label>
                                                                             {{ form_widget(form.saison, { 'attr': {'class': 'form-control'} }) }}
-                                                                            {{ form_errors(form.saison) }}
+                                                                            {% if form.saison.vars.errors %}
+                                                                                {% for error in form.saison.vars.errors %}
+                                                                                    <span class="text-danger">{{ error.message }}</span>
+                                                                                {% endfor %}
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -129,13 +134,22 @@
                                                                             <label for="{{ form.prixUnitaire.vars.id }}" class="col-md-5 col-form-label">Prix unitaire</label>
                                                                             {{ form_widget(form.prixUnitaire, { 'attr': {'class': 'form-control'} }) }}
                                                                             {{ form_errors(form.prixUnitaire) }}
+                                                                            {% if form.prixUnitaire.vars.errors %}
+                                                                                {% for error in form.prixUnitaire.vars.errors %}
+                                                                                    <span class="text-danger">{{ error.message }}</span>
+                                                                                {% endfor %}
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="mb-3">
                                                                             <label for="{{ form.quantiteStock.vars.id }}" class="col-md-5 col-form-label">Quantité en stock</label>
                                                                             {{ form_widget(form.quantiteStock, { 'attr': {'class': 'form-control'} }) }}
-                                                                            {{ form_errors(form.quantiteStock) }}
+                                                                            {% if form.quantiteStock.vars.errors %}
+                                                                                {% for error in form.quantiteStock.vars.errors %}
+                                                                                    <span class="text-danger">{{ error.message }}</span>
+                                                                                {% endfor %}
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -143,12 +157,41 @@
                                                                 <div class="mb-0">
                                                                     <label for="{{ form.description.vars.id }}" class="col-md-5 col-form-label">Description</label>
                                                                     {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
-                                                                    {{ form_errors(form.description) }}
+                                                                    {% if form.description.vars.errors %}
+                                                                        {% for error in form.description.vars.errors %}
+                                                                            <span class="text-danger">{{ error.message }}</span>
+                                                                        {% endfor %}
+                                                                    {% endif %}
                                                                 </div>
-                                                                <div class="mb-0">
-                                                                    <label for="{{ form.caracteristique.vars.id }}" class="col-md-5 col-form-label">Caractéristique</label>
-                                                                    {{ form_widget(form.caracteristique, { 'attr': {'class': 'form-control'} }) }}
-                                                                    {{ form_errors(form.caracteristique) }}
+                                                                <div class="row mb-0 py-3">
+                                                                    <div class="col-6 mb-3">
+                                                                        <label for="{{ form.taille.vars.id }}" class="form-label">{{ form.taille.vars.label }}</label>
+                                                                        {{ form_widget(form.taille, { 'attr': {'class': 'form-control', 'id': 'taille-mask'} }) }}
+                                                                        <div class="text-muted">{{ form.taille.vars.attr.placeholder }}</div>
+                                                                        {% if form.taille.vars.errors %}
+                                                                            {% for error in form.taille.vars.errors %}
+                                                                                <span class="text-danger">{{ error.message }}</span>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-3 mb-3">
+                                                                        <label for="{{ form.indiceCharge.vars.id }}" class="form-label">{{ form.indiceCharge.vars.label }}</label>
+                                                                        {{ form_widget(form.indiceCharge, { 'attr': {'class': 'form-control', 'id': 'number-input', 'value': 0} }) }}
+                                                                        {% if form.indiceCharge.vars.errors %}
+                                                                            {% for error in form.indiceCharge.vars.errors %}
+                                                                                <span class="text-danger">{{ error.message }}</span>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="col-3 mb-3">
+                                                                        <label for="{{ form.indiceVitesse.vars.id }}" class="form-label">{{ form.indiceVitesse.vars.label }}</label>
+                                                                        {{ form_widget(form.indiceVitesse, { 'attr': {'class': 'form-control', 'id': 'choices-multiple-default'} }) }}
+                                                                        {% if form.indiceVitesse.vars.errors %}
+                                                                            {% for error in form.indiceVitesse.vars.errors %}
+                                                                                <span class="text-danger">{{ error.message }}</span>
+                                                                            {% endfor %}
+                                                                        {% endif %}
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -183,7 +226,11 @@
                                                                         <label for="{{ form.imageFile.vars.id }}" class="col-md-2 col-form-label">Image</label>
                                                                         <div class="col-md-10">
                                                                             {{ form_widget(form.imageFile, { 'attr': {'class': 'form-control'} }) }}
-                                                                            {{ form_errors(form.imageFile) }}
+                                                                            {% if form.imageFile.vars.errors %}
+                                                                                {% for error in form.imageFile.vars.errors %}
+                                                                                    <span class="text-danger">{{ error.message }}</span>
+                                                                                {% endfor %}
+                                                                            {% endif %}
                                                                         </div>
                                                                     </div>
 
@@ -244,8 +291,12 @@
 
 {% block javascripts %}
 
+    <!-- form mask -->
+    <script src="{{ asset('libs/imask/imask.min.js') }}"></script>
+    <script src="{{ asset('js/pages/form-add-pneu-mask.js') }}"></script>
     <!-- gridjs js -->
     <script src="{{ asset('libs/gridjs/gridjs.umd.js') }}"></script>
+{#    TODO : A deplacer !!  #}
     <script>
         function loadGridData() {
             new gridjs.Grid({
@@ -440,8 +491,5 @@
         }
 
     </script>
-{#    <script src="{{ asset('js/pages/gridjs.init.js') }}"></script>#}
-
-
 
 {% endblock %}
