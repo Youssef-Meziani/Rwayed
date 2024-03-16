@@ -102,7 +102,6 @@ services:
         image: mysql
         volumes:
             - db_data:/var/lib/mysql
-            - ./docker/db/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf
         ports:
             - "3306:3306"
         environment:

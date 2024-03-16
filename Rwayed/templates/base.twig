@@ -9,6 +9,18 @@
     <title>Rwayed{% block title %}{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.svg')}}" id="favicon">
 
+    <script>
+        function updateFavicon() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon light.svg') }}");
+            } else {
+                document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon.svg') }}");
+            }
+        }
+        updateFavicon();
+        window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
+    </script>
+
     <!--<script src="{{ asset('vendor/turbo/turbo.index.js') }}"></script>-->
 
     <!-- fonts -->

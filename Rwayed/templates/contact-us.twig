@@ -52,30 +52,49 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6">
+                        <div class="col-12 col-lg-6 contact">
                             <div class="ml-1">
                                 <h4 class="contact-us__header card-title">Leave us a Message</h4>
-                                <form>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="form-name">Your Name</label>
-                                            <input type="text" id="form-name" class="form-control" placeholder="Your Name">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="form-email">Email</label>
-                                            <input type="email" id="form-email" class="form-control" placeholder="Email Address">
-                                        </div>
+                                {% for message in app.flashes('success') %}
+                                    <div class="alert alert-success flash-message">{{ message }}</div>
+                                {% endfor %}
+                                {% for message in app.flashes('error') %}
+                                    <div class="alert alert-danger flash-message">{{ message }}</div>
+                                {% endfor %}
+
+                                {{ form_start(contact_form) }}
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="form-name">Your Name</label>
+                                        {{ form_widget(contact_form.name) }}
+                                        {% for error in contact_form.name.vars.errors %}
+                                            <span class="text-danger">{{ error.message }}</span>
+                                        {% endfor %}
                                     </div>
-                                    <div class="form-group">
-                                        <label for="form-subject">Subject</label>
-                                        <input type="text" id="form-subject" class="form-control" placeholder="Subject">
+                                    <div class="form-group col-md-6">
+                                        <label for="form-email">Email</label>
+                                        {{ form_widget(contact_form.email) }}
+                                        {% for error in contact_form.email.vars.errors %}
+                                            <span class="text-danger">{{ error.message }}</span>
+                                        {% endfor %}
                                     </div>
-                                    <div class="form-group">
-                                        <label for="form-message">Message</label>
-                                        <textarea id="form-message" class="form-control" rows="4"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Send Message</button>
-                                </form>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-subject">Subject</label>
+                                    {{ form_widget(contact_form.subject) }}
+                                    {% for error in contact_form.subject.vars.errors %}
+                                        <span class="text-danger">{{ error.message }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-message">Message</label>
+                                    {{ form_widget(contact_form.message) }}
+                                    {% for error in contact_form.message.vars.errors %}
+                                        <span class="text-danger">{{ error.message }}</span>
+                                    {% endfor %}
+                                </div>
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                                {{ form_end(contact_form) }}
                             </div>
                         </div>
                     </div>
@@ -84,4 +103,15 @@
         </div>
     </div>
     <div class="block-space block-space--layout--before-footer"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // Scroll to the flash message when it appears
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.querySelector('.flash-message') || document.querySelector('span.text-danger')) {
+                document.querySelector('.contact').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
 {% endblock %}

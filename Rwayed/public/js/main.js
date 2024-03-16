@@ -1409,20 +1409,6 @@ act like a costumer support working at CarCrafter and your name is Hamza and ( D
 }
 
 
-
-function updateFavicon() {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.getElementById('favicon').setAttribute('href', "images/favicon light.svg");
-    } else {
-        document.getElementById('favicon').setAttribute('href', "images/favicon.svg");
-    }
-}
-
-updateFavicon();
-
-window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
-
-
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         const flashMessages = document.querySelectorAll('.alert-success, .alert-danger');
@@ -1433,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 flashMessage.style.display = 'none'; // Masque complètement l'élément après l'animation.
             });
         });
-    }, 7000); // Les alertes commencent à disparaître après 5 secondes.
+    }, 8000); // Les alertes commencent à disparaître après 5 secondes.
 });
 
 
@@ -1460,10 +1446,14 @@ $(document).ready(function() {
             url: $(this).attr('action'),
             data: formData,
             success: function(response) {
-                if(response.subscribed){
+                if(response.subscribed) {
                     $('#subscription-message').removeClass('alert-danger').removeClass('alert-success').addClass('alert-warning').text("Already subscribed").fadeIn().delay(5000).fadeOut();
                 } else {
-                    $('#subscription-message').removeClass('alert-danger').removeClass('alert-warning').addClass('alert-success').text("Successfully subscribed").fadeIn().delay(5000).fadeOut();
+                    if (typeof response.errors === 'undefined') {
+                        $('#subscription-message').removeClass('alert-danger').removeClass('alert-warning').addClass('alert-success').text("Successfully subscribed").fadeIn().delay(5000).fadeOut();
+                    } else {
+                        $('#subscription-message').removeClass('alert-success').removeClass('alert-warning').addClass('alert-danger').text(response.errors.join(', ')).fadeIn().delay(5000).fadeOut();
+                    }
                 }
             },
             error: function(xhr, status, error) {
