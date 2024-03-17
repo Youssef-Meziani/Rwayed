@@ -31,9 +31,9 @@ class ProductController extends AbstractController
     #[Route('/quickview/{id}', name: 'quickview')]
     public function quickview(int $id, Request $request): Response
     {
-        // if (!$request->isXmlHttpRequest()) {
-        //     throw new NotFoundHttpException();
-        // }
+         if (!$request->isXmlHttpRequest()) {
+             throw new NotFoundHttpException();
+         }
 
         try {
             // fetchPneuById pour récupérer les données du pneu

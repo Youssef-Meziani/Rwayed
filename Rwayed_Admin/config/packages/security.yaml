@@ -18,7 +18,7 @@ security:
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
-                target: logout_success
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%' # Utilisez un paramètre secret pour générer le cookie

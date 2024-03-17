@@ -81,7 +81,7 @@ class SecurityController extends AbstractController
                 'from_name' => 'Rwayed admin',
                 'to' => $user->getEmail(),
                 'subject' => 'Please confirm your email address',
-                'template' => 'registration/confirmation_email.html.twig',
+                'template' => 'email templates/confirm.twig',
                 'context' => [
                     'signedUrl' => $signatureComponents->getSignedUrl(),
                     'expiresAtMessageKey' => $signatureComponents->getExpirationMessageKey(),
@@ -105,7 +105,7 @@ class SecurityController extends AbstractController
         if (!$request->getSession()->get('isVerifiedEmailSent')) {
             return $this->redirectToRoute('signup');
         }
-        return $this->render('registration/check_email.html.twig');
+        return $this->render('security/signup_check_email.twig');
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

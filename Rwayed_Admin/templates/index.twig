@@ -1,6 +1,6 @@
 {% extends 'base-sidebar.twig' %}
 
-{% block title %} - Home{% endblock %}
+{% block title %} - Dashboard{% endblock %}
 
 {% block content %}
 
@@ -993,4 +993,15 @@
         <!-- container-fluid -->
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- apexcharts -->
+    <script src="{{ asset('libs/apexcharts/apexcharts.min.js')}}"></script>
+    <!-- Vector map-->
+    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
+    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js')}}"></script>
+    <script src="{{ asset('js/pages/dashboard.init.js')}}"></script>
 {% endblock %}
