@@ -23,18 +23,13 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
         $form = $this->createForm(LoginFormType::class, ['email' => $lastUsername]);
 
-        return $this->render('account/login.twig', [
+        return $this->render('security/login.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/logout_success', name: 'logout_success')]
-    public function logoutSuccess(): Response
-    {
-        return $this->render('account/logout.twig');
-    }
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

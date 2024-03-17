@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-#[Route('/pneu')]
+#[Route('/tire')]
 class PneuController extends AbstractController
 {
 
@@ -42,7 +42,7 @@ class PneuController extends AbstractController
             return $this->redirectToRoute('pneu_index');
         }
 
-        return $this->render('pneu/index.html.twig', [
+        return $this->render('tire/index.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -84,7 +84,7 @@ class PneuController extends AbstractController
         $images = $pneu->getPhotos();
         $photo = $pneu->getImage();
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
-        return $this->render('pneu/edit.html.twig', [
+        return $this->render('tire/edit.twig', [
             'pneu' => $pneu,
             'images' => $images,
             'photo' => $photo,

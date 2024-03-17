@@ -1,36 +1,12 @@
 {% extends 'base-sidebar.twig' %}
 
-{% block title %}List des pneus{% endblock %}
+{% block title %} - Tires{% endblock %}
 
 {% block stylesheets %}
-    <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}">
+    {{ parent() }}
+
     <!-- gridjs css -->
     <link rel="stylesheet" href="{{ asset('libs/gridjs/theme/mermaid.min.css') }}">
-    <style>
-        .image-container {
-            position: relative;
-            display: inline-block;
-            margin-right: 10px;
-        }
-
-        .delete-button {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            z-index: 1;
-            background-color: rgba(255, 255, 255, 0.5);
-            color: red;
-            border: none;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            font-size: 16px;
-            line-height: 1;
-            cursor: pointer;
-        }
-
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -290,6 +266,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
 
     <!-- form mask -->
     <script src="{{ asset('libs/imask/imask.min.js') }}"></script>
@@ -316,7 +293,6 @@
                         name: 'Actions',
                         width: '100px',
                         formatter: (cell, row) => {
-                            console.log(row);
                             const pneuSlug = row.cells[7].data;
                             return gridjs.html(`
                         <td>
@@ -325,7 +301,7 @@
                                     <a href="javascript:void(0);" id="delete_${pneuSlug}" class="px-2 text-danger delete-btn" data-id="${pneuSlug}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="bx bx-trash-alt font-size-18"></i></a>
                                 </li>
                                 <li class="list-inline-item">
-                                    <a href="/pneu/edit/${pneuSlug}" class="px-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="bx bx-edit font-size-18"></i></a>
+                                    <a href="/tire/edit/${pneuSlug}" class="px-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="bx bx-edit font-size-18"></i></a>
                                 </li>
                             </ul>
                         </td>
@@ -357,7 +333,6 @@
             while (target != null) {
                 if (target.id && target.id.startsWith('delete_')) {
                     const pneuSlug = target.getAttribute('data-id');
-                    console.log(pneuSlug)
                     SweetAlert.fire({
                         title: 'Êtes-vous sûr?',
                         text: "Vous ne pourrez pas revenir en arrière!",

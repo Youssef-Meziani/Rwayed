@@ -8,11 +8,11 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted("ROLE_ADMIN")]
-class HomeController extends AbstractController
+class InvoiceController extends AbstractController
 {
-    #[Route('/home', name: 'home')]
+    #[Route('/invoice', name: 'invoice')]
     public function index(): Response
     {
-        return $this->render('index.twig');
+        return $this->render('invoice/index.twig');
     }
 }

@@ -53,7 +53,7 @@ class ResetPasswordController extends AbstractController
             );
         }
 
-        return $this->render('reset_password/request.html.twig', [
+        return $this->render('security/reset_request.twig', [
             'requestForm' => $form->createView(),
         ]);
     }
@@ -70,7 +70,7 @@ class ResetPasswordController extends AbstractController
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
 
-        return $this->render('reset_password/check_email.html.twig', [
+        return $this->render('security/reset_check_email.twig', [
             'resetToken' => $resetToken,
         ]);
     }
@@ -135,7 +135,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('reset_password/reset.html.twig', [
+        return $this->render('security/reset.twig', [
             'resetForm' => $form->createView(),
         ]);
     }
@@ -171,7 +171,7 @@ class ResetPasswordController extends AbstractController
             'from_name' => 'Rwayed Admin',
             'to' => $user->getEmail(),
             'subject' => 'Your password reset request',
-            'template' => 'reset_password/email.html.twig',
+            'template' => 'email templates/reset.twig',
             'context' => [
                 'resetToken' => $resetToken,
             ]
