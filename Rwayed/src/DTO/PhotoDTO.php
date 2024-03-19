@@ -7,4 +7,5 @@ class PhotoDTO
 {
     public int $id;
     public string $path;
+
 }
