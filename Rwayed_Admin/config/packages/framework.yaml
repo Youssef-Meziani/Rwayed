@@ -4,15 +4,12 @@ framework:
     #csrf_protection: true
     handle_all_throwables: true
 
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: null
-        cookie_secure: auto
+        cookie_secure: auto  # Assurez-vous que votre application fonctionne en HTTPS pour forcer ce paramètre à true
         cookie_samesite: lax
+        cookie_lifetime: 86400  # Définit la durée de vie du cookie de session à 1 jour (86400 secondes)
 
-    #esi: true
-    #fragments: true
     php_errors:
         log: true
 
