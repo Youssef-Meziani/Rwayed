@@ -7,6 +7,30 @@
 
     <!-- gridjs css -->
     <link rel="stylesheet" href="{{ asset('libs/gridjs/theme/mermaid.min.css') }}">
+
+    <style>
+        .image-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: red;
+            border: none;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            line-height: 1;
+            cursor: pointer;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -239,18 +263,18 @@
                                 <!-- /.modal -->
                             </div>
                         </div><!-- end card header -->
-                        <div class="card-body">
-                            {% for message in app.flashes('success') %}
-                                <div class="alert alert-success" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success mx-4 my-2" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
 
-                            {% for error in app.flashes('error') %}
-                                <div class="alert alert-danger" role="alert">
-                                    {{ error }}
-                                </div>
-                            {% endfor %}
+                        {% for error in app.flashes('error') %}
+                            <div class="alert alert-danger mx-4 my-2" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                        <div class="card-body">
                             <div id="table-gridjs"></div>
                         </div>
                         <!-- end card body -->
@@ -275,8 +299,16 @@
     <script src="{{ asset('libs/gridjs/gridjs.umd.js') }}"></script>
 {#    TODO : A deplacer !!  #}
     <script>
+        let myGrid; // Variable globale pour conserver une référence à la grille
+
         function loadGridData() {
-            new gridjs.Grid({
+            // Vérifie si une grille existe déjà et la détruit
+            if (myGrid) {
+                myGrid.destroy();
+            }
+
+            // Crée une nouvelle instance de la grille
+            myGrid = new gridjs.Grid({
                 columns: [
                     {
                         name: 'Image',
@@ -295,25 +327,25 @@
                         formatter: (cell, row) => {
                             const pneuSlug = row.cells[7].data;
                             return gridjs.html(`
-                        <td>
-                            <ul class="list-inline mb-0 d-flex">
-                                <li class="list-inline-item">
-                                    <a href="javascript:void(0);" id="delete_${pneuSlug}" class="px-2 text-danger delete-btn" data-id="${pneuSlug}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="bx bx-trash-alt font-size-18"></i></a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a href="/tire/edit/${pneuSlug}" class="px-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="bx bx-edit font-size-18"></i></a>
-                                </li>
-                            </ul>
-                        </td>
-                    `);
+                            <td>
+                                <ul class="list-inline mb-0 d-flex">
+                                    <li class="list-inline-item">
+                                        <a href="javascript:void(0);" id="delete_${pneuSlug}" class="px-2 text-danger delete-btn" data-id="${pneuSlug}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><i class="bx bx-trash-alt font-size-18"></i></a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="/tire/edit/${pneuSlug}" class="px-2 text-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit"><i class="bx bx-edit font-size-18"></i></a>
+                                    </li>
+                                </ul>
+                            </td>
+                        `);
                         }
                     }
                 ],
-                pagination: {limit: 10},
+                pagination: {limit: 5},
                 sort: true,
                 search: true,
                 server: {
-                    url: '{{ path('pneus_json') }}',
+                    url: '{{ path('pneus_json') }}', // Assurez-vous que ce chemin est correctement configuré
                     then: data => data.map(pneu => [
                         pneu.image,
                         pneu.marque,
@@ -343,7 +375,7 @@
                         confirmButtonText: 'Oui, supprimez-le!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/pneu/delete/${pneuSlug}`, { method: 'POST' })
+                            fetch(`/tire/delete/${pneuSlug}`, { method: 'POST' })
                                 .then(response => response.json())
                                 .then(data => {
                                     if(data.success) {
@@ -352,7 +384,7 @@
                                             'Le pneu a été supprimé.',
                                             'success'
                                         ).then(() => {
-                                            loadGridData(); // Rafraîchir la grille après suppression
+                                            loadGridData(); // Rafraîchit la grille après suppression
                                         });
                                     } else {
                                         SweetAlert.fire(
@@ -371,100 +403,9 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            loadGridData(); // Charger les données de la grille au chargement de la page
+            loadGridData(); // Charge les données de la grille au chargement de la page
         });
-
-
-        function previewImages(event) {
-            var previewContainer = document.getElementById('image-preview-container');
-            var noImageText = document.getElementById('no-image-text');
-            var addButton = document.getElementById('add-button');
-            var errorSpan = document.getElementById('file-error-message');
-            previewContainer.innerHTML = '';
-            var fileList = event.target.files; // Liste des fichiers sélectionnés
-            var newFileList = []; // Liste des fichiers restants
-
-            // Vérifier le nombre maximal de fichiers sélectionnés
-            if (fileList.length > 5) {
-                addButton.disabled = true; // Désactiver le bouton d'ajout
-                errorSpan.textContent = 'You can only upload a maximum of 5 images.'; // Afficher le message d'erreur
-                errorSpan.style.display = 'block'; // Afficher le span d'erreur
-            } else {
-                addButton.disabled = false; // Activer le bouton d'ajout
-                errorSpan.style.display = 'none'; // Cacher le span d'erreur s'il n'y a pas d'erreur
-            }
-
-            if (fileList.length > 0) {
-                noImageText.style.display = 'none';
-                for (var i = 0; i < fileList.length; i++) {
-                    var imgContainer = document.createElement('div');
-                    imgContainer.classList.add('image-container');
-
-                    var img = document.createElement('img');
-                    img.src = URL.createObjectURL(fileList[i]);
-                    img.classList.add('img-thumbnail', 'mb-2');
-                    img.style.width = '150px';
-                    img.style.height = '150px';
-
-                    // Créer un bouton de suppression (avec une icône "X") pour chaque image
-                    var deleteButton = document.createElement('button');
-                    deleteButton.type = 'button';
-                    deleteButton.innerHTML = '&times;'; // Icône "X"
-                    deleteButton.classList.add('delete-button');
-                    deleteButton.addEventListener('click', function (index) {
-                        return function () {
-                            // Supprimer l'image parente lorsque le bouton est cliqué
-                            this.parentNode.removeChild(this.previousSibling);
-                            this.parentNode.removeChild(this);
-                            // Supprimer le fichier correspondant de la sélection
-                            newFileList.splice(index, 1);
-                            // Mettre à jour l'input de type fichier avec les fichiers restants
-                            updateFileInput(newFileList);
-                            // Afficher le texte "Aucune image sélectionnée" si toutes les images sont supprimées
-                            if (previewContainer.children.length === 0) {
-                                noImageText.style.display = 'block';
-                            }
-                        };
-                    }(i)); // Passez l'index comme paramètre à la fonction d'événement
-
-                    // Ajouter l'image et le bouton de suppression à la zone d'aperçu
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(deleteButton);
-                    previewContainer.appendChild(imgContainer);
-
-                    // Ajouter le fichier à la liste des fichiers restants
-                    newFileList.push(fileList[i]);
-                }
-            } else {
-                noImageText.style.display = 'block';
-            }
-        }
-
-
-        function updateFileInput(newFileList) {
-            // Récupérer l'ancien input de type fichier
-            var oldInput = document.getElementById('photo_files');
-
-            // Créer un nouvel input de type fichier avec les mêmes attributs de classe CSS
-            var newInput = document.createElement('input');
-            newInput.type = 'file';
-            newInput.id = 'photo_files';
-            newInput.name = 'photo_files[]';
-            newInput.multiple = true;
-            newInput.className = oldInput.className;
-
-            // Mettre à jour l'input de type fichier avec les fichiers restants
-            newInput.files = newFileList;
-
-            // Ajouter le gestionnaire d'événement onchange au nouvel input
-            newInput.addEventListener('change', function(event) {
-                previewImages(event);
-            });
-
-            // Remplacer l'ancien input par le nouvel input
-            oldInput.parentNode.replaceChild(newInput, oldInput);
-        }
-
     </script>
+
 
 {% endblock %}
