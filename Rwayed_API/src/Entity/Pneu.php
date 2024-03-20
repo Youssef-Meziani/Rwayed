@@ -184,15 +184,7 @@ class Pneu
         return $this;
     }
 
-    public function getCaracteristique(): ?Caracteristique
-    {
-        return $this->caracteristique;
-    }
-
-    public function setCaracteristique(?Caracteristique $caracteristique): void
-    {
-        $this->caracteristique = $caracteristique;
-    }
+  
     public function getDateAjout(): ?\DateTimeInterface
     {
         return $this->dateAjout;

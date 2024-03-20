@@ -34,7 +34,8 @@ class PneuDTO
         return $this->photos;
     }
 
-    public function setPhotos(array $photos): void {
+    public function setPhotos(array $photos): void 
+    {
         foreach ($photos as $photo) {
             if (!$photo instanceof PhotoDTO) {
                 throw new \InvalidArgumentException('All photos must be instances of PhotoDTO');
