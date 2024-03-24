@@ -130,7 +130,7 @@
 								<div class="products-list__content">
 									{% for pneu in pneus %}
 										{% if pneu.prixUnitaire is not null %}
-											{% include 'partials/_product-card.twig' with {'image': pneu.image, 'price': pneu.prixUnitaire} %}
+											{{ include('partials/_product-card.twig', {class_name: 'products-list__item'}) }}
 										{% endif %}
 									{% endfor %}
 								</div>
