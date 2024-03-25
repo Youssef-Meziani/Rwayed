@@ -7,6 +7,7 @@ use App\Strategy\PneuTransformationStrategy;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ShopController extends AbstractController
@@ -21,22 +22,27 @@ class ShopController extends AbstractController
     }
 
     #[Route('/shop', name: 'shop')]
-    public function index(Request $request): Response
+    public function index(Request $request, SessionInterface $session): Response
     {
+        if ($request->isMethod('POST')) {
+            $itemsPerPage = filter_var($request->request->get('itemsPerPage'), FILTER_VALIDATE_INT, ["options" => ["default" => 16, "min_range" => 1]]);
+            $session->set('itemsPerPage', $itemsPerPage);
+            return $this->redirectToRoute('shop', [], 303);
+        }
+        $itemsPerPage = $session->get('itemsPerPage', 16);
         $page = max($request->query->getInt('page', 1), 1);
-        $itemsPerPage = 4;
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
-        $pneusDTOs = $this->apiService->fetchPneus($page, $itemsPerPage);
-        $pneus = [];
-        foreach ($pneusDTOs as $pneuDTO) {
-            $pneus[] = $this->pneuTransformationStrategy->transform($pneuDTO);
+        $tiresDTOs = $this->apiService->fetchPneus($page, $itemsPerPage);
+        $tires = [];
+        foreach ($tiresDTOs as $pneuDTO) {
+            $tires[] = $this->pneuTransformationStrategy->transform($pneuDTO);
         }
         $totalItems = $this->apiService->getTotalItems();
 
         $totalPages = ceil($totalItems / $itemsPerPage);
 
         return $this->render('shop.twig', [
-            'pneus' => $pneus,
+            'tires' => $tires,
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'itemsPerPage' => $itemsPerPage,
@@ -57,7 +63,7 @@ class ShopController extends AbstractController
             throw $this->createNotFoundException('Le pneu demandé n\'existe pas.');
         }
         $pneu = $this->pneuTransformationStrategy->transform($pneuDTO);
-        // Récupérez une liste de pneus similaires
+        // Récupérez une liste de tires similaires
         $similarPneus = $this->apiService->fetchPneus(1,1);
         return $this->render('product.twig', [
             'pneu' => $pneu,

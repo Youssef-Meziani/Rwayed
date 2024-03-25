@@ -24,13 +24,13 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
-        $pneusDTOs = $this->apiService->fetchPneus();
-        $pneus = [];
-        foreach ($pneusDTOs as $pneuDTO) {
-            $pneus[] = $this->pneuTransformationStrategy->transform($pneuDTO);
+        $tireDTOs = $this->apiService->fetchPneus();
+        $tires = [];
+        foreach ($tireDTOs as $tireDTO) {
+            $tires[] = $this->pneuTransformationStrategy->transform($tireDTO);
         }
         return $this->render('index.twig', [
-            'pneus' => $pneus,
+            'tires' => $tires,
             'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }

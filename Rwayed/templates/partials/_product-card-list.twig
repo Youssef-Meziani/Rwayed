@@ -10,7 +10,7 @@
         </div>
         <div class="product-card__image">
             <div class="image image--type--product">
-                <a href="{{ path('product') }}" class="image__body">
+                <a href="{{ path('product', {'slug': slug}) }}" class="image__body">
                     <img class="image__tag" src="{{ asset('images/products/' ~ image) }}" alt="">
                 </a>
             </div>
@@ -29,7 +29,7 @@
                             <div class="tag-badge tag-badge--hot">hot</div>
                         {% endif %}
                     </div>
-                    <a href="{{ path('product') }}">Product Name</a>
+                    <a href="{{ path('product', {'slug': slug}) }}">Product Name</a>
                 </div>
             </div>
             <div class="product-card__rating">
