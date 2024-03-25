@@ -18,13 +18,13 @@
 						</svg>
 					</button>
 					<div class="owl-carousel">
-						<a class="image image--type--product" href="{{ path('product') }}" target="_blank" data-width="700" data-height="700">
+						<a class="image image--type--product" href="{{ path('product', {'slug': pneu.slug}) }}" target="_blank" data-width="700" data-height="700">
 							<div class="image__body">
 								<img class="image__tag" src="{{ asset(uploads_base_url ~ pneu.image) }}" alt="">
 							</div>
 						</a>
 						{% for photo in pneu.photos %}
-						<a class="image image--type--product" href="{{ path('product') }}" target="_blank" data-width="700" data-height="700">
+						<a class="image image--type--product" href="{{ path('product', {'slug': pneu.slug}) }}" target="_blank" data-width="700" data-height="700">
 							<div class="image__body">
 								<img class="image__tag" src="{{ asset(uploads_base_url ~ photo.path) }}" alt="">
 							</div>
@@ -92,7 +92,7 @@
 					</table>
 				</div>
 				<div class="quickview__product-description">
-					{{pneu.description}}
+					{{ pneu.description | nl2br }}
 				</div>
 				<div class="quickview__product-prices-stock">
 					<div class="quickview__product-prices">
@@ -160,6 +160,6 @@
 				</div>
 			</div>
 		</div>
-		<a href="{{ path('product') }}" class="quickview__see-details">See full details</a>
+		<a href="{{ path('product', {'slug': pneu.slug}) }}" class="quickview__see-details">See full details</a>
 	</div>
 </div>
