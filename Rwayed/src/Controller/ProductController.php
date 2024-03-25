@@ -13,11 +13,6 @@ use App\Strategy\PneuTransformationStrategy;
 
 class ProductController extends AbstractController
 {
-    #[Route('/product', name: 'product')]
-    public function index(): Response
-    {
-        return $this->render('product.twig');
-    }
 
     private ApiPlatformConsumerService $apiService;
     private $pneuTransformationStrategy;

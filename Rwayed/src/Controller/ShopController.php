@@ -44,4 +44,25 @@ class ShopController extends AbstractController
             'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }
+
+    /**
+     * @throws \JsonException
+     */
+    #[Route('/shop/{slug}', name: 'product')]
+    public function detail(string $slug): Response
+    {
+        $uploadsBaseUrl = $this->getParameter('uploads_base_url');
+        $pneuDTO = $this->apiService->fetchPneuBySlug($slug);
+        if (!$pneuDTO) {
+            throw $this->createNotFoundException('Le pneu demandé n\'existe pas.');
+        }
+        $pneu = $this->pneuTransformationStrategy->transform($pneuDTO);
+        // Récupérez une liste de pneus similaires
+        $similarPneus = $this->apiService->fetchPneus(1,1);
+        return $this->render('product.twig', [
+            'pneu' => $pneu,
+            'similarPneus' => $similarPneus,
+            'uploads_base_url' => $uploadsBaseUrl,
+        ]);
+    }
 }

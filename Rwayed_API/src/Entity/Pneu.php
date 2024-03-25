@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PneuRepository;
@@ -18,6 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['pneu:write']],
     paginationItemsPerPage: 16
 )]
+#[ApiFilter(SearchFilter::class, properties: ['slug' => 'exact'])]
 class Pneu
 {
     #[ORM\Id]

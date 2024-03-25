@@ -44,7 +44,12 @@ class ApiPlatformConsumerService
         $pneusDataJson = json_encode($decodedData['hydra:member']);
 
         // return $this->serializer->deserialize($pneusDataJson, 'App\Entity\Pneu[]', 'json');
-        return $this->serializer->deserialize($pneusDataJson, 'App\DTO\PneuDTO[]', 'json');
+        $similarPneus = $this->serializer->deserialize($pneusDataJson, 'App\DTO\PneuDTO[]', 'json');
+
+        // Mélangez les pneus similaires
+        shuffle($similarPneus);
+
+        return $similarPneus;
     }
 
     public function fetchPneuById(int $id)
@@ -67,7 +72,31 @@ class ApiPlatformConsumerService
         }
     }
 
-    public function getTotalItems(): int {
+    public function fetchPneuBySlug(string $slug)
+    {
+        try {
+            $response = $this->client->request('GET', "pneus?slug=" . $slug);
+
+            if ($response->getStatusCode() !== 200) {
+                return null;
+            }
+
+            $data = $response->getContent();
+            $decodedData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+            if (!isset($decodedData['hydra:member']) || count($decodedData['hydra:member']) === 0) {
+                return null;
+            }
+            // Supposant que la recherche par slug retourne un tableau d'éléments
+            $pneuDataJson = json_encode($decodedData['hydra:member'][0]);
+            return $this->serializer->deserialize($pneuDataJson, 'App\DTO\PneuDTO', 'json');
+        } catch (TransportExceptionInterface | ClientException | ServerException | RedirectionException $e) {
+            return null;
+        }
+    }
+
+
+    public function getTotalItems(): int
+    {
         try {
             $response = $this->client->request('GET', 'pneus', [
                 'query' => [
