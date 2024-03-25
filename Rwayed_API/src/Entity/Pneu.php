@@ -19,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['pneu:read']],
     denormalizationContext: ['groups' => ['pneu:write']],
+    paginationClientItemsPerPage: true,
     paginationItemsPerPage: 16
 )]
 #[ApiFilter(SearchFilter::class, properties: ['slug' => 'exact'])]
