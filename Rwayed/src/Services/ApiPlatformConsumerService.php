@@ -2,23 +2,26 @@
 
 namespace App\Services;
 
-
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Exception\ServerException;
 use Symfony\Component\HttpClient\Exception\RedirectionException;
+use App\Entity\Adherent;
 
 class ApiPlatformConsumerService
 {
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(HttpClientInterface $apiPlatformClient, SerializerInterface $serializer)
+    public function __construct(HttpClientInterface $apiPlatformClient, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
         $this->client = $apiPlatformClient;
         $this->serializer = $serializer;
+        $this->entityManager = $entityManager;
     }
 
     public function fetchPneus(int $page = 1, int $itemsPerPage = 4): array
@@ -115,4 +118,17 @@ class ApiPlatformConsumerService
             return 0;
         }
     }
+
+    public function getTotalMembers(): int {
+        try {
+            $repository = $this->entityManager->getRepository(Adherent::class);
+            return $repository->createQueryBuilder('m')
+                ->select('COUNT(m.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+    
 }

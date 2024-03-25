@@ -24,7 +24,7 @@ class ShopController extends AbstractController
     public function index(Request $request): Response
     {
         $page = max($request->query->getInt('page', 1), 1);
-        $itemsPerPage = 16;
+        $itemsPerPage = 4;
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
         $pneusDTOs = $this->apiService->fetchPneus($page, $itemsPerPage);
         $pneus = [];
