@@ -24,12 +24,24 @@ class ShopController extends AbstractController
     #[Route('/shop', name: 'shop')]
     public function index(Request $request, SessionInterface $session): Response
     {
-        if ($request->isMethod('POST')) {
-            $itemsPerPage = filter_var($request->request->get('itemsPerPage'), FILTER_VALIDATE_INT, ["options" => ["default" => 16, "min_range" => 1]]);
+        if ($request->isMethod(Request::METHOD_POST)) {
+            $itemsPerPage = filter_var(
+                $request->request->get('itemsPerPage'),
+                FILTER_VALIDATE_INT,
+                [
+                    "options" => [
+                        "default" => ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE,
+                        "min_range" => 1,
+                    ],
+                ]);
             $session->set('itemsPerPage', $itemsPerPage);
-            return $this->redirectToRoute('shop', [], 303);
+
+            return $this->redirectToRoute('shop');
         }
-        $itemsPerPage = $session->get('itemsPerPage', 16);
+        $itemsPerPage = $session->get(
+            'itemsPerPage',
+            ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE,
+        );
         $page = max($request->query->getInt('page', 1), 1);
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
         $tiresDTOs = $this->apiService->fetchPneus($page, $itemsPerPage);
@@ -64,7 +76,8 @@ class ShopController extends AbstractController
         }
         $pneu = $this->pneuTransformationStrategy->transform($pneuDTO);
         // Récupérez une liste de tires similaires
-        $similarPneus = $this->apiService->fetchPneus(1,1);
+        $similarPneus = $this->apiService->fetchPneus(1,10);
+//        dd($similarPneus);
         return $this->render('product.twig', [
             'pneu' => $pneu,
             'similarPneus' => $similarPneus,

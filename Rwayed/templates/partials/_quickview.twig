@@ -18,13 +18,13 @@
 						</svg>
 					</button>
 					<div class="owl-carousel">
-						<a class="image image--type--product" href="{{ path('product', {'slug': pneu.slug}) }}" target="_blank" data-width="700" data-height="700">
+						<a class="image image--type--product" href="{{ asset(uploads_base_url ~ pneu.image) }}" target="_blank" data-width="700" data-height="700">
 							<div class="image__body">
 								<img class="image__tag" src="{{ asset(uploads_base_url ~ pneu.image) }}" alt="">
 							</div>
 						</a>
 						{% for photo in pneu.photos %}
-						<a class="image image--type--product" href="{{ path('product', {'slug': pneu.slug}) }}" target="_blank" data-width="700" data-height="700">
+						<a class="image image--type--product" href="{{ asset(uploads_base_url ~ photo.path) }}" target="_blank" data-width="700" data-height="700">
 							<div class="image__body">
 								<img class="image__tag" src="{{ asset(uploads_base_url ~ photo.path) }}" alt="">
 							</div>

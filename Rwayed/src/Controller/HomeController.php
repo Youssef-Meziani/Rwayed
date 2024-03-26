@@ -24,7 +24,7 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
-        $tireDTOs = $this->apiService->fetchPneus();
+        $tireDTOs = $this->apiService->fetchPneus(1,16);
         $tires = [];
         foreach ($tireDTOs as $tireDTO) {
             $tires[] = $this->pneuTransformationStrategy->transform($tireDTO);

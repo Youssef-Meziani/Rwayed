@@ -292,6 +292,8 @@
 {% block javascripts %}
     {{ parent() }}
 
+
+
     <!-- form mask -->
     <script src="{{ asset('libs/imask/imask.min.js') }}"></script>
     <script src="{{ asset('js/pages/form-add-pneu-mask.js') }}"></script>
@@ -299,8 +301,55 @@
     <script src="{{ asset('libs/gridjs/gridjs.umd.js') }}"></script>
 {#    TODO : A deplacer !!  #}
     <script>
-        let myGrid; // Variable globale pour conserver une référence à la grille
 
+        function previewImages(event) {
+            var previewContainer = document.getElementById('image-preview-container'); // Ajusté pour correspondre au HTML
+            var noImageText = document.getElementById('no-image-text'); // Ajusté pour correspondre au HTML
+            var errorSpan = document.getElementById('file-error-message'); // Ajusté pour correspondre au HTML
+            previewContainer.innerHTML = ''; // Effacer les prévisualisations existantes
+            var fileList = event.target.files;
+
+            if (fileList.length > 0) {
+                noImageText.style.display = 'none'; // Cacher le texte si des images sont présentes
+                Array.from(fileList).forEach(file => {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var imgContainer = document.createElement('div');
+                        imgContainer.classList.add('image-container');
+
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.classList.add('img-thumbnail', 'mb-2');
+                        img.style.width = '150px';
+                        img.style.height = '150px';
+
+                        var deleteButton = document.createElement('button');
+                        deleteButton.innerHTML = '&times;';
+                        deleteButton.classList.add('delete-button');
+                        deleteButton.onclick = function() {
+                            imgContainer.remove(); // Suppression de la prévisualisation
+                            checkForEmptyPreview(); // Vérifier si le texte "Aucune image sélectionnée" doit être affiché
+                        };
+
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(deleteButton);
+                        previewContainer.appendChild(imgContainer);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                noImageText.style.display = 'block'; // Afficher le texte si aucune image n'est présente
+            }
+        }
+        function checkForEmptyPreview() {
+            var previewContainer = document.getElementById('image-preview-container'); // Ajusté pour correspondre au HTML
+            var noImageText = document.getElementById('no-image-text'); // Ajusté pour correspondre au HTML
+            noImageText.style.display = previewContainer.children.length === 0 ? 'block' : 'none';
+        }
+        // Appel initial pour gérer les images existantes
+        document.addEventListener('DOMContentLoaded', checkForEmptyPreview);
+
+        let myGrid; // Variable globale pour conserver une référence à la grille
         function loadGridData() {
             // Vérifie si une grille existe déjà et la détruit
             if (myGrid) {
