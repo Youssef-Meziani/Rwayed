@@ -13,6 +13,8 @@ use App\Entity\Adherent;
 
 class ApiPlatformConsumerService
 {
+    public const DEFAULT_COUNT_ITEMS_PER_PAGE = 16;
+
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
     private EntityManagerInterface $entityManager;
