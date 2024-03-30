@@ -287,6 +287,20 @@ class Pneu
         return $this->scoreTotal / $this->nombreEvaluations;
     }
 
+    public function isNew(): bool
+    {
+        $now = new \DateTime();
+        $interval = $now->diff($this->dateAjout);
+        return $interval->days <= 30; // nouveau s'il a été ajouté il y a moins de 30 jours
+    }
+
+    public function isHot(): bool
+    {
+//        $nombreDeCommandes = $this->getNombreDeCommandes();   // TODO : remplacer ici la methode prochainement
+//        return $nombreDeCommandes > 10; // Considéré comme hot s'il a été commandé plus de 10 fois  (DEMO : on peut ameliorer cette logique prochainement)
+        return 30 > 10;
+    }
+
     /**
      * @return Collection<int, Photo>
      */
