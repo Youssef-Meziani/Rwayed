@@ -67,19 +67,19 @@ class ShopController extends AbstractController
     #[Route('/shop/{slug}', name: 'product')]
     public function detail(string $slug): Response
     {
-        $uploadsBaseUrl = $this->getParameter('uploads_base_url');
         $pneuDTO = $this->apiService->fetchPneuBySlug($slug);
         if (!$pneuDTO) {
             throw $this->createNotFoundException('Le pneu demandé n\'existe pas.');
         }
+
         $pneu = $this->pneuTransformationStrategy->transform($pneuDTO);
-        // Récupérez une liste de tires similaires
-        $similarPneus = $this->apiService->fetchPneus(1,10);
-//        dd($similarPneus);
+        $similarPneusDTO = $this->apiService->fetchPneus(1, 10);
+
+        $similarPneus = array_map(fn($pneuDTO) => $this->pneuTransformationStrategy->transform($pneuDTO), $similarPneusDTO);
+
         return $this->render('product.twig', [
             'pneu' => $pneu,
             'similarPneus' => $similarPneus,
-            'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }
 }
