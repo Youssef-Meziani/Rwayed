@@ -34,6 +34,8 @@ class PneuTransformationStrategy implements TransformationStrategyInterface
         $pneu->setIndiceCharge($dto->indiceCharge);
         $pneu->setTaille($dto->taille);
         $pneu->setIndiceVitesse($dto->indiceVitesse);
+        $pneu->setScoreTotal($dto->scoreTotal);
+        $pneu->setNombreEvaluations($dto->nombreEvaluations);
 
         // Transformation des PhotoDTO en Photo et ajout à la collection de photos de Pneu
         foreach ($dto->photos as $photoDTO) {

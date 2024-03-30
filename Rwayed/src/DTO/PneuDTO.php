@@ -17,6 +17,8 @@ class PneuDTO
     public string $taille;
     public int $indiceCharge;
     public string $indiceVitesse;
+    public int $scoreTotal;
+    public int $nombreEvaluations;
 
     /**
      * @var PhotoDTO[] 
