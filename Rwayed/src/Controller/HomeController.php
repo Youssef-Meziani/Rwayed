@@ -23,7 +23,6 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(): Response
     {
-        $uploadsBaseUrl = $this->getParameter('uploads_base_url');
         $tireDTOs = $this->apiService->fetchPneus(1,16);
         $tires = [];
         foreach ($tireDTOs as $tireDTO) {
@@ -31,7 +30,6 @@ class HomeController extends AbstractController
         }
         return $this->render('index.twig', [
             'tires' => $tires,
-            'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }
 }

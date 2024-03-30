@@ -43,7 +43,6 @@ class ShopController extends AbstractController
             ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE,
         );
         $page = max($request->query->getInt('page', 1), 1);
-        $uploadsBaseUrl = $this->getParameter('uploads_base_url');
         $tiresDTOs = $this->apiService->fetchPneus($page, $itemsPerPage);
         $tires = [];
         foreach ($tiresDTOs as $pneuDTO) {
@@ -59,7 +58,6 @@ class ShopController extends AbstractController
             'totalPages' => $totalPages,
             'itemsPerPage' => $itemsPerPage,
             'totalItems' => $totalItems,
-            'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }
 

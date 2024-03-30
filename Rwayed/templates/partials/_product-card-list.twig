@@ -11,7 +11,7 @@
         <div class="product-card__image">
             <div class="image image--type--product">
                 <a href="{{ path('product', {'slug': slug}) }}" class="image__body">
-                    <img class="image__tag" src="{{ asset(uploads_base_url ~ image) }}" alt="">
+                    <img class="image__tag" src="{{ minio_url(image) }}" alt="">
                 </a>
             </div>
         </div>
