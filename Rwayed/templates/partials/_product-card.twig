@@ -53,14 +53,16 @@
             <div class="product-card__rating">
                 <div class="rating product-card__rating-stars">
                     <div class="rating__body">
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star"></div>
+                        {% for i in 1..5 %}
+                            {% if i <= tire.noteMoyenne %}
+                                <div class="rating__star rating__star--active"></div>
+                            {% else %}
+                                <div class="rating__star"></div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="product-card__rating-label">4 on 3 reviews</div>
+                <div class="product-card__rating-label">{{ tire.noteMoyenne|round(0, 'common') }} on {{ tire.nombreEvaluations }} reviews</div>
             </div>
             <div class="product-card__features">
                 <ul>

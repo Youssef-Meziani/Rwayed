@@ -729,24 +729,57 @@
                 <div class="col-4">
                     <div class="block-products-columns__title">Top Rated Products</div>
                     <div class="block-products-columns__list">
-                        {% for i in range(1, 3) %}
-                            {{ include('partials/_product-card-list.twig', {image: 'product-' ~ i ~ '-245x245.jpg', slug : 'test', show_sale: false, show_new: true, show_hot: false}) }}
+                        {% for tire in tires|slice(0,3) %}
+                            {{ include('partials/_product-card-list.twig', {
+                                image: tire.image,
+                                slug: tire.slug,
+                                product_name: tire.marque,
+                                price: tire.prixUnitaire,
+                                noteMoyenne: tire.noteMoyenne|round(0, 'common'),
+                                nombreEvaluations: tire.nombreEvaluations,
+                                id: tire.id,
+                                show_sale: false,
+                                show_new: true,
+                                show_hot: false,
+                            }) }}
                         {% endfor %}
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="block-products-columns__title">Special Offers</div>
                     <div class="block-products-columns__list">
-                        {% for i in range(4, 6) %}
-                            {{ include('partials/_product-card-list.twig', {image: 'product-' ~ i ~ '-245x245.jpg', slug : 'test', show_sale: true, show_new: false, show_hot: false}) }}
+                        {% for tire in tires|slice(3,3) %}
+                            {{ include('partials/_product-card-list.twig', {
+                                image: tire.image,
+                                slug: tire.slug,
+                                product_name: tire.marque,
+                                price: tire.prixUnitaire,
+                                noteMoyenne: tire.noteMoyenne|round(0, 'common'),
+                                nombreEvaluations: tire.nombreEvaluations,
+                                id: tire.id,
+                                show_sale: true,
+                                show_new: false,
+                                show_hot: false,
+                            }) }}
                         {% endfor %}
                     </div>
                 </div>
                 <div class="col-4">
                     <div class="block-products-columns__title">Bestsellers</div>
                     <div class="block-products-columns__list">
-                        {% for i in range(7, 9) %}
-                            {{ include('partials/_product-card-list.twig', {image: 'product-' ~ i ~ '-245x245.jpg', slug : 'test', show_sale: false, show_new: false, show_hot: true}) }}
+                        {% for tire in tires|slice(6,3) %}
+                            {{ include('partials/_product-card-list.twig', {
+                                image: tire.image,
+                                slug: tire.slug,
+                                product_name: tire.marque,
+                                price: tire.prixUnitaire,
+                                noteMoyenne: tire.noteMoyenne|round(0, 'common'),
+                                nombreEvaluations: tire.nombreEvaluations,
+                                id: tire.id,
+                                show_sale: false,
+                                show_new: false,
+                                show_hot: true,
+                            }) }}
                         {% endfor %}
                     </div>
                 </div>

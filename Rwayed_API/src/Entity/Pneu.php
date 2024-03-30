@@ -80,6 +80,14 @@ class Pneu
     #[Groups(['pneu:read', 'pneu:write'])]
     private string $indiceVitesse;
 
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $scoreTotal = 0;
+
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $nombreEvaluations = 0;
+
 
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
     #[Groups(['pneu:read'])]
@@ -235,6 +243,28 @@ class Pneu
     {
         $this->indiceVitesse = $indiceVitesse;
 
+        return $this;
+    }
+
+    public function getScoreTotal(): ?int
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(int $scoreTotal): self
+    {
+        $this->scoreTotal = $scoreTotal;
+        return $this;
+    }
+
+    public function getNombreEvaluations(): ?int
+    {
+        return $this->nombreEvaluations;
+    }
+
+    public function setNombreEvaluations(int $nombreEvaluations): self
+    {
+        $this->nombreEvaluations = $nombreEvaluations;
         return $this;
     }
 
