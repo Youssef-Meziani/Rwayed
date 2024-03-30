@@ -24,7 +24,7 @@
         <div class="product-card__image">
             <div class="image image--type--product">
                 <a href="{{ path('product', {'slug': tire.slug}) }}" class="image__body">
-                    <img class="image__tag" src="{{ asset(uploads_base_url ~ tire.image) }}" alt="">
+                    <img class="image__tag" src="{{ minio_url(tire.image) }}" alt="">
                 </a>
             </div>
             <div class="status-badge status-badge--style--success product-card__fit status-badge--has-icon status-badge--has-text">

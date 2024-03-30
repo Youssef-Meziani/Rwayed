@@ -43,15 +43,15 @@
 										</svg>
 									</button>
 									<div class="owl-carousel">
-										<a class="image image--type--product" href="{{ asset(uploads_base_url ~ pneu.image) }}" target="_blank" data-width="700" data-height="700">
+										<a class="image image--type--product" href="{{ minio_url(pneu.image) }}" target="_blank" data-width="700" data-height="700">
 											<div class="image__body">
-												<img class="image__tag" src="{{ asset(uploads_base_url ~ pneu.image) }}" alt="">
+												<img class="image__tag" src="{{ minio_url(pneu.image) }}" alt="">
 											</div>
 										</a>
 										{% for photo in pneu.photos %}
-											<a class="image image--type--product" href="{{ asset(uploads_base_url ~ photo.path) }}" target="_blank" data-width="700" data-height="700">
+											<a class="image image--type--product" href="{{ minio_url(photo.path) }}" target="_blank" data-width="700" data-height="700">
 												<div class="image__body">
-													<img class="image__tag" src="{{ asset(uploads_base_url ~ photo.path) }}" alt="">
+													<img class="image__tag" src="{{ minio_url(photo.path) }}" alt="">
 												</div>
 											</a>
 										{% endfor %}
@@ -61,13 +61,13 @@
 									<div class="owl-carousel">
 										<div class="product-gallery__thumbnails-item image image--type--product">
 											<div class="image__body">
-												<img class="image__tag" src="{{ asset(uploads_base_url ~ pneu.image) }}" alt="">
+												<img class="image__tag" src="{{ minio_url(pneu.image) }}" alt="">
 											</div>
 										</div>
 										{% for photo in pneu.photos %}
 											<div class="product-gallery__thumbnails-item image image--type--product">
 												<div class="image__body">
-													<img class="image__tag" src="{{ asset(uploads_base_url ~ photo.path) }}" alt="">
+													<img class="image__tag" src="{{ minio_url(photo.path) }}" alt="">
 												</div>
 											</div>
 										{% endfor %}
@@ -819,7 +819,7 @@
 														<div class="product-card__image">
 															<div class="image image--type--product">
 																<a href="{{ path('product', {'slug': pneu.slug}) }}" class="image__body">
-																	<img class="image__tag" src="{{ asset(uploads_base_url ~ pneu.image) }}" alt="">
+																	<img class="image__tag" src="{{ minio_url(pneu.image) }}" alt="">
 																</a>
 															</div>
 															<div class="status-badge status-badge--style--success product-card__fit status-badge--has-icon status-badge--has-text">
