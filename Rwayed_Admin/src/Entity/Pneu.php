@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
+
 #[ORM\Entity(repositoryClass: PneuRepository::class)]
 #[Vich\Uploadable]
 class Pneu
@@ -20,41 +22,60 @@ class Pneu
     private ?int $id = null;
 
     #[ORM\Column(length: 70)]
+    #[Assert\NotBlank(message: "Brand is required.")]
     private string $marque;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: "Vehicle type is required.")]
     private string $typeVehicule;
 
     #[Vich\UploadableField(mapping: "pneus",fileNameProperty:"image")]
     private ?File $imageFile = null;
 
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTime $updatedAt = null;
     #[ORM\Column(length: 255)]
-    private string $image = '';
+    private ?string $image = null;
 
     #[ORM\Column(length: 128, unique: true)]
     #[Gedmo\Slug(fields: ["marque", "typeVehicule"])]
     private string $slug;
 
     #[ORM\Column(length: 20)]
+    #[Assert\NotBlank(message: "Season is required.")]
     private string $saison;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Unit price is mandatory.")]
+    #[Assert\Positive(message: "Unit price must be positive.")]
     private float $prixUnitaire;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Quantity in stock is mandatory.")]
+    #[Assert\Positive(message: "Stock quantity must be a positive number.")]
     private int $quantiteStock;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: "Description is required.")]
+    #[Assert\Length(
+        max: 1000,
+        maxMessage: "The description cannot exceed 1000 characters."
+    )]
     private string $description;
+
+    #[ORM\Column(length: 50)]
+    private string $taille;
+
+    #[ORM\Column]
+    private int $indiceCharge;
+
+    #[ORM\Column(length: 10)]
+    private string $indiceVitesse;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private \DateTimeInterface $dateAjout;
 
-    #[ORM\ManyToOne(inversedBy: 'pneus')]
-    #[ORM\JoinColumn(name: "id", referencedColumnName: "id", nullable: false)]
-    private ?Caracteristique $caracteristique = null;
-
-    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
 
     public function __construct()
@@ -68,15 +89,9 @@ class Pneu
         return $this->id;
     }
 
-    public function getImage(): string
-    {
-        return $this->image;
-    }
 
-    public function setImage(string $image): void
-    {
-        $this->image = $image;
-    }
+
+
     public function getImageFile(): ?File
     {
         return $this->imageFile;
@@ -85,6 +100,9 @@ class Pneu
     public function setImageFile(?File $imageFile): void
     {
         $this->imageFile = $imageFile;
+        if ($imageFile) {
+            $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getMarque(): ?string
@@ -98,6 +116,18 @@ class Pneu
 
         return $this;
     }
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+
 
     public function getTypeVehicule(): ?string
     {
@@ -109,15 +139,6 @@ class Pneu
         $this->typeVehicule = $typeVehicule;
 
         return $this;
-    }
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): void
-    {
-        $this->path = $path;
     }
     public function getSlug(): ?string
     {
@@ -179,6 +200,42 @@ class Pneu
         return $this;
     }
 
+    public function getTaille(): ?string
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(string $taille): static
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getIndiceCharge(): ?int
+    {
+        return $this->indiceCharge;
+    }
+
+    public function setIndiceCharge(int $indiceCharge): static
+    {
+        $this->indiceCharge = $indiceCharge;
+
+        return $this;
+    }
+
+    public function getIndiceVitesse(): ?string
+    {
+        return $this->indiceVitesse;
+    }
+
+    public function setIndiceVitesse(string $indiceVitesse): static
+    {
+        $this->indiceVitesse = $indiceVitesse;
+
+        return $this;
+    }
+
     public function getDateAjout(): ?\DateTimeInterface
     {
         return $this->dateAjout;
@@ -189,16 +246,6 @@ class Pneu
         $this->dateAjout = $dateAjout;
 
         return $this;
-    }
-
-    public function getCaracteristique(): ?Caracteristique
-    {
-        return $this->caracteristique;
-    }
-
-    public function setCaracteristique(?Caracteristique $caracteristique): void
-    {
-        $this->caracteristique = $caracteristique;
     }
 
     /**

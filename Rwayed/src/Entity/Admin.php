@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AdminRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,9 +22,13 @@ class Admin extends Personne
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_embauche;
 
+    #[ORM\OneToMany(mappedBy: 'id_adm', targetEntity: Informations::class)]
+    private Collection $informations;
+
     public function __construct()
     {
         $this->date_embauche = new \DateTime();
+        $this->informations = new ArrayCollection();
     }
     public function getRang(): ?string
     {
@@ -85,5 +91,35 @@ class Admin extends Personne
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    /**
+     * @return Collection<int, Informations>
+     */
+    public function getInformations(): Collection
+    {
+        return $this->informations;
+    }
+
+    public function addInformation(Informations $information): static
+    {
+        if (!$this->informations->contains($information)) {
+            $this->informations->add($information);
+            $information->setIdAdm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInformation(Informations $information): static
+    {
+        if ($this->informations->removeElement($information)) {
+            // set the owning side to null (unless already changed)
+            if ($information->getIdAdm() === $this) {
+                $information->setIdAdm(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -724,19 +724,22 @@
             button.addClass('product-card__action--loading');
 
             let xhr = null;
-            // timeout ONLY_FOR_DEMO!
             const timeout = setTimeout(function() {
+                const id = button.attr('id');////
                 xhr = $.ajax({
-                    url: '/quickview',
+                    url: '/quickview/'+id,
+                    type: 'GET',
                     success: function(data) {
                         quickview.cancelPreviousModal = function() {};
                         button.removeClass('product-card__action--loading');
-
                         modal.html(data);
                         modal.find('.quickview__close').on('click', function() {
                             modal.modal('hide');
                         });
                         modal.modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
                 });
             }, 1000);
@@ -747,8 +750,6 @@
                 if (xhr) {
                     xhr.abort();
                 }
-
-                // timeout ONLY_FOR_DEMO!
                 clearTimeout(timeout);
             };
         }
@@ -1406,3 +1407,58 @@ act like a costumer support working at CarCrafter and your name is Hamza and ( D
     closeBtn.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
     chatbotToggler.addEventListener("click", () => document.body.classList.toggle("show-chatbot"));
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        const flashMessages = document.querySelectorAll('.alert-success, .alert-danger');
+        flashMessages.forEach(flashMessage => {
+            flashMessage.classList.add('fade-out');
+
+            flashMessage.addEventListener('animationend', () => {
+                flashMessage.style.display = 'none'; // Masque complètement l'élément après l'animation.
+            });
+        });
+    }, 8000); // Les alertes commencent à disparaître après 5 secondes.
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var showModal = document.body.getAttribute('data-show-modal') === 'true';
+    if (showModal) {
+        $('#loginMessageModal').modal('show');
+    }
+
+    // Optionnel : Nettoyer la session après l'affichage du modal
+    if (showModal) {
+        fetch('/nettoyer-modal'); // Assurez-vous que cette route nettoie `show_login_modal` de la session
+    }
+});
+
+$(document).ready(function() {
+    $('#newsletter-form').submit(function(event) {
+        event.preventDefault();
+
+        var formData = $(this).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: formData,
+            success: function(response) {
+                if(response.subscribed) {
+                    $('#subscription-message').removeClass('alert-danger').removeClass('alert-success').addClass('alert-warning').text("Already subscribed").fadeIn().delay(5000).fadeOut();
+                } else {
+                    if (typeof response.errors === 'undefined') {
+                        $('#subscription-message').removeClass('alert-danger').removeClass('alert-warning').addClass('alert-success').text("Successfully subscribed").fadeIn().delay(5000).fadeOut();
+                    } else {
+                        $('#subscription-message').removeClass('alert-success').removeClass('alert-warning').addClass('alert-danger').text(response.errors.join(', ')).fadeIn().delay(5000).fadeOut();
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#subscription-message').removeClass('alert-success').removeClass('alert-warning').addClass('alert-danger').text("Ops! Server error").fadeIn().delay(5000).fadeOut();
+            }
+        });
+    });
+});

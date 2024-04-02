@@ -202,7 +202,7 @@
                                         <h6 class="mb-0">{{ app.user.nom }} {{ app.user.prenom }}</h6>
                                     {% endif %}
                                 </div>
-                                <a class="dropdown-item" href="contacts-profile.html"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Profile</span></a>
+                                <a class="dropdown-item" href="{{ path('profile') }}"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Profile</span></a>
                                 <a class="dropdown-item" href="auth-lock-screen.html"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Lock screen</span></a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-2"></i> <span class="align-middle">Logout</span></a>
@@ -263,14 +263,16 @@
                                     <span class="menu-item" data-key="t-users">Users</span>
                                 </a>
                                 <ul class="sub-menu" aria-expanded="false">
-                                    <li><a href="" data-key="t-user-clients">Clients</a></li>
-                                    <li><a href="" data-key="t-user-techniciens">Techniciens</a></li>
-                                    <li><a href="" data-key="t-user-admins">Admins</a></li>
+                                    <li><a href="{{ path('client') }}" data-key="t-user-clients">Clients</a></li>
+                                    <li><a href="{{ path('technician') }}" data-key="t-user-techniciens">Techniciens</a></li>
+                                    {% if app.user.isIsSuper() %}
+                                        <li><a href="{{ path('admin') }}" data-key="t-user-admins">Admins</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
 
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ path('invoice') }}">
                                     <i class="bx bx-receipt icon nav-icon"></i>
                                     <span class="menu-item" data-key="t-invoices">Invoices</span>
                                 </a>
@@ -278,7 +280,7 @@
 
 
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ path('order') }}">
                                     <i class="bx bx-box icon nav-icon"></i>
                                     <span class="menu-item" data-key="t-orders">Orders</span>
                                 </a>
@@ -288,7 +290,7 @@
                             <li class="menu-title" data-key="t-products">Products</li>
 
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ path('pneu_index') }}">
                                     <i class="bx bx-buoy icon nav-icon"></i>
                                     <span class="menu-item" data-key="t-tires">Tires</span>
                                 </a>
@@ -971,12 +973,5 @@
 
 
 {% block javascripts %}
-    <!-- apexcharts -->
-    <script src="{{ asset('libs/apexcharts/apexcharts.min.js')}}"></script>
 
-    <!-- Vector map-->
-    <script src="{{ asset('libs/jsvectormap/js/jsvectormap.min.js')}}"></script>
-    <script src="{{ asset('libs/jsvectormap/maps/world-merc.js')}}"></script>
-    <script src="{{ asset('js/pages/dashboard.init.js')}}"></script>
-    <script src="{{ asset('js/app.js')}}"></script>
 {% endblock %}

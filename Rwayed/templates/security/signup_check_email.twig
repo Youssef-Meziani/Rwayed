@@ -1,0 +1,31 @@
+{% extends 'base.twig' %}
+
+{% block title %} - SignUp{% endblock %}
+
+{% block body %}
+    <div class="block-space block-space--layout--after-header"></div>
+    <div class="block">
+        <div class="container container--max--lg">
+            <div class="row justify-content-center">
+                <div class="col-md-8 d-flex mt-4 mt-md-0"> <!-- Ajustez la largeur au besoin -->
+                    <div class="card flex-grow-1 mb-0">
+                        <div class="card-body card-body--padding--2">
+                            <div class="card-body p-4">
+                                <div class="mt-2">
+                                    <h5 class="card-title">Confirm your  address</h5>
+                                </div>
+                                <div class="p-2 mt-4  text-center">
+                                    <p class="alert alert-info text-center small mb-4">
+                                        Please verify your email address to confirm your registration. <br><br>
+                                    </p>
+                                    <small class="card-text">If you don't receive an email please check your spam folder.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block-space block-space--layout--before-footer"></div>
+{% endblock %}

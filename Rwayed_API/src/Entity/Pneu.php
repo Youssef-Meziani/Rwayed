@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PneuRepository;
@@ -15,8 +18,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: PneuRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['pneu:read']],
-    denormalizationContext: ['groups' => ['pneu:write']]
+    denormalizationContext: ['groups' => ['pneu:write']],
+    paginationClientItemsPerPage: true,
+    paginationItemsPerPage: 16
 )]
+#[ApiFilter(SearchFilter::class, properties: ['slug' => 'exact'])]
 class Pneu
 {
     #[ORM\Id]
@@ -62,10 +68,25 @@ class Pneu
     #[Groups(['pneu:read', 'pneu:write'])]
     private \DateTimeInterface $dateAjout;
 
-    #[ORM\ManyToOne(targetEntity: Caracteristique::class, inversedBy: 'pneus')]
-    #[ORM\JoinColumn(name: "id_cara", referencedColumnName: "id", nullable: false)]
-    #[Groups(['pneu:read'])]
-    private ?Caracteristique $caracteristique = null;
+    #[ORM\Column(length: 50)]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private string $taille;
+
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $indiceCharge;
+
+    #[ORM\Column(length: 10)]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private string $indiceVitesse;
+
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $scoreTotal = 0;
+
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $nombreEvaluations = 0;
 
 
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
@@ -176,15 +197,7 @@ class Pneu
         return $this;
     }
 
-    public function getCaracteristique(): ?Caracteristique
-    {
-        return $this->caracteristique;
-    }
-
-    public function setCaracteristique(?Caracteristique $caracteristique): void
-    {
-        $this->caracteristique = $caracteristique;
-    }
+  
     public function getDateAjout(): ?\DateTimeInterface
     {
         return $this->dateAjout;
@@ -194,6 +207,64 @@ class Pneu
     {
         $this->dateAjout = $dateAjout;
 
+        return $this;
+    }
+
+    public function getTaille(): ?string
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(string $taille): static
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getIndiceCharge(): ?int
+    {
+        return $this->indiceCharge;
+    }
+
+    public function setIndiceCharge(int $indiceCharge): static
+    {
+        $this->indiceCharge = $indiceCharge;
+
+        return $this;
+    }
+
+    public function getIndiceVitesse(): ?string
+    {
+        return $this->indiceVitesse;
+    }
+
+    public function setIndiceVitesse(string $indiceVitesse): static
+    {
+        $this->indiceVitesse = $indiceVitesse;
+
+        return $this;
+    }
+
+    public function getScoreTotal(): ?int
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(int $scoreTotal): self
+    {
+        $this->scoreTotal = $scoreTotal;
+        return $this;
+    }
+
+    public function getNombreEvaluations(): ?int
+    {
+        return $this->nombreEvaluations;
+    }
+
+    public function setNombreEvaluations(int $nombreEvaluations): self
+    {
+        $this->nombreEvaluations = $nombreEvaluations;
         return $this;
     }
 

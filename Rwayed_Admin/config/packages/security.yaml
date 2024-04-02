@@ -18,13 +18,13 @@ security:
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
-                target: logout_success
+                target: app_login
 
             remember_me:
-                secret: '%kernel.secret%' # Utilisez un paramètre secret pour générer le cookie
-                lifetime: 604800  # Durée de vie du cookie en secondes (604800 = 7 jours ici)
-                path: /            # Chemin pour lequel le cookie est valide
-                secure: true       # Définissez à true si votre site fonctionne exclusivement en HTTPS
+                secret: '%kernel.secret%'
+                lifetime: 604800  # Augmenté à 7 jours
+                path: /
+                secure: true  # Assurez-vous de passer à false si votre site n'est pas exclusivement en HTTPS
 
             access_denied_handler: App\Handlers\CustomAccessDeniedHandler
 

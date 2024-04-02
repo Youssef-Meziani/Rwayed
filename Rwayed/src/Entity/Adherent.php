@@ -13,6 +13,7 @@ class Adherent extends Personne
     public function __construct()
     {
         $this->points_fidelite = 0;
+        $this->roles = ['ROLE_ADHERENT'];
     }
 
     public function getPointsFidelite(): ?int
@@ -29,16 +30,18 @@ class Adherent extends Personne
 
     public function getRoles(): array
     {
-        // Vérifie si le tableau $roles est vide avant d'ajouter 'ROLE_USER'
-        if (empty($this->roles)) {
-            return ['ROLE_USER'];
+        $roles = $this->roles;
+        if (!in_array('ROLE_ADHERENT', $roles, true)) {
+            $roles[] = 'ROLE_ADHERENT';
         }
-
-        return $this->roles;
+        return $roles;
     }
 
-    public function setRoles(array $roles):self
+    public function setRoles(array $roles): self
     {
+        if (!in_array('ROLE_ADHERENT', $roles, true)) {
+            $roles[] = 'ROLE_ADHERENT';
+        }
         $this->roles = $roles;
 
         return $this;
