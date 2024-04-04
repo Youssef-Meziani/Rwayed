@@ -18,6 +18,6 @@ class AppFixtures extends Fixture
         AdherentFactory::createMany(30);
         AdminFactory::createMany(5);
         TechnicienFactory::createMany(20);
-        CaracteristiqueFactory::createMany(10);
+//        CaracteristiqueFactory::createMany(10);
     }
 }
