@@ -301,6 +301,11 @@ class Pneu
         return 30 > 10;
     }
 
+    public function isSale(): bool
+    {
+        return $this->quantiteStock === 0;
+    }
+
     /**
      * @return Collection<int, Photo>
      */

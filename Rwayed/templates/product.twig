@@ -4,6 +4,14 @@
 	- Product
 {% endblock %}
 
+{% block stylesheets %}
+	<style>
+		.hidden {
+			display: none !important;
+		}
+	</style>
+{% endblock %}
+
 {% block body %}
 	<div class="block-header block-header--has-breadcrumb">
 		<div class="container">
@@ -131,14 +139,16 @@
 										</li>
 									</ul>
 									<div class="product__features-link">
-										<a href="">See Full Specification</a>
+										<a href="#product-tab-specification" class="see-full-spec">See Full Specification</a>
 									</div>
 								</div>
 							</div>
 							<div class="product__info">
 								<div class="product__info-card">
 									<div class="product__info-body">
-										<div class="product__badge tag-badge tag-badge--sale">Sale</div>
+										{% if pneu.isSale() %}
+											<div class="product__badge tag-badge tag-badge--sale">Unavailable</div>
+										{%  endif %}
 										<div class="product__prices-stock">
 											<div class="product__prices">
 												<div class="product__price product__price--current">{{pneu.prixUnitaire}}
@@ -201,13 +211,14 @@
 									{#                                    </div>#}
 										<div class="product__actions"> <div class="product__actions-item product__actions-item--quantity">
 											<div class="input-number">
-												<input class="input-number__input form-control form-control-lg" type="number" min="1" value="1">
-												<div class="input-number__add"></div>
-												<div class="input-number__sub"></div>
+												<input class="input-number__input form-control form-control-lg" {{ pneu.isSale()  ? 'disabled' : '' }} type="number" min="1" value="{{ pneu.isSale()  ? '0' : '1' }}">
+												<div class="input-number__add {{ pneu.isSale() ? 'hidden' : '' }}"></div>
+												<div class="input-number__sub {{ pneu.isSale() ? 'hidden' : '' }}"></div>
 											</div>
 										</div>
 										<div class="product__actions-item product__actions-item--addtocart">
-											<button class="btn btn-primary btn-lg btn-block">Add to cart</button>
+
+											<button class="btn btn-primary btn-lg btn-block" {{ pneu.isSale()  ? 'disabled' : '' }}>Add to cart</button>
 										</div>
 										<div class="product__actions-divider"></div>
 										<button class="product__actions-item product__actions-item--wishlist" type="button">
@@ -855,16 +866,18 @@
 																</div>
 															</div>
 															<div class="product-card__rating">
-																<div class="rating product-card__rating-stars">
-																	<div class="rating__body">
-																		<div class="rating__star rating__star--active"></div>
-																		<div class="rating__star rating__star--active"></div>
-																		<div class="rating__star rating__star--active"></div>
-																		<div class="rating__star rating__star--active"></div>
-																		<div class="rating__star"></div>
-																	</div>
-																</div>
-																<div class="product-card__rating-label">4 on 3 reviews</div>
+                                                                <div class="rating product-card__rating-stars">
+                                                                    <div class="rating__body">
+                                                                        {% for i in 1..5 %}
+                                                                            {% if i <= pneu.noteMoyenne %}
+                                                                                <div class="rating__star rating__star--active"></div>
+                                                                            {% else %}
+                                                                                <div class="rating__star"></div>
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="product-card__rating-label">{{ pneu.noteMoyenne|round(0, 'common') }} on {{ pneu.nombreEvaluations }} reviews</div>
 															</div>
 														</div>
 														<div class="product-card__footer">
@@ -896,4 +909,30 @@
 		</div>
 	</div>
 	<div class="block-space block-space--layout--before-footer"></div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$('.see-full-spec').click(function(e){
+				e.preventDefault(); // Empêche le lien de naviguer directement
+
+				// Change l'onglet actif
+				$('.product-tabs__item').removeClass('product-tabs__item--active');
+				$('a[href="#product-tab-specification"]').parent().addClass('product-tabs__item--active');
+
+				// Affiche le contenu de l'onglet de spécification
+				$('.product-tabs__pane').removeClass('product-tabs__pane--active');
+				$('#product-tab-specification').addClass('product-tabs__pane--active');
+
+				// Anime le défilement jusqu'à la section
+				$('html, body').animate({
+					scrollTop: $("#product-tab-specification").offset().top - 100 // Ajustez -100 selon les besoins pour le décalage
+				}, 600); // 600 ms pour l'animation de défilement
+			});
+		});
+	</script>
+
 {% endblock %}

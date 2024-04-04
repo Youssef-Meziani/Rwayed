@@ -107,17 +107,19 @@
 				<div class="product-form quickview__product-form">
 					<div class="product-form__body">
 						<div class="product-form__row">
-							<div class="product-form__title">Material</div>
+{#							TODO : on clique sur yes => calcul total price = tire price + repair price #}
+							<div class="product-form__title">Repair service</div>
 							<div class="product-form__control">
 								<div class="input-radio-label">
 									<div class="input-radio-label__list">
 										<label class="input-radio-label__item">
 											<input type="radio" name="material" class="input-radio-label__input">
-											<span class="input-radio-label__title">Steel</span>
+											<span class="input-radio-label__title">Yes</span>
 										</label>
+{#										TODO : non : tire price normal #}
 										<label class="input-radio-label__item">
 											<input type="radio" name="material" class="input-radio-label__input">
-											<span class="input-radio-label__title">Aluminium</span>
+											<span class="input-radio-label__title">Non</span>
 										</label>
 										<label class="input-radio-label__item">
 											<input type="radio" name="material" class="input-radio-label__input" disabled>
@@ -132,6 +134,7 @@
 				<div class="quickview__product-actions">
 					<div class="quickview__product-actions-item quickview__product-actions-item--quantity">
 						<div class="input-number">
+{#							TODO : repaire price augment with pourcentage , tire price augmente with number of tires selected#}
 							<input class="input-number__input form-control" type="number" min="1" value="1">
 							<div class="input-number__add"></div>
 							<div class="input-number__sub"></div>
@@ -140,6 +143,7 @@
 					<div class="quickview__product-actions-item quickview__product-actions-item--addtocart">
 						<button class="btn btn-primary btn-block">Add to cart</button>
 					</div>
+{#					TODO : button wishlist should stay active and should be added in wishlist page, logo in header doiventetre gerer pour afficher le nombre des pneus dans l wishlist#}
 					<div class="quickview__product-actions-item quickview__product-actions-item--wishlist">
 						<button class="btn btn-muted btn-icon" type="button">
 							<svg width="16" height="16">
@@ -148,15 +152,15 @@
 							</svg>
 						</button>
 					</div>
-					<div class="quickview__product-actions-item quickview__product-actions-item--compare">
-						<button class="btn btn-muted btn-icon" type="button">
-							<svg width="16" height="16">
-								<path d="M9,15H7c-0.6,0-1-0.4-1-1V2c0-0.6,0.4-1,1-1h2c0.6,0,1,0.4,1,1v12C10,14.6,9.6,15,9,15z"/>
-								<path d="M1,9h2c0.6,0,1,0.4,1,1v4c0,0.6-0.4,1-1,1H1c-0.6,0-1-0.4-1-1v-4C0,9.4,0.4,9,1,9z"/>
-								<path d="M15,5h-2c-0.6,0-1,0.4-1,1v8c0,0.6,0.4,1,1,1h2c0.6,0,1-0.4,1-1V6C16,5.4,15.6,5,15,5z"/>
-							</svg>
-						</button>
-					</div>
+{#					<div class="quickview__product-actions-item quickview__product-actions-item--compare">#}
+{#						<button class="btn btn-muted btn-icon" type="button">#}
+{#							<svg width="16" height="16">#}
+{#								<path d="M9,15H7c-0.6,0-1-0.4-1-1V2c0-0.6,0.4-1,1-1h2c0.6,0,1,0.4,1,1v12C10,14.6,9.6,15,9,15z"/>#}
+{#								<path d="M1,9h2c0.6,0,1,0.4,1,1v4c0,0.6-0.4,1-1,1H1c-0.6,0-1-0.4-1-1v-4C0,9.4,0.4,9,1,9z"/>#}
+{#								<path d="M15,5h-2c-0.6,0-1,0.4-1,1v8c0,0.6,0.4,1,1,1h2c0.6,0,1-0.4,1-1V6C16,5.4,15.6,5,15,5z"/>#}
+{#							</svg>#}
+{#						</button>#}
+{#					</div>#}
 				</div>
 			</div>
 		</div>
