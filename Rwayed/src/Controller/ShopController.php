@@ -136,10 +136,8 @@ class ShopController extends AbstractController
      * @throws \JsonException
      */
     #[Route('/shop/submit-avis/{slug}', name: 'submit_avis', methods: ['POST'])]
-    public function submitAvis(string $slug, Request $request, EntityManagerInterface $entityManager, Security $security): JsonResponse
+    public function submitAvis(Pneu $pneu, Request $request, EntityManagerInterface $entityManager, Security $security): JsonResponse
     {
-        $pneu = $this->findPneuOrFail($slug, $entityManager);
-
         $formAvis = $this->prepareAvisForm($request);
 
         if ($formAvis->isSubmitted() && $formAvis->isValid()) {
@@ -158,15 +156,6 @@ class ShopController extends AbstractController
             $messages[$error->getOrigin()->getName()] = $error->getMessage();
         }
         return $messages;
-    }
-
-    private function findPneuOrFail(string $slug, EntityManagerInterface $entityManager): Pneu
-    {
-        $pneu = $entityManager->getRepository(Pneu::class)->findOneBy(['slug' => $slug]);
-        if (!$pneu) {
-            throw $this->createNotFoundException('The tire does not exist.');
-        }
-        return $pneu;
     }
 
     private function saveAvis($formAvis, Pneu $pneu, Security $security, EntityManagerInterface $entityManager): void
