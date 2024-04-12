@@ -14,6 +14,7 @@ services:
             $adminEmail: '%env(ADMIN_EMAIL_ADDRESS)%'
             $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
             $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
+            $avisStrategy: '@App\Strategy\AvisStrategyInterface'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
     App\Services\EmailService:
@@ -22,11 +23,13 @@ services:
     # Définition des stratégies comme services
     # Alias pour PhotoTransformationStrategy
     App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
-    
+    App\Strategy\AvisStrategyInterface: '@App\Strategy\AvisTransformationStrategy'
+
     # Définition de PneuTransformationStrategy avec injection des stratégies spécifiques
     App\Strategy\PneuTransformationStrategy:
         arguments:
             $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
+            $avisStrategy: '@App\Strategy\AvisStrategyInterface'
     # Configuration HttpClient pour consommer l'API Platform
     my.api.platform.client:
         class: Symfony\Contracts\HttpClient\HttpClientInterface

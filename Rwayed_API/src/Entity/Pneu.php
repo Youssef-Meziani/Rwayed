@@ -93,10 +93,15 @@ class Pneu
     #[Groups(['pneu:read'])]
     private Collection $photos;
 
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
+    #[Groups(['pneu:read'])]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -296,6 +301,11 @@ class Pneu
         }
 
         return $this;
+    }
+
+    public function getAvis(): Collection
+    {
+        return $this->avis;
     }
 
 }

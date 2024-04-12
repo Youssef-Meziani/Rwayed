@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Strategy;
 
 use App\DTO\PneuDTO;
@@ -8,10 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 class PneuTransformationStrategy implements TransformationStrategyInterface
 {
     private $photoStrategy;
+    private $avisStrategy;
 
-    public function __construct(TransformationStrategyInterface $photoStrategy)
+    public function __construct(TransformationStrategyInterface $photoStrategy, TransformationStrategyInterface $avisStrategy)
     {
         $this->photoStrategy = $photoStrategy;
+        $this->avisStrategy = $avisStrategy;
     }
 
     public function transform($dto)
@@ -42,6 +45,13 @@ class PneuTransformationStrategy implements TransformationStrategyInterface
             $photo = $this->photoStrategy->transform($photoDTO);
             $pneu->addPhoto($photo);
         }
+
+        // Transformation des AvisDTO en Avis
+        foreach ($dto->avis as $avisDTO) {
+            $avis = $this->avisStrategy->transform($avisDTO);
+            $pneu->addAvi($avis);
+        }
+
 
         return $pneu;
     }

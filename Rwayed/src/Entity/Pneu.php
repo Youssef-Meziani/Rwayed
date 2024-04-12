@@ -84,10 +84,14 @@ class Pneu
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
 
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +334,37 @@ class Pneu
             // set the owning side to null (unless already changed)
             if ($photo->getPneu() === $this) {
                 $photo->setPneu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $this->scoreTotal += $avi->getNote();
+            $this->nombreEvaluations++;
+        }
+
+        return $this;
+    }
+
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            if ($avi->getPneu() === $this) {
+                $this->scoreTotal -= $avi->getNote();
+                $this->nombreEvaluations--;
             }
         }
 
