@@ -39,7 +39,7 @@ class ApiPlatformConsumerService
             return [];
         }
 
-        $data = $response->getContent();
+        $data = $response->getContent();        
         $decodedData = json_decode($data, true);
 
         if (!isset($decodedData['hydra:member'])) {

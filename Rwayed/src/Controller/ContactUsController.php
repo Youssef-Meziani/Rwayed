@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use App\Form\ContactFormType;
-use App\Security\EmailVerifier;
 use App\Services\EmailService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Security\EmailVerifier;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ContactUsController extends AbstractController
 {
