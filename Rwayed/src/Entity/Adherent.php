@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\AdherentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AdherentRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: AdherentRepository::class)]
 class Adherent extends Personne
@@ -13,12 +13,17 @@ class Adherent extends Personne
     #[ORM\Column]
     private ?int $points_fidelite;
 
+    #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: PneuFavList::class, orphanRemoval: true)]
+    private Collection $pneuFavLists;
+
     #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: Avis::class)]
     private Collection $avis;
+
     public function __construct()
     {
         $this->points_fidelite = 0;
         $this->roles = ['ROLE_ADHERENT'];
+        $this->pneuFavLists = new ArrayCollection();
         $this->avis = new ArrayCollection();
     }
 
@@ -61,6 +66,35 @@ class Adherent extends Personne
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    /**
+     * @return Collection<int, PneuFavList>
+     */
+    public function getPneuFavLists(): Collection
+    {
+        return $this->pneuFavLists;
+    }
+
+    public function addPneuFavList(PneuFavList $pneuFavList): static
+    {
+        if (!$this->pneuFavLists->contains($pneuFavList)) {
+            $this->pneuFavLists->add($pneuFavList);
+            $pneuFavList->setAdherent($this);
+        }
+
+        return $this;
+    }
+    public function removePneuFavList(PneuFavList $pneuFavList): static
+    {
+        if ($this->pneuFavLists->removeElement($pneuFavList)) {
+            // set the owning side to null (unless already changed)
+            if ($pneuFavList->getAdherent() === $this) {
+                $pneuFavList->setAdherent(null);
+            }
+        }
+
+        return $this;
     }
 
     /**

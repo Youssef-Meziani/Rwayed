@@ -4,7 +4,6 @@ namespace App\Strategy;
 
 use App\DTO\PneuDTO;
 use App\Entity\Pneu;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class PneuTransformationStrategy implements TransformationStrategyInterface
 {

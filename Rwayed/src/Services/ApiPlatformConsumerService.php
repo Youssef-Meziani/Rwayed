@@ -36,6 +36,34 @@ class ApiPlatformConsumerService
             'page' => $page,
             'itemsPerPage' => $itemsPerPage,
         ], PneuDTO::class);
+
+        // $response = $this->client->request('GET', 'pneus', [
+        //     'query' => [
+        //         'page' => $page,
+        //         'itemsPerPage' => $itemsPerPage,
+        //     ]
+        // ]);
+
+        // if ($response->getStatusCode() !== 200) {
+        //     return [];
+        // }
+
+        // $data = $response->getContent();        
+        // $decodedData = json_decode($data, true);
+
+        // if (!isset($decodedData['hydra:member'])) {
+        //     return [];
+        // }
+
+        // $pneusDataJson = json_encode($decodedData['hydra:member']);
+
+        // // return $this->serializer->deserialize($pneusDataJson, 'App\Entity\Pneu[]', 'json');
+        // $similarPneus = $this->serializer->deserialize($pneusDataJson, 'App\DTO\PneuDTO[]', 'json');
+
+        // // Mélangez les pneus similaires
+        // shuffle($similarPneus);
+
+        // return $similarPneus;
     }
 
     public function fetchPneuById(int $id): ?PneuDTO
