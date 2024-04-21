@@ -25,6 +25,11 @@ class PneuDTO
      */
     public array $photos = [];
 
+    /**
+     * @var AvisDTO[]
+     */
+    public array $avis = [];
+
     public function addPhoto(PhotoDTO $photo): void {
         $this->photos[] = $photo;
     }
