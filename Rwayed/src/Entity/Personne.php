@@ -51,6 +51,7 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+
     public function getId(): ?int
     {
         return $this->id;
