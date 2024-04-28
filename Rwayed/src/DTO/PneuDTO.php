@@ -17,11 +17,18 @@ class PneuDTO
     public string $taille;
     public int $indiceCharge;
     public string $indiceVitesse;
+    public int $scoreTotal;
+    public int $nombreEvaluations;
 
     /**
      * @var PhotoDTO[] 
      */
     public array $photos = [];
+
+    /**
+     * @var AvisDTO[]
+     */
+    public array $avis = [];
 
     public function addPhoto(PhotoDTO $photo): void {
         $this->photos[] = $photo;

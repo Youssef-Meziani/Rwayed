@@ -415,13 +415,13 @@
                 if (target.id && target.id.startsWith('delete_')) {
                     const pneuSlug = target.getAttribute('data-id');
                     SweetAlert.fire({
-                        title: 'Êtes-vous sûr?',
-                        text: "Vous ne pourrez pas revenir en arrière!",
+                        title: 'Are you sure?',
+                        text: "You won't be able to go back!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Oui, supprimez-le!'
+                        confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
                             fetch(`/tire/delete/${pneuSlug}`, { method: 'POST' })
@@ -429,15 +429,15 @@
                                 .then(data => {
                                     if(data.success) {
                                         SweetAlert.fire(
-                                            'Supprimé!',
-                                            'Le pneu a été supprimé.',
+                                            'Deleted!',
+                                            'The tire has been removed.',
                                             'success'
                                         ).then(() => {
                                             loadGridData(); // Rafraîchit la grille après suppression
                                         });
                                     } else {
                                         SweetAlert.fire(
-                                            'Erreur!',
+                                            'Error!',
                                             data.message,
                                             'error'
                                         );

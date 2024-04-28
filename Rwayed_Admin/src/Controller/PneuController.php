@@ -7,6 +7,7 @@ use App\Entity\Photo;
 use App\Entity\Pneu;
 use App\Form\PneuType;
 use App\Repository\PneuRepository;
+use App\Services\PhotoService;
 use App\Services\PneuManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,10 +26,12 @@ class PneuController extends AbstractController
 {
 
     private $uploadsBaseUrl;
+    private $photoService;
 
-    public function __construct($uploadsBaseUrl)
+    public function __construct($uploadsBaseUrl, PhotoService $photoService)
     {
         $this->uploadsBaseUrl = $uploadsBaseUrl;
+        $this->photoService = $photoService;
     }
 
     #[Route('', name: 'pneu_index', methods: ['GET', 'POST'])]
@@ -70,14 +73,9 @@ class PneuController extends AbstractController
                 $pneu->removePhoto($oldPhoto); // Optionnel : supprime la relation entre le pneu et l'ancienne photo
             }
             $entityManager->flush();
-            $files = $request->files->get('photo_files');
-            if ($files) {
-                foreach ($files as $file) {
-                    $photo = new Photo();
-                    $photo->setImageFile($file);
-                    $photo->setPneu($pneu); // Associe la nouvelle photo au pneu
-                    $entityManager->persist($photo); // Prépare la nouvelle photo pour la persistance
-                }
+            $photoFiles = $request->files->get('photo_files');
+            if (!empty($photoFiles)) {
+                $this->photoService->processPhotoFiles($pneu, $photoFiles);
             }
             $pneuManager->editPneu($pneu);
             $this->addFlash('success', 'The tire has been successfully modified.');

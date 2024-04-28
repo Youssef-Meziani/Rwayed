@@ -1,17 +1,19 @@
 <?php
+
 namespace App\Strategy;
 
 use App\DTO\PneuDTO;
 use App\Entity\Pneu;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class PneuTransformationStrategy implements TransformationStrategyInterface
 {
     private $photoStrategy;
+    private $avisStrategy;
 
-    public function __construct(TransformationStrategyInterface $photoStrategy)
+    public function __construct(TransformationStrategyInterface $photoStrategy, TransformationStrategyInterface $avisStrategy)
     {
         $this->photoStrategy = $photoStrategy;
+        $this->avisStrategy = $avisStrategy;
     }
 
     public function transform($dto)
@@ -34,12 +36,21 @@ class PneuTransformationStrategy implements TransformationStrategyInterface
         $pneu->setIndiceCharge($dto->indiceCharge);
         $pneu->setTaille($dto->taille);
         $pneu->setIndiceVitesse($dto->indiceVitesse);
+        $pneu->setScoreTotal($dto->scoreTotal);
+        $pneu->setNombreEvaluations($dto->nombreEvaluations);
 
         // Transformation des PhotoDTO en Photo et ajout à la collection de photos de Pneu
         foreach ($dto->photos as $photoDTO) {
             $photo = $this->photoStrategy->transform($photoDTO);
             $pneu->addPhoto($photo);
         }
+
+        // Transformation des AvisDTO en Avis
+        foreach ($dto->avis as $avisDTO) {
+            $avis = $this->avisStrategy->transform($avisDTO);
+            $pneu->addAvi($avis);
+        }
+
 
         return $pneu;
     }

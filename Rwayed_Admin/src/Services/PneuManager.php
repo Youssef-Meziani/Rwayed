@@ -11,21 +11,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class PneuManager implements PneuManagerInterface
 {
     private $entityManager;
+    private $photoService;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, PhotoService $photoService)
     {
         $this->entityManager = $entityManager;
+        $this->photoService = $photoService;
     }
 
     public function createPneu(Pneu $pneu, array $photoFiles): void
     {
-        foreach ($photoFiles as $file) {
-            $photo = new Photo();
-            $photo->setImageFile($file);
-            $photo->setPneu($pneu);
-            $this->entityManager->persist($photo);
-        }
-
+        $this->photoService->processPhotoFiles($pneu, $photoFiles);
         $this->entityManager->persist($pneu);
         $this->entityManager->flush();
     }
@@ -33,7 +29,6 @@ class PneuManager implements PneuManagerInterface
 
     public function editPneu(Pneu $pneu): void
     {
-
         $this->entityManager->flush();
     }
 

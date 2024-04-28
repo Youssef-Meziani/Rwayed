@@ -24,7 +24,7 @@
         <div class="product-card__image">
             <div class="image image--type--product">
                 <a href="{{ path('product', {'slug': tire.slug}) }}" class="image__body">
-                    <img class="image__tag" src="{{ asset(uploads_base_url ~ tire.image) }}" alt="">
+                    <img class="image__tag" src="{{ minio_url(tire.image) }}" alt="">
                 </a>
             </div>
             <div class="status-badge status-badge--style--success product-card__fit status-badge--has-icon status-badge--has-text">
@@ -43,9 +43,15 @@
             <div class="product-card__name">
                 <div>
                     <div class="product-card__badges">
-                        <div class="tag-badge tag-badge--sale">sale</div>
-                        <div class="tag-badge tag-badge--new">new</div>
-                        <div class="tag-badge tag-badge--hot">hot</div>
+                        {% if tire.isSale() %}
+                            <div class="tag-badge tag-badge--sale">Unavailable</div>
+                        {%  endif %}
+                        {% if tire.isNew() %}
+                            <div class="tag-badge tag-badge--new">new</div>
+                        {% endif %}
+                        {% if tire.isHot() %}
+                            <div class="tag-badge tag-badge--hot">hot</div>
+                        {% endif %}
                     </div>
                     <a href="{{ path('product', {'slug': tire.slug}) }}">{{tire.marque}}</a>
                 </div>
@@ -53,14 +59,16 @@
             <div class="product-card__rating">
                 <div class="rating product-card__rating-stars">
                     <div class="rating__body">
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star rating__star--active"></div>
-                        <div class="rating__star"></div>
+                        {% for i in 1..5 %}
+                            {% if i <= tire.noteMoyenne %}
+                                <div class="rating__star rating__star--active"></div>
+                            {% else %}
+                                <div class="rating__star"></div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="product-card__rating-label">4 on 3 reviews</div>
+                <div class="product-card__rating-label">{{ tire.noteMoyenne|round(0, 'common') }} on {{ tire.nombreEvaluations }} reviews</div>
             </div>
             <div class="product-card__features">
                 <ul>

@@ -80,15 +80,28 @@ class Pneu
     #[Groups(['pneu:read', 'pneu:write'])]
     private string $indiceVitesse;
 
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $scoreTotal = 0;
+
+    #[ORM\Column]
+    #[Groups(['pneu:read', 'pneu:write'])]
+    private int $nombreEvaluations = 0;
+
 
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, orphanRemoval: true)]
     #[Groups(['pneu:read'])]
     private Collection $photos;
 
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
+    #[Groups(['pneu:read'])]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -238,6 +251,28 @@ class Pneu
         return $this;
     }
 
+    public function getScoreTotal(): ?int
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(int $scoreTotal): self
+    {
+        $this->scoreTotal = $scoreTotal;
+        return $this;
+    }
+
+    public function getNombreEvaluations(): ?int
+    {
+        return $this->nombreEvaluations;
+    }
+
+    public function setNombreEvaluations(int $nombreEvaluations): self
+    {
+        $this->nombreEvaluations = $nombreEvaluations;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Photo>
      */
@@ -266,6 +301,11 @@ class Pneu
         }
 
         return $this;
+    }
+
+    public function getAvis(): Collection
+    {
+        return $this->avis;
     }
 
 }

@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\PneuRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PneuRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -75,13 +76,28 @@ class Pneu
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private \DateTimeInterface $dateAjout;
 
+    #[ORM\Column]
+    private int $scoreTotal = 0;
+
+    #[ORM\Column]
+    private int $nombreEvaluations = 0;
+
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
+
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: PneuFavList::class, orphanRemoval: true)]
+    private Collection $pneuFavLists;
+
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
+    private Collection $avis;
+
 
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->pneuFavLists = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -167,6 +183,16 @@ class Pneu
         return $this;
     }
 
+    /**
+     * @Groups({"read"})
+     */
+    public function getFormattedPrice(): string
+    {
+        // La virgule (,) est le séparateur décimal. Le point (.) est le séparateur de milliers.
+        // utilise des sérialiseurs Symfony pour contrôler l'inclusion de cette propriété dans la sérialisation.
+        return number_format($this->prixUnitaire, 2, ',', '.');
+    }
+    
     public function getPrixUnitaire(): ?float
     {
         return $this->prixUnitaire;
@@ -251,6 +277,55 @@ class Pneu
         return $this;
     }
 
+    public function getScoreTotal(): ?int
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(int $scoreTotal): self
+    {
+        $this->scoreTotal = $scoreTotal;
+        return $this;
+    }
+
+    public function getNombreEvaluations(): ?int
+    {
+        return $this->nombreEvaluations;
+    }
+
+    public function setNombreEvaluations(int $nombreEvaluations): self
+    {
+        $this->nombreEvaluations = $nombreEvaluations;
+        return $this;
+    }
+
+    public function getNoteMoyenne(): ?float
+    {
+        if ($this->nombreEvaluations === 0) {
+            return 0.0;
+        }
+        return $this->scoreTotal / $this->nombreEvaluations;
+    }
+
+    public function isNew(): bool
+    {
+        $now = new \DateTime();
+        $interval = $now->diff($this->dateAjout);
+        return $interval->days <= 30; // nouveau s'il a été ajouté il y a moins de 30 jours
+    }
+
+    public function isHot(): bool
+    {
+//        $nombreDeCommandes = $this->getNombreDeCommandes();   // TODO : remplacer ici la methode prochainement
+//        return $nombreDeCommandes > 10; // Considéré comme hot s'il a été commandé plus de 10 fois  (DEMO : on peut ameliorer cette logique prochainement)
+        return 30 > 10;
+    }
+
+    public function isSale(): bool
+    {
+        return $this->quantiteStock === 0;
+    }
+
     /**
      * @return Collection<int, Photo>
      */
@@ -275,6 +350,66 @@ class Pneu
             // set the owning side to null (unless already changed)
             if ($photo->getPneu() === $this) {
                 $photo->setPneu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PneuFavList>
+     */
+    public function getPneuFavLists(): Collection
+    {
+        return $this->pneuFavLists;
+    }
+
+    public function addPneuFavList(PneuFavList $pneuFavList): static
+    {
+        if (!$this->pneuFavLists->contains($pneuFavList)) {
+            $this->pneuFavLists->add($pneuFavList);
+            $pneuFavList->setPneu($this);
+        }
+
+        return $this;
+    }
+            
+     /**   
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $this->scoreTotal += $avi->getNote();
+            $this->nombreEvaluations++;
+        }
+
+        return $this;
+    }
+
+    public function removePneuFavList(PneuFavList $pneuFavList): static
+    {
+        if ($this->pneuFavLists->removeElement($pneuFavList)) {
+            // set the owning side to null (unless already changed)
+            if ($pneuFavList->getPneu() === $this) {
+                $pneuFavList->setPneu(null);
+            }
+        }
+
+        return $this;
+    }
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            if ($avi->getPneu() === $this) {
+                $this->scoreTotal -= $avi->getNote();
+                $this->nombreEvaluations--;
             }
         }
 

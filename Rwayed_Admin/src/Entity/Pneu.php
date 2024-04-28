@@ -75,6 +75,12 @@ class Pneu
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private \DateTimeInterface $dateAjout;
 
+    #[ORM\Column]
+    private int $scoreTotal = 0;
+
+    #[ORM\Column]
+    private int $nombreEvaluations = 0;
+
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
 
@@ -245,6 +251,28 @@ class Pneu
     {
         $this->dateAjout = $dateAjout;
 
+        return $this;
+    }
+
+    public function getScoreTotal(): ?int
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(int $scoreTotal): self
+    {
+        $this->scoreTotal = $scoreTotal;
+        return $this;
+    }
+
+    public function getNombreEvaluations(): ?int
+    {
+        return $this->nombreEvaluations;
+    }
+
+    public function setNombreEvaluations(int $nombreEvaluations): self
+    {
+        $this->nombreEvaluations = $nombreEvaluations;
         return $this;
     }
 

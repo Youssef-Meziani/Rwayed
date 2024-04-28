@@ -1,53 +1,145 @@
 {% extends 'base.twig' %}
 
-{% block title %} - Wishlist{% endblock %}
+{% block title %}
+	- Wishlist
+{% endblock %}
 
 {% block body %}
-    <!-- site__body -->
-    <div class="site__body">
-        <div class="block-header block-header--has-breadcrumb block-header--has-title">
-            <div class="container">
-                <div class="block-header__body">
-                    <nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
-                        <ol class="breadcrumb__list">
-                            <li class="breadcrumb__spaceship-safe-area" role="presentation"></li>
-                            <li class="breadcrumb__item breadcrumb__item--parent breadcrumb__item--first">
-                                <a href="{{ path('home') }}" class="breadcrumb__item-link">Home</a>
-                            </li>
-                            <li class="breadcrumb__item breadcrumb__item--current breadcrumb__item--last" aria-current="page">
-                                <span class="breadcrumb__item-link">Whishlist</span>
-                            </li>
-                            <li class="breadcrumb__title-safe-area" role="presentation"></li>
-                        </ol>
-                    </nav>
-                    <h1 class="block-header__title">Wishlist</h1>
-                </div>
-            </div>
-        </div>
-        <div class="block">
-            <div class="container container--max--xl">
-                <div class="wishlist">
-                    <table class="wishlist__table">
-                        <thead class="wishlist__head">
-                        <tr class="wishlist__row wishlist__row--head">
-                            <th class="wishlist__column wishlist__column--head wishlist__column--image">Image</th>
-                            <th class="wishlist__column wishlist__column--head wishlist__column--product">Product</th>
-                            <th class="wishlist__column wishlist__column--head wishlist__column--stock">Stock status</th>
-                            <th class="wishlist__column wishlist__column--head wishlist__column--price">Price</th>
-                            <th class="wishlist__column wishlist__column--head wishlist__column--button"></th>
-                            <th class="wishlist__column wishlist__column--head wishlist__column--remove"></th>
-                        </tr>
-                        </thead>
-                        <tbody class="wishlist__body">
-                        {{ include('partials/_wishlist-item.twig', {price: 299.99}) }}
-                        {{ include('partials/_wishlist-item.twig', {price: 299.99}) }}
-                        {{ include('partials/_wishlist-item.twig', {price: 299.99}) }}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="block-space block-space--layout--before-footer"></div>
-    </div>
-    <!-- site__body / end -->
+	<!-- site__body -->
+	<div class="site__body">
+		<div class="block-header block-header--has-breadcrumb block-header--has-title">
+			<div class="container">
+				<div class="block-header__body">
+					<nav class="breadcrumb block-header__breadcrumb" aria-label="breadcrumb">
+						<ol class="breadcrumb__list">
+							<li class="breadcrumb__spaceship-safe-area" role="presentation"></li>
+							<li class="breadcrumb__item breadcrumb__item--parent breadcrumb__item--first">
+								<a href="{{ path('home') }}" class="breadcrumb__item-link">Home</a>
+							</li>
+							<li class="breadcrumb__item breadcrumb__item--current breadcrumb__item--last" aria-current="page">
+								<span class="breadcrumb__item-link">Whishlist</span>
+							</li>
+							<li class="breadcrumb__title-safe-area" role="presentation"></li>
+						</ol>
+					</nav>
+					<h1 class="block-header__title">Wishlist</h1>
+				</div>
+			</div>
+		</div>
+		<div class="block">
+			<div class="container container--max--xl">
+				<div class="wishlist">
+					<table class="wishlist__table">
+						<thead class="wishlist__head">
+							<tr class="wishlist__row wishlist__row--head">
+								<th class="wishlist__column wishlist__column--head wishlist__column--image">Image</th>
+								<th class="wishlist__column wishlist__column--head wishlist__column--product">Product</th>
+								<th class="wishlist__column wishlist__column--head wishlist__column--stock">Stock status</th>
+								<th class="wishlist__column wishlist__column--head wishlist__column--price">Price</th>
+								<th class="wishlist__column wishlist__column--head wishlist__column--button"></th>
+								<th class="wishlist__column wishlist__column--head wishlist__column--remove"></th>
+							</tr>
+						</thead>
+						<tbody class="wishlist__body">
+							{% for item in wishlist %}
+								{{ include('partials/_wishlist-item.twig', { price: item.pneu.getFormattedPrice() }) }}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="block-space block-space--layout--before-footer"></div>
+	</div>
+	<!-- site__body / end -->
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+ 	{# Todo à remplacer avec lien asset/sweet-alert.js #}
+	<script>
+	$(document).ready(function() {
+		$('.wishlist__remove').click(function() {
+				// Récupérer l'ID du pneu
+				var pneuId = $(this).data('pneu-id');
+
+				// Vérifier si l'ID du pneu est un nombre entier
+				if (!isNaN(pneuId) && pneuId !== '') {
+					// L'ID est valide, continuez avec la requête AJAX
+					showAlert('confirm', "Are you sure you want to remove this item from your wishlist?", function(confirmed) {
+						if (confirmed) {
+							$.ajax({
+								type: "POST",
+								url: "{{ path('wishlist_remove', {'id': 'pneuId'}) }}".replace('pneuId', pneuId),
+								success: function(response) {
+									if (response.success) {
+										// Afficher une alerte Sweet Alert pour indiquer le succès
+										Swal.fire({
+											icon: 'success',
+											title: 'Success',
+											text: 'Tire removed from wishlist successfully.'
+										}).then(function() {
+											window.location.reload();
+										});
+									} else {
+										// Afficher une alerte Sweet Alert pour indiquer l'erreur
+										Swal.fire({
+											icon: 'error',
+											title: 'Error',
+											text: 'Error removing tire from wishlist: ' + response.error
+										});
+									}
+								},
+								error: function(xhr, status, error) {
+									// Afficher une alerte Sweet Alert pour indiquer l'erreur
+									Swal.fire({
+										icon: 'error',
+										title: 'Error',
+										text: 'An error occurred while removing the tire from wishlist: ' + error
+									});
+								}
+							});
+						}
+					});
+				} else {
+					// Afficher une alerte si l'ID du pneu est invalide
+					showAlert('error', "Invalid tire ID: " + pneuId);
+				}
+			});
+		});
+
+		// Fonction pour afficher Sweet Alert ou une alerte Bootstrap
+		function showAlert(type, message, confirmCallback, cancelCallback) {
+			if (type === 'confirm') {
+				// Afficher une alerte Sweet Alert de confirmation avec le message spécifié
+				Swal.fire({
+					icon: 'question',
+					title: 'Confirmation',
+					text: message,
+					showCancelButton: true,
+					confirmButtonText: 'Confirm',
+					cancelButtonText: 'Cancel'
+				}).then(function(result) {
+					if (result.isConfirmed) {
+						if (confirmCallback) {
+							confirmCallback(true);
+						}
+					} else {
+						if (cancelCallback) {
+							cancelCallback(false);
+						}
+					}
+				});
+			} else {
+				// Afficher une alerte Sweet Alert avec le type spécifié
+				Swal.fire({
+					icon: type === 'success' ? 'success' : 'error',
+					title: type === 'success' ? 'Success' : 'Error',
+					text: message
+				});
+			}
+		}
+
+	</script>
 {% endblock %}

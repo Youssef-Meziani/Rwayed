@@ -38,11 +38,9 @@ class ProductController extends AbstractController
             throw new NotFoundHttpException('Pneu not found');
         }
         // minio
-        $uploadsBaseUrl = $this->getParameter('uploads_base_url');
         return $this->render('partials/_quickview.twig', [
             'pneu' => $pneu,
             'id' => $id,
-            'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }
 }
