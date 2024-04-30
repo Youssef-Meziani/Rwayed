@@ -7,6 +7,13 @@ parameters:
     uploads_base_url: '%env(UPLOADS_BASE_URL)%'
     admin_email_address: '%env(ADMIN_EMAIL_ADDRESS)%'
 services:
+    
+    App\Services\AddressesService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+           
+
+
     _defaults:
         bind:
             $csrfTokenManager: '@security.csrf.token_manager'
@@ -20,6 +27,7 @@ services:
     App\Services\EmailService:
         arguments:
             $adminEmail: '%admin_email%'
+   
     # Définition des stratégies comme services
     # Alias pour PhotoTransformationStrategy
     App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
@@ -66,4 +74,4 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
+    
