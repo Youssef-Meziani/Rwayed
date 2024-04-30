@@ -56,90 +56,10 @@
 
 {% block javascripts %}
 	{{ parent() }}
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
- 	{# Todo à remplacer avec lien asset/sweet-alert.js #}
 	<script>
-	$(document).ready(function() {
-		$('.wishlist__remove').click(function() {
-				// Récupérer l'ID du pneu
-				var pneuId = $(this).data('pneu-id');
-
-				// Vérifier si l'ID du pneu est un nombre entier
-				if (!isNaN(pneuId) && pneuId !== '') {
-					// L'ID est valide, continuez avec la requête AJAX
-					showAlert('confirm', "Are you sure you want to remove this item from your wishlist?", function(confirmed) {
-						if (confirmed) {
-							$.ajax({
-								type: "POST",
-								url: "{{ path('wishlist_remove', {'id': 'pneuId'}) }}".replace('pneuId', pneuId),
-								success: function(response) {
-									if (response.success) {
-										// Afficher une alerte Sweet Alert pour indiquer le succès
-										Swal.fire({
-											icon: 'success',
-											title: 'Success',
-											text: 'Tire removed from wishlist successfully.'
-										}).then(function() {
-											window.location.reload();
-										});
-									} else {
-										// Afficher une alerte Sweet Alert pour indiquer l'erreur
-										Swal.fire({
-											icon: 'error',
-											title: 'Error',
-											text: 'Error removing tire from wishlist: ' + response.error
-										});
-									}
-								},
-								error: function(xhr, status, error) {
-									// Afficher une alerte Sweet Alert pour indiquer l'erreur
-									Swal.fire({
-										icon: 'error',
-										title: 'Error',
-										text: 'An error occurred while removing the tire from wishlist: ' + error
-									});
-								}
-							});
-						}
-					});
-				} else {
-					// Afficher une alerte si l'ID du pneu est invalide
-					showAlert('error', "Invalid tire ID: " + pneuId);
-				}
-			});
-		});
-
-		// Fonction pour afficher Sweet Alert ou une alerte Bootstrap
-		function showAlert(type, message, confirmCallback, cancelCallback) {
-			if (type === 'confirm') {
-				// Afficher une alerte Sweet Alert de confirmation avec le message spécifié
-				Swal.fire({
-					icon: 'question',
-					title: 'Confirmation',
-					text: message,
-					showCancelButton: true,
-					confirmButtonText: 'Confirm',
-					cancelButtonText: 'Cancel'
-				}).then(function(result) {
-					if (result.isConfirmed) {
-						if (confirmCallback) {
-							confirmCallback(true);
-						}
-					} else {
-						if (cancelCallback) {
-							cancelCallback(false);
-						}
-					}
-				});
-			} else {
-				// Afficher une alerte Sweet Alert avec le type spécifié
-				Swal.fire({
-					icon: type === 'success' ? 'success' : 'error',
-					title: type === 'success' ? 'Success' : 'Error',
-					text: message
-				});
-			}
-		}
-
-	</script>
+        var wishlistRemoveUrl = '{{ path('wishlist_remove', {'id': 'pneuId'}) }}';
+    </script>
+	<script src="{{ asset('js/sweetalert.js') }}"></script>
+	<script src="{{ asset('js/wishlist.js') }}"></script>
+	
 {% endblock %}

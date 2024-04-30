@@ -49,6 +49,10 @@ services:
         arguments:
             $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
 
+    App\Services\WishlistService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
     # Enregistrement manuel de l'extension Twig comme service
     App\Twig\AppExtension:
         tags:
