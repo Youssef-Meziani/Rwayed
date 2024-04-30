@@ -8,3 +8,7 @@ faq:
     path: /faq
     defaults:
         template: faq.twig
+
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login

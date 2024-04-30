@@ -15,35 +15,39 @@
                                 <div class="profile-card__avatar">
                                     <img src="images/avatars/avatar-4.jpg" alt="">
                                 </div>
-                                <div class="profile-card__name">Helena Garcia</div>
-                                <div class="profile-card__email">{{ company_email }}</div>
+                                <div class="profile-card__name">{{ app.user.Nom }} {{  app.user.Prenom }}</div>
+                                <div class="profile-card__email">{{  app.user.Email }}</div>
                                 <div class="profile-card__edit">
                                     <a href="{{ path('profile') }}" class="btn btn-secondary btn-sm">Edit Profile</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="dashboard__address card address-card address-card--featured">
-                            <div class="address-card__badge tag-badge tag-badge--theme">Default</div>
-                            <div class="address-card__body">
-                                <div class="address-card__name">Helena Garcia</div>
-                                <div class="address-card__row">
-                                    Random Federation<br>
-                                    115302, Moscow<br>
-                                    ul. Varshavskaya, 15-2-178
+                        {% for adresse in app.user.Adresses%}
+                            {% if adresse.isSetasmydefaultaddress() %}
+                                <div class="dashboard__address card address-card address-card--featured">
+                                    <div class="address-card__badge tag-badge tag-badge--theme">Default</div>
+                                    <div class="address-card__body">
+                                        <div class="address-card__name">{{ adresse.City }}</div>
+                                        <div class="address-card__row">
+                                            {{ adresse.Street }}
+                                            <br>
+                                            {{ adresse.Postcode }}, {{ adresse.City }}
+                                        </div>
+                                        <div class="address-card__row">
+                                            <div class="address-card__row-title">Phone Number</div>
+                                            <div class="address-card__row-content">{{ app.user.Tele }}</div>
+                                        </div>
+                                        <div class="address-card__row">
+                                            <div class="address-card__row-title">Email Address</div>
+                                            <div class="address-card__row-content">{{ app.user.Email }}</div>
+                                        </div>
+                                        <div class="address-card__footer">
+                                            <a href="{{ path('addresses') }}">Edit Address</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Phone Number</div>
-                                    <div class="address-card__row-content">38 972 588-42-36</div>
-                                </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Email Address</div>
-                                    <div class="address-card__row-content">helena@example.com</div>
-                                </div>
-                                <div class="address-card__footer">
-                                    <a href="{{ path('addresses') }}">Edit Address</a>
-                                </div>
-                            </div>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="dashboard__orders card">
                             <div class="card-header">
                                 <h5>Recent Orders</h5>

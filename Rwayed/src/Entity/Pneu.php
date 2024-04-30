@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\PneuRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PneuRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -84,13 +85,18 @@ class Pneu
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
 
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: PneuFavList::class, orphanRemoval: true)]
+    private Collection $pneuFavLists;
+
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
     private Collection $avis;
+
 
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->pneuFavLists = new ArrayCollection();
         $this->avis = new ArrayCollection();
     }
 
@@ -177,6 +183,16 @@ class Pneu
         return $this;
     }
 
+    /**
+     * @Groups({"read"})
+     */
+    public function getFormattedPrice(): string
+    {
+        // La virgule (,) est le séparateur décimal. Le point (.) est le séparateur de milliers.
+        // utilise des sérialiseurs Symfony pour contrôler l'inclusion de cette propriété dans la sérialisation.
+        return number_format($this->prixUnitaire, 2, ',', '.');
+    }
+    
     public function getPrixUnitaire(): ?float
     {
         return $this->prixUnitaire;
@@ -341,6 +357,24 @@ class Pneu
     }
 
     /**
+     * @return Collection<int, PneuFavList>
+     */
+    public function getPneuFavLists(): Collection
+    {
+        return $this->pneuFavLists;
+    }
+
+    public function addPneuFavList(PneuFavList $pneuFavList): static
+    {
+        if (!$this->pneuFavLists->contains($pneuFavList)) {
+            $this->pneuFavLists->add($pneuFavList);
+            $pneuFavList->setPneu($this);
+        }
+
+        return $this;
+    }
+            
+     /**   
      * @return Collection<int, Avis>
      */
     public function getAvis(): Collection
@@ -359,6 +393,17 @@ class Pneu
         return $this;
     }
 
+    public function removePneuFavList(PneuFavList $pneuFavList): static
+    {
+        if ($this->pneuFavLists->removeElement($pneuFavList)) {
+            // set the owning side to null (unless already changed)
+            if ($pneuFavList->getPneu() === $this) {
+                $pneuFavList->setPneu(null);
+            }
+        }
+
+        return $this;
+    }
     public function removeAvi(Avis $avi): static
     {
         if ($this->avis->removeElement($avi)) {

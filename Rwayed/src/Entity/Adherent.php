@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\AdherentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AdherentRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: AdherentRepository::class)]
 class Adherent extends Personne
@@ -13,13 +14,26 @@ class Adherent extends Personne
     #[ORM\Column]
     private ?int $points_fidelite;
 
+
+    #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: Adresse::class, orphanRemoval: true)]
+    private Collection $adresses;
+
+    #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: PneuFavList::class, orphanRemoval: true)]
+    private Collection $pneuFavLists;
+
     #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: Avis::class)]
     private Collection $avis;
+
+
     public function __construct()
     {
         $this->points_fidelite = 0;
         $this->roles = ['ROLE_ADHERENT'];
+
+        $this->adresses = new ArrayCollection(
+        $this->pneuFavLists = new ArrayCollection();
         $this->avis = new ArrayCollection();
+
     }
 
     public function getPointsFidelite(): ?int
@@ -64,6 +78,53 @@ class Adherent extends Personne
     }
 
     /**
+
+     * @return Collection<int, Adresse>
+     */
+    public function getAdresses(): Collection
+    {
+        return $this->adresses;
+    }
+
+   public function addAdress(Adresse $adress): static
+    {
+        if (!$this->adresses->contains($adress)) {
+            $this->adresses->add($adress);
+            $adress->setAdherent($this);
+        }
+
+        return $this;
+    }
+    /**
+     * @return Collection<int, PneuFavList>
+     */
+    public function getPneuFavLists(): Collection
+    {
+        return $this->pneuFavLists;
+    }
+
+    public function addPneuFavList(PneuFavList $pneuFavList): static
+    {
+        if (!$this->pneuFavLists->contains($pneuFavList)) {
+            $this->pneuFavLists->add($pneuFavList);
+            $pneuFavList->setAdherent($this);
+        }
+
+        return $this;
+    }
+    public function removePneuFavList(PneuFavList $pneuFavList): static
+    {
+        if ($this->pneuFavLists->removeElement($pneuFavList)) {
+            // set the owning side to null (unless already changed)
+            if ($pneuFavList->getAdherent() === $this) {
+                $pneuFavList->setAdherent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Avis>
      */
     public function getAvis(): Collection
@@ -76,17 +137,31 @@ class Adherent extends Personne
         if (!$this->avis->contains($avi)) {
             $this->avis->add($avi);
             $avi->setAdherent($this);
+
         }
 
         return $this;
     }
 
+
+   public function removeAdress(Adresse $adress): static
+    {
+        if ($this->adresses->removeElement($adress)) {
+            // set the owning side to null (unless already changed)
+            if ($adress->getAdherent() === $this) {
+                $adress->setAdherent(null);
+            }
+        }
+
+        return $this;
+    }
     public function removeAvi(Avis $avi): static
     {
         if ($this->avis->removeElement($avi)) {
             // set the owning side to null (unless already changed)
             if ($avi->getAdherent() === $this) {
                 $avi->setAdherent(null);
+
             }
         }
 

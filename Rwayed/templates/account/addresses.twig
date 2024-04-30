@@ -9,59 +9,46 @@
             <div class="row">
                 {{ include('partials/_account-nav.twig', { activeNavItem: 'addresses' }) }}
                 <div class="col-12 col-lg-9 mt-4 mt-lg-0">
+                 {% for message in app.flashes('success') %}
+									<div class="alert alert-success" role="alert">
+										{{ message }}
+									</div>
+								{% endfor %}
+								{% for message in app.flashes('error') %}
+									<div class="alert alert-danger" role="alert">
+										{{ message }}
+									</div>
+								{% endfor %}
                     <div class="addresses-list">
-                        <a href="" class="addresses-list__item addresses-list__item--new">
+                        <a href="{{ path('address_add') }}" class="addresses-list__item addresses-list__item--new">
                             <div class="addresses-list__plus"></div>
                             <div class="btn btn-secondary btn-sm">Add New</div>
                         </a>
-                        <div class="addresses-list__divider"></div>
-                        <div class="addresses-list__item card address-card">
-                            <div class="address-card__badge tag-badge tag-badge--theme">Default</div>
-                            <div class="address-card__body">
-                                <div class="address-card__name">Helena Garcia</div>
-                                <div class="address-card__row">
-                                    Random Federation<br>
-                                    115302, Moscow<br>
-                                    ul. Varshavskaya, 15-2-178
-                                </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Phone Number</div>
-                                    <div class="address-card__row-content">38 972 588-42-36</div>
-                                </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Email Address</div>
-                                    <div class="address-card__row-content">helena@example.com</div>
-                                </div>
-                                <div class="address-card__footer">
-                                    <a href="">Edit</a>&nbsp;&nbsp;
-                                    <a href="">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="addresses-list__divider"></div>
-                        <div class="addresses-list__item card address-card">
-                            <div class="address-card__body">
-                                <div class="address-card__name">Jupiter Saturnov</div>
-                                <div class="address-card__row">
-                                    RandomLand<br>
-                                    4b4f53, MarsGrad<br>
-                                    Sun Orbit, 43.3241-85.239
-                                </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Phone Number</div>
-                                    <div class="address-card__row-content">ZX 971 972-57-26</div>
-                                </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Email Address</div>
-                                    <div class="address-card__row-content">jupiter@example.com</div>
-                                </div>
-                                <div class="address-card__footer">
-                                    <a href="">Edit</a>&nbsp;&nbsp;
-                                    <a href="">Remove</a>
+                        	  
+                            {% for address in addresses %}
+                            <div class="addresses-list__item card address-card">
+                                {% if address.setasmydefaultaddress %}
+                                    <div class="address-card__badge tag-badge tag-badge--theme">Default</div>
+                                {% endif %}
+                                <div class="address-card__body">
+                                    <div class="address-card__name">{{ address.adherent.nom }} {{ address.adherent.prenom }}</div>
+                                    <div class="address-card__row">
+                                        {{ address.street }}<br>
+                                        {{ address.postcode }}, {{ address.city }}<br><br>
+                                          <div class="address-card__row-title">Phone Number</div>
+                                      <div class="address-card__row-content"> {{ app.user.tele }}<br><br></div>
+                                         <div class="address-card__row-title">Email Address</div>
+                                            <div class="address-card__row-content"> {{ app.user.email }}<br></div>
+                                       
+                                    </div>
+                                    <div class="address-card__footer">
+                                        <a href="{{ path('address_edit', {'id': address.id}) }}">Edit</a>&nbsp;&nbsp;
+                                        <a href="{{ path('address_delete', {'id': address.id}) }}">Remove</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="addresses-list__divider"></div>
+                            <div class="addresses-list__divider"></div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
