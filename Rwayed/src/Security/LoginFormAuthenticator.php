@@ -85,13 +85,14 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     }
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $refererUrl = $request->headers->get('referer');
         // Exemple de redirection basée sur des rôles avec support pour les rôles hérités
         if ($this->authorizationChecker->isGranted('ROLE_TECHNICIEN')) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
         }
 
         if ($this->authorizationChecker->isGranted('ROLE_ADHERENT')) {
-            return new RedirectResponse($this->urlGenerator->generate('home'));
+            return new RedirectResponse($refererUrl);
         }
 
         $request->getSession()->getFlashBag()->add('error', 'Your account does not have the necessary permissions to access this resource');
