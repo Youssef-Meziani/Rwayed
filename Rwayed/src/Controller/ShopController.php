@@ -131,46 +131,4 @@ class ShopController extends AbstractController
             'totalAvis' => $result['totalAvis']
         ];
     }
-
-    /**
-     * @throws \JsonException
-     */
-    #[Route('/shop/submit-avis/{slug}', name: 'submit_avis', methods: ['POST'])]
-    public function submitAvis(Pneu $pneu, Request $request, EntityManagerInterface $entityManager, Security $security): JsonResponse
-    {
-        $formAvis = $this->prepareAvisForm($request);
-
-        if ($formAvis->isSubmitted() && $formAvis->isValid()) {
-            $this->saveAvis($formAvis, $pneu, $security, $entityManager);
-            return $this->json(['message' => 'Your review has been submitted successfully.'], Response::HTTP_OK);
-        }
-
-        $errors = $this->getFormErrors($formAvis->getErrors(true));
-        return $this->json(['error' => 'There was a problem submitting your review.', 'formErrors' => $errors], Response::HTTP_BAD_REQUEST);
-    }
-
-    private function getFormErrors(FormErrorIterator $errors): array
-    {
-        $messages = [];
-        foreach ($errors as $error) {
-            $messages[$error->getOrigin()->getName()] = $error->getMessage();
-        }
-        return $messages;
-    }
-
-    private function saveAvis($formAvis, Pneu $pneu, Security $security, EntityManagerInterface $entityManager): void
-    {
-        $avis = $formAvis->getData();
-        $user = $security->getUser();
-
-        if ($user instanceof Adherent) {
-            $avis->setAdherent($user);
-        } else {
-            $avis->setAuthor($formAvis->get('author')->getData());
-            $avis->setEmail($formAvis->get('email')->getData());
-        }
-        $avis->setPneu($pneu);
-        $entityManager->persist($avis);
-        $entityManager->flush();
-    }
 }
