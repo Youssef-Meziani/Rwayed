@@ -26,8 +26,8 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('The requested tire does not exist.');
         }
         $tires=[];
-        foreach ($tiresDTO as $tire) {
-            $tires[] = $this->pneuTransformationStrategy->transform($tire);
+        foreach ($tiresDTO as $pneu) {
+            $tires[] = $this->pneuTransformationStrategy->transform($pneu);
         }
         
         return $this->render('cart.twig', [

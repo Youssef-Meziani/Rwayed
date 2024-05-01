@@ -53,7 +53,24 @@ services:
             $defaultOptions:
                 base_uri: '%env(API_BASE_URL)%'
 
-    # Extensions Twig
+
+    App\EventSubscriber\AuthenticationEventSubscriber:
+        arguments:
+            $authenticationUtils: '@security.authentication_utils'
+            $twig: '@twig'
+        tags:
+            - { name: 'kernel.event_subscriber' }
+    # default configuration for services in this file
+    App\Services\PasswordHasherService:
+        arguments:
+            $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+
+    App\Services\WishlistService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+
+    # Enregistrement manuel de l'extension Twig comme service
+
     App\Twig\AppExtension:
         tags:
             - { name: twig.extension }

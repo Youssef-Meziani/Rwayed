@@ -43,6 +43,9 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/wishlist, roles: ROLE_ADHERENT }
+        - { path: ^/wishlist/add, roles: ROLE_ADHERENT }
+        - { path: ^/wishlist/remove, roles: ROLE_ADHERENT }
 
 when@test:
     security:
