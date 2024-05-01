@@ -1,7 +1,5 @@
 FROM lavoweb/php-8.3
 
-RUN echo "Acquire::Check-Valid-Until \"false\";\nAcquire::Check-Date \"false\";" | cat > /etc/apt/apt.conf.d/10no--check-valid-until
-
 # Mise à jour des paquets et installation des dépendances nécessaires
 RUN apt-get update \
     && apt-get install -y --fix-missing \
