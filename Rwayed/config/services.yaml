@@ -17,6 +17,7 @@ services:
     _defaults:
         autowire: true      # Injecte automatiquement les dépendances dans vos services.
         autoconfigure: true # Enregistre automatiquement vos services comme commandes, abonnés à des événements, etc.
+        public: false       # (encapsule)interdit l'accès direct au service à l'extérieur du conteneur de services, mais permet toujours son utilisation en tant que dépendance injectée dans d'autres services.
         bind:               # Liaisons de paramètres spécifiques pour l'injection de dépendances
             $csrfTokenManager: '@security.csrf.token_manager'
             $apiPlatformClient: '@my.api.platform.client'
@@ -37,6 +38,11 @@ services:
         tags:
             - { name: 'kernel.event_subscriber' }
 
+    # App\EventListener\TotalItemsListener:
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
+    #         - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }        
+
     # Stratégies
     App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
     App\Strategy\AvisStrategyInterface: '@App\Strategy\AvisTransformationStrategy'
@@ -51,29 +57,20 @@ services:
         factory: ['Symfony\Component\HttpClient\HttpClient', 'create']
         arguments:
             $defaultOptions:
-                base_uri: '%env(API_BASE_URL)%'
-
-
-    App\EventSubscriber\AuthenticationEventSubscriber:
-        arguments:
-            $authenticationUtils: '@security.authentication_utils'
-            $twig: '@twig'
-        tags:
-            - { name: 'kernel.event_subscriber' }
-    # default configuration for services in this file
-    App\Services\PasswordHasherService:
-        arguments:
-            $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
-
-    App\Services\WishlistService:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
+                base_uri: '%env(API_BASE_URL)%'    
 
     # Enregistrement manuel de l'extension Twig comme service
 
     App\Twig\AppExtension:
         tags:
             - { name: twig.extension }
+            
+    App\Twig\TotalItemsExtension:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $security: '@security.helper'
+        tags: [twig.extension]
+
     App\Twig\MinioExtension:
         arguments:
             $uploadsBaseUrl: '%uploads_base_url%'

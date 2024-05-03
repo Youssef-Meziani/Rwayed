@@ -30,7 +30,7 @@ class Adherent extends Personne
         $this->points_fidelite = 0;
         $this->roles = ['ROLE_ADHERENT'];
 
-        $this->adresses = new ArrayCollection(
+        $this->adresses = new ArrayCollection();
         $this->pneuFavLists = new ArrayCollection();
         $this->avis = new ArrayCollection();
 
