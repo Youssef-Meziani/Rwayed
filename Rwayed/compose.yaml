@@ -1,1 +1,34 @@
-version: '3'
+version: "3.8"
+
+services:
+  http:
+    build:
+      context: .
+      dockerfile: /docker/server/Dockerfile
+    expose:
+      - "9000"
+      - "9003"
+    ports:
+      - "8000:80"
+    working_dir: /var/www/html
+    volumes:
+      - ./source:/var/www/html
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+      - ./docker/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    depends_on:
+      - database
+    networks:
+      - inner_net
+    environment:
+      MERCURE_SUBSCRIBER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+      MERCURE_PUBLISHER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+      PUBLISHER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+      SUBSCRIBER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+
+volumes:
+  mercure_data:
+  mercure_config:
+
+networks:
+  inner_net:

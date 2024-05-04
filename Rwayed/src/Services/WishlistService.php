@@ -18,15 +18,13 @@ class WishlistService
 
     public function addToWishlist(Adherent $user, Pneu $pneu): bool
     {
-        // Vérifier si le pneu est déjà dans la liste de souhaits de l'utilisateur
-        $wishlistEntry = $this->entityManager->getRepository(PneuFavList::class)->findOneBy([
-            'adherent' => $user,
-            'pneu' => $pneu,
-        ]);
-        if ($wishlistEntry) {
-            return false; // Le pneu est déjà dans la liste de souhaits
-        }
+        $pneuFavLists = $user->getPneuFavLists();
 
+        foreach ($pneuFavLists as $pneuFavList) {
+            if ($pneuFavList->getPneu() === $pneu) {
+                return false; // Le pneu est déjà dans la liste des favoris de l'utilisateur
+            }
+        }
         // Créer une nouvelle entité PneuFavList
         $pneuFavList = new PneuFavList();
         $pneuFavList->setAdherent($user);
@@ -42,20 +40,19 @@ class WishlistService
 
     public function removeFromWishlist(Adherent $user, Pneu $pneu): bool
     {
-        // Rechercher pneu correspondante dans la liste de souhaits de l'utilisateur
-        $wishlistEntry = $this->entityManager->getRepository(PneuFavList::class)->findOneBy([
-            'adherent' => $user,
-            'pneu' => $pneu,
-        ]);
+        $pneuFavLists = $user->getPneuFavLists();
 
-        // Si pneu existe, le supprimer
-        if ($wishlistEntry) {
-            $this->entityManager->remove($wishlistEntry);
-            $this->entityManager->flush();
-
-            return true;
-        } else {
-            return false;
+        foreach ($pneuFavLists as $pneuFavList) {
+            if ($pneuFavList->getPneu() === $pneu) {
+                // Supprimer le pneu de la liste de souhaits de l'utilisateur
+                $this->entityManager->remove($pneuFavList);
+                $this->entityManager->flush();
+                
+                return true;
+            }
         }
+
+        // Si le pneu n'est pas trouvé dans la liste de souhaits de l'utilisateur
+        return false;
     }
 }
