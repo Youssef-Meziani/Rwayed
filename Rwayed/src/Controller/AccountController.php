@@ -43,10 +43,19 @@ class AccountController extends AbstractController
 
     #[Route('/addresses', name: 'addresses')]
     #[IsGranted('ROLE_ADHERENT')]
-    public function addresses(AdresseRepository $adresseRepository): Response
+    public function addresses(): Response
     {
-        $addresses = $adresseRepository->findAll();
-        
+        // Récupérer l'utilisateur connecté
+        $user = $this->getUser();
+
+        // Vérifier si un utilisateur est connecté
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to access this page.');
+        }
+        /**@var User $user */
+        // Récupérer les adresses de l'utilisateur connecté
+        $addresses = $user->getAdresses();
+
         return $this->render('account/addresses.twig', [
             'addresses' => $addresses,
         ]);
