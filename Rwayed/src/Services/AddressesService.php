@@ -46,4 +46,20 @@ class AddressesService
         $this->entityManager->remove($adresse);
         $this->entityManager->flush();
     }
+
+    public function setAsDefaultAddress(Adresse $adresse, Adherent $adherent): void
+    {
+        // Unset the default status for existing default address(es) of the adherent
+        foreach ($adherent->getAdresses() as $address) {
+            if ($address !== $adresse && $address->isSetasmydefaultaddress()) {
+                $address->setSetasmydefaultaddress(false);
+                $this->entityManager->persist($address);
+            }
+        }
+    
+        // Set the new address as the default address
+        $adresse->setSetasmydefaultaddress(true);
+        $this->entityManager->persist($adresse);
+        $this->entityManager->flush();
+    }
 }

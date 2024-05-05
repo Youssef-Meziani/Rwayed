@@ -76,6 +76,10 @@ class AccountController extends AbstractController
             // Appeler la méthode addAddress du service AddressesService pour ajouter l'adresse
             $addressesService->addAddress($adresse,$adherent);
             $this->addFlash('success', 'Address successfully added.');
+            //Check if the checkbox for setting as default address is checked
+        if ($adresse->isSetasmydefaultaddress()) {
+            $addressesService->setAsDefaultAddress($adresse, $adherent);
+        }
            
             // Rediriger vers la page des adresses après l'ajout réussi
             return $this->redirectToRoute('addresses');
@@ -102,9 +106,14 @@ class AccountController extends AbstractController
     
        // Vérifier si le formulaire a été soumis et est valide
        if ($form->isSubmitted() && $form->isValid()) {
+
            // Appeler la méthode updateAddress du service AddressesService pour mettre à jour l'adresse
            $addressesService->updateAddress($adresse);
            $this->addFlash('success', 'Address successfully updated.');
+            // Check if the checkbox for setting as default address is checked
+            if ($adresse->isSetasmydefaultaddress()) {
+                $addressesService->setAsDefaultAddress($adresse, $this->getUser());
+            }
            // Rediriger vers la page des adresses après la mise à jour réussie
            return $this->redirectToRoute('addresses');
        }
