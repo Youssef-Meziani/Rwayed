@@ -10,12 +10,9 @@ use Twig\Extension\ExtensionInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class TotalItemsExtension extends AbstractExtension implements ExtensionInterface
+class TotalItemsExtension extends AbstractExtension
 {
-    private $entityManager;
-    private $security;
-
-    public function __construct(EntityManagerInterface $entityManager, Security $security)
+    public function __construct(private EntityManagerInterface $entityManager, private Security $security)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;

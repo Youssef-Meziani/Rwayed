@@ -16,8 +16,7 @@ services:
             - '../src/Kernel.php'
     _defaults:
         autowire: true      # Injecte automatiquement les dépendances dans vos services.
-        autoconfigure: true # Enregistre automatiquement vos services comme commandes, abonnés à des événements, etc.
-        public: false       # (encapsule)interdit l'accès direct au service à l'extérieur du conteneur de services, mais permet toujours son utilisation en tant que dépendance injectée dans d'autres services.
+        autoconfigure: true # Enregistre automatiquement vos services comme commandes, abonnés à des événements, etc.        
         bind:               # Liaisons de paramètres spécifiques pour l'injection de dépendances
             $csrfTokenManager: '@security.csrf.token_manager'
             $apiPlatformClient: '@my.api.platform.client'
@@ -36,12 +35,7 @@ services:
             $authenticationUtils: '@security.authentication_utils'
             $twig: '@twig'
         tags:
-            - { name: 'kernel.event_subscriber' }
-
-    # App\EventListener\TotalItemsListener:
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
-    #         - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }        
+            - { name: 'kernel.event_subscriber' }            
 
     # Stratégies
     App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
@@ -66,10 +60,6 @@ services:
             - { name: twig.extension }
             
     App\Twig\TotalItemsExtension:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
-            $security: '@security.helper'
-        tags: [twig.extension]
 
     App\Twig\MinioExtension:
         arguments:
