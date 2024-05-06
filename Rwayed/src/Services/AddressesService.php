@@ -46,4 +46,29 @@ class AddressesService
         $this->entityManager->remove($adresse);
         $this->entityManager->flush();
     }
+    public function setAsDefaultAddress(Adresse $adresse, Adherent $adherent): void
+    {
+        // Récupérer toutes les adresses de l'adhérent
+        $addresses = $adherent->getAdresses();
+    
+        // Si l'adresse n'est pas déjà associée à l'adhérent, l'associer
+        if (!$addresses->contains($adresse)) {
+            $adresse->setAdherent($adherent);
+            $addresses->add($adresse);
+        }
+    
+        // Désactiver toutes les adresses par défaut précédemment définies pour l'adhérent
+        foreach ($addresses as $memberAddress) {
+            $memberAddress->setSetasmydefaultaddress(false);
+        }
+    
+        // Activer l'adresse fournie comme l'adresse par défaut
+        $adresse->setSetasmydefaultaddress(true);
+    
+        // Persist the changes
+        $this->entityManager->persist($adresse);
+        $this->entityManager->flush();
+    }
+    
+    
 }

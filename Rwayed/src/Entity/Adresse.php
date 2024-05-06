@@ -15,19 +15,12 @@ class Adresse
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    
-    #[Assert\NotBlank(message:"Le champ ville ne peut pas être vide")]
-    #[Assert\Length(max:30, maxMessage:"La ville ne peut pas dépasser {{ limit }} caractères")]
     private ?string $city = null;
 
     #[ORM\Column(length: 30)]
-     
-    #[Assert\NotBlank(message:"Le champ rue ne peut pas être vide")]
-    #[Assert\Length(max:30, maxMessage:"La street ne peut pas dépasser {{ limit }} caractères")]
     private ?string $street = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message:"Le champ codepostale ne peut pas être vide")]
     private ?int $postcode = null;
 
     #[ORM\Column]
