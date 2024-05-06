@@ -10,20 +10,27 @@ use Doctrine\ORM\EntityManagerInterface;
 class WishlistService
 {
     private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct( EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    public function addToWishlist(Adherent $user, Pneu $pneu): bool
+    private function findPneuInWishlist(Adherent $user, Pneu $pneu): ?PneuFavList
     {
         $pneuFavLists = $user->getPneuFavLists();
 
         foreach ($pneuFavLists as $pneuFavList) {
             if ($pneuFavList->getPneu() === $pneu) {
-                return false; // Le pneu est déjà dans la liste des favoris de l'utilisateur
+                return $pneuFavList;
             }
+        }
+
+        return null;
+    }
+    public function addToWishlist(Adherent $user, Pneu $pneu): bool
+    {
+        if ($this->findPneuInWishlist($user, $pneu) !== null) {
+            return false;
         }
         // Créer une nouvelle entité PneuFavList
         $pneuFavList = new PneuFavList();
@@ -40,16 +47,13 @@ class WishlistService
 
     public function removeFromWishlist(Adherent $user, Pneu $pneu): bool
     {
-        $pneuFavLists = $user->getPneuFavLists();
+        $pneuFavList = $this->findPneuInWishlist($user, $pneu);
+        if ($pneuFavList !== null) {
+            // Supprimer le pneu de la liste de souhaits de l'utilisateur
+            $this->entityManager->remove($pneuFavList);
+            $this->entityManager->flush();
 
-        foreach ($pneuFavLists as $pneuFavList) {
-            if ($pneuFavList->getPneu() === $pneu) {
-                // Supprimer le pneu de la liste de souhaits de l'utilisateur
-                $this->entityManager->remove($pneuFavList);
-                $this->entityManager->flush();
-                
-                return true;
-            }
+            return true;
         }
 
         // Si le pneu n'est pas trouvé dans la liste de souhaits de l'utilisateur
