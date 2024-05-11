@@ -17,7 +17,6 @@
                 document.getElementById('favicon').setAttribute('href', "{{ asset('images/favicon.svg') }}");
             }
         }
-
         updateFavicon();
         window.matchMedia('(prefers-color-scheme: dark)').addListener(updateFavicon);
     </script>
@@ -48,7 +47,40 @@
 
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
-    {% block stylesheets %} {% endblock %}
+    <style>
+        .dropcart__empty {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 18px;
+            color: #555;
+            border-radius: 8px;
+            margin: 20px;
+            font-weight: bold;
+        }
+        .hidden {
+             display: none !important;
+         }
+         a[disabled] {
+             pointer-events: none;
+             opacity: 0.5;
+         }
+        .product-card--disabled {
+            opacity: 0.5;
+            pointer-events: none;  /* This disables all interactions with the elements in the card */
+        }
+
+        .product-card--disabled .product-card__action,
+        .product-card--disabled .product-card__addtocart-icon,
+        .product-card--disabled .product-card__addtocart-full,
+        .product-card--disabled .product-card__wishlist,
+        .product-card--disabled .product-card__compare {
+            cursor: not-allowed;
+        }
+    </style>
+    {% block stylesheets %}
+    {% endblock %}
 
 </head>
 
@@ -105,7 +137,7 @@
 	V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
 	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z"/>
                                         </svg>
-                                        <span class="mobile-indicator__counter">3</span>
+                                        <span class="mobile-indicator__counter" data-counter-cart=>{{ panier.getLines|length }}</span>
                                     </span>
                             </a>
                         </div>
@@ -364,121 +396,80 @@
 	l3.4,14.3c0.1,0.2,0.3,0.4,0.5,0.4h15.2c0.2,0,0.4-0.1,0.5-0.4l3.1-10c0.1-0.2,0-0.4-0.1-0.4C29.8,8.1,29.7,8,29.5,8H14
 	c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,10C28.5,20.3,27.5,21,26.4,21z"/>
                                 </svg>
-                                <span class="indicator__counter">3</span>
+                                <span class="indicator__counter" id="cart-item-count">{{ panier.getLines|length }}</span>
                             </span>
                         <span class="indicator__title">Shopping Cart</span>
-                        <span class="indicator__value">250<small>.00</small> DH</span>
+                        {% set price = prixTotal  | number_format(2, '.', '') %}
+                        {% set parts = price | split('.') %}
+                        <span class="indicator__value" id="cart-total-price">{{ parts[0] }}<small>.{{ parts[1] }}</small> DH</span>
                     </a>
                     <div class="indicator__content">
                         <div class="dropcart">
-                            <ul class="dropcart__list">
-                                <li class="dropcart__item">
-                                    <div class="dropcart__item-image image image--type--product">
-                                        <a class="image__body" href="">
-                                            <img class="image__tag"
-                                                 src="{{ asset('images/products/product-4-70x70.jpg') }}" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="dropcart__item-info">
-                                        <div class="dropcart__item-name">
-                                            <a href="">Glossy Gray 19" Aluminium Wheel AR-19</a>
-                                        </div>
-                                        <ul class="dropcart__item-features">
-                                            <li>Color: Yellow</li>
-                                            <li>Material: Aluminium</li>
-                                        </ul>
-                                        <div class="dropcart__item-meta">
-                                            <div class="dropcart__item-quantity">2</div>
-                                            <div class="dropcart__item-price">$699.00</div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="dropcart__item-remove">
-                                        <svg width="10" height="10">
-                                            <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
-	C9.2,7.8,9.2,8.4,8.8,8.8z"/>
-                                        </svg>
-                                    </button>
-                                </li>
-                                <li class="dropcart__divider" role="presentation"></li>
-                                <li class="dropcart__item">
-                                    <div class="dropcart__item-image image image--type--product">
-                                        <a class="image__body" href="">
-                                            <img class="image__tag"
-                                                 src="{{ asset('images/products/product-2-70x70.jpg') }}" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="dropcart__item-info">
-                                        <div class="dropcart__item-name">
-                                            <a href="">Brandix Brake Kit BDX-750Z370-S</a>
-                                        </div>
-                                        <div class="dropcart__item-meta">
-                                            <div class="dropcart__item-quantity">1</div>
-                                            <div class="dropcart__item-price">$849.00</div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="dropcart__item-remove">
-                                        <svg width="10" height="10">
-                                            <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
-	C9.2,7.8,9.2,8.4,8.8,8.8z"/>
-                                        </svg>
-                                    </button>
-                                </li>
-                                <li class="dropcart__divider" role="presentation"></li>
-                                <li class="dropcart__item">
-                                    <div class="dropcart__item-image image image--type--product">
-                                        <a class="image__body" href="">
-                                            <img class="image__tag"
-                                                 src="{{ asset('images/products/product-5-70x70.jpg') }}" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="dropcart__item-info">
-                                        <div class="dropcart__item-name">
-                                            <a href="">Twin Exhaust Pipe From Brandix Z54</a>
-                                        </div>
-                                        <ul class="dropcart__item-features">
-                                            <li>Color: True Red</li>
-                                        </ul>
-                                        <div class="dropcart__item-meta">
-                                            <div class="dropcart__item-quantity">3</div>
-                                            <div class="dropcart__item-price">$1210.00</div>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="dropcart__item-remove">
-                                        <svg width="10" height="10">
-                                            <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
-	C9.2,7.8,9.2,8.4,8.8,8.8z"/>
-                                        </svg>
-                                    </button>
-                                </li>
-                                <li class="dropcart__divider" role="presentation"></li>
-                            </ul>
-                            <div class="dropcart__totals">
-                                <table>
-                                    <tr>
-                                        <th>Subtotal</th>
-                                        <td>$5877.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Shipping</th>
-                                        <td>$25.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Tax</th>
-                                        <td>$0.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Total</th>
-                                        <td>$5902.00</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="dropcart__actions">
-                                <a href="{{ url('cart') }}" class="btn btn-secondary">View Cart</a>
-                                <a href="{{ url('checkout') }}" class="btn btn-primary">Checkout</a>
-                            </div>
+                                <ul class="dropcart__list">
+                                    {% if panier.getLines|length == 0 %}
+                                    <span class="dropcart__empty">Your cart is empty.</span>
+                                    {% else %}
+                                        {% for item in panier.getLines %}
+                                            <li class="dropcart__item" id="cart-item-{{ item.getId() }}">
+                                                <div class="dropcart__item-image image image--type--product">
+                                                    <a class="image__body" href="{{ path('product', {'slug': item.slug}) }}">
+                                                        <img class="image__tag"
+                                                             src="{{ minio_url(item.getImage()) }}" alt="">
+                                                    </a>
+                                                </div>
+                                                <div class="dropcart__item-info">
+                                                    <div class="dropcart__item-name">
+                                                        <a href="{{ path('product', {'slug': item.slug}) }}">{{ item.getMarque() }}</a>
+                                                    </div>
+                                                    <ul class="dropcart__item-features">
+                                                        {% if item.isWithRepair() %}
+                                                            <li>Repaired</li>
+                                                        {% else %}
+                                                            <li>No Repair</li>
+                                                        {% endif %}
+                                                    </ul>
+                                                    <div class="dropcart__item-meta">
+                                                        <div class="dropcart__item-quantity">{{ item.getQuantity() }}</div>
+                                                        <div class="dropcart__item-price">{{ item.getPrix() | number_format(2, '.', ',') }} DH</div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="dropcart__item-remove" data-id="{{ item.getId() }}" data-repair="{{ item.isWithRepair() ? 'true' : 'false' }}">
+                                                    <svg width="10" height="10">
+                                                        <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
+        c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
+        C9.2,7.8,9.2,8.4,8.8,8.8z"/>
+                                                    </svg>
+                                                </button>
+
+                                            </li>
+                                            <li class="dropcart__divider" role="presentation"></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </ul>
+                                <div class="dropcart__totals" >
+                                    <table>
+                                        <tr>
+                                            <th>Subtotal</th>
+                                            <td data-subtotal>{{ prixTotal | number_format(2, '.', ',') }} DH</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Shipping</th>
+                                            <td data-shipping>0.0 DH</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Tax</th>
+                                            <td data-tax>{{ totalTax | number_format(2, '.', ',') }} DH</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="font-weight-bold text-primary">Total</th>
+                                            <td class="font-weight-bold text-primary" data-total>{{ (prixTotal + totalTax) | number_format(2, '.', ',') }} DH</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="dropcart__actions">
+                                    <a href="{{ url('cart') }}" class="btn btn-secondary">View Cart</a>
+                                    <a href="{{ url('checkout') }}" class="btn btn-primary btn-checkout-header" {{ panier.getLines|length == 0 ? 'disabled="disabled"' : '' }}>Checkout</a>
+                                </div>
                         </div>
                     </div>
                 </div>
@@ -740,7 +731,7 @@
 	V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
 	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z"/>
                                 </svg>
-                                <span class="mobile-menu__indicator-counter">3</span>
+                                <span class="mobile-menu__indicator-counter" data-counter-cart>{{ panier.getLines|length }}</span>
                             </span>
                         <span class="mobile-menu__indicator-title">Cart</span>
                     </a>
@@ -1088,6 +1079,9 @@
 <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('js/number.js') }}"></script>
 <script src="{{ asset('js/main.js') }}"></script>
+<script src="{{ asset('js/sweetalert.js') }}"></script>
+<script src="{{ asset('js/cart-ajax.js') }}"></script>
+
 
 <script>
     // disable prefetch for ux-turbo on link hover

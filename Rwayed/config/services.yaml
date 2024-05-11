@@ -30,6 +30,23 @@ services:
         arguments:
             $adminEmail: '%admin_email_address%'
 
+    App\EventSubscriber\PanierSubscriber:
+        arguments:
+            $twig: '@twig'
+            $panierFactory: '@App\Order\Factory\PanierFactory'
+            $orderStorage: '@App\Order\Storage\OrderSessionStorage'
+#        tags:
+#            - { name: kernel.event_subscriber }
+
+#    App\Order\Factory\PanierFactory:
+#        arguments:
+#            $storage: '@App\Order\Storage\OrderSessionStorage'
+
+    App\Controller\PanierController:
+        arguments:
+            $panierFactory: '@App\Order\Factory\PanierFactory'
+            $minioExtension: '@App\Twig\MinioExtension'
+
     App\EventSubscriber\AuthenticationEventSubscriber:
         arguments:
             $authenticationUtils: '@security.authentication_utils'

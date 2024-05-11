@@ -31,39 +31,43 @@
 				<div class="cart">
 					<div class="cart__table cart-table">
 						<table class="cart-table__table">
-							<thead class="cart-table__head">
-								<tr class="cart-table__row">
-									<th class="cart-table__column cart-table__column--image">Image</th>
-									<th class="cart-table__column cart-table__column--product">Product</th>
-									<th class="cart-table__column cart-table__column--price">Price</th>
-									<th class="cart-table__column cart-table__column--quantity">Quantity</th>
-									<th class="cart-table__column cart-table__column--total">Total</th>
-									<th class="cart-table__column cart-table__column--remove"></th>
-								</tr>
-							</thead>
-							<tbody class="cart-table__body">
-								{% for tire in tires %}
-									{# {% if tire.quantiteStock is not null %} #}
-										{{ include('partials/_cart-item.twig', {price: tire.prixUnitaire, quantity: tire.quantiteStock}) }}
-									{# {% endif %} #}
-								{% endfor %}
-							</tbody>
-							<tfoot class="cart-table__foot">
-								<tr>
-									<td colspan="6">
-										<div class="cart-table__actions">
-											<form class="cart-table__coupon-form form-row">
-												<div class="form-group mb-0 col flex-grow-1">
-													<input type="text" class="form-control form-control-sm" placeholder="Coupon Code">
-												</div>
-												<div class="form-group mb-0 col-auto">
-													<button type="button" class="btn btn-sm btn-primary">Apply Coupon</button>
-												</div>
-											</form>
-										</div>
-									</td>
-								</tr>
-							</tfoot>
+							{% if panier.getLines|length == 0 %}
+							<span class="dropcart__empty">Your cart is empty.</span>
+							{% else %}
+								<thead class="cart-table__head">
+									<tr class="cart-table__row">
+										<th class="cart-table__column cart-table__column--image">Image</th>
+										<th class="cart-table__column cart-table__column--product">Product</th>
+										<th class="cart-table__column cart-table__column--price">Price</th>
+										<th class="cart-table__column cart-table__column--quantity">Quantity</th>
+										<th class="cart-table__column cart-table__column--total">Total</th>
+										<th class="cart-table__column cart-table__column--remove"></th>
+									</tr>
+								</thead>
+								<tbody class="cart-table__body">
+									{% for tire in panier.getLines %}
+										{# {% if tire.quantiteStock is not null %} #}
+											{{ include('partials/_cart-item.twig', {price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair(), id:tire.getId()}) }}
+										{# {% endif %} #}
+									{% endfor %}
+								</tbody>
+								<tfoot class="cart-table__foot">
+									<tr>
+										<td colspan="6">
+											<div class="cart-table__actions">
+												<form class="cart-table__coupon-form form-row">
+													<div class="form-group mb-0 col flex-grow-1">
+														<input type="text" class="form-control form-control-sm" placeholder="Coupon Code">
+													</div>
+													<div class="form-group mb-0 col-auto">
+														<button type="button" class="btn btn-sm btn-primary">Apply Coupon</button>
+													</div>
+												</form>
+											</div>
+										</td>
+									</tr>
+								</tfoot>
+							{% endif %}
 						</table>
 					</div>
 					<div class="cart__totals">
@@ -74,29 +78,29 @@
 									<thead>
 										<tr>
 											<th>Subtotal</th>
-											<td>0.00 DH</td>
+											<td data-subtotal>0.00 DH</td>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
 											<th>Shipping</th>
-											<td>
+											<td data-shipping>
 												0.00 DH
 											</td>
 										</tr>
 										<tr>
 											<th>Tax</th>
-											<td>0.00 DH</td>
+											<td data-tax>0.00 DH</td>
 										</tr>
 									</tbody>
 									<tfoot>
 										<tr>
 											<th>Total</th>
-											<td>0.00 DH</td>
+											<td data-total>0.00 DH</td>
 										</tr>
 									</tfoot>
 								</table>
-								<a class="btn btn-primary btn-xl btn-block" href="{{ url('checkout') }}">
+								<a href="{{ url('checkout') }}" class="btn btn-primary btn-xl btn-block btn-checkout" {{ panier.getLines|length == 0 ? 'disabled="disabled"' : '' }}>
 									Proceed to checkout
 								</a>
 							</div>

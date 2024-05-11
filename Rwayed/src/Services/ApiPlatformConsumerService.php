@@ -48,7 +48,7 @@ class ApiPlatformConsumerService
         //     return [];
         // }
 
-        // $data = $response->getContent();        
+        // $data = $response->getContent();
         // $decodedData = json_decode($data, true);
 
         // if (!isset($decodedData['hydra:member'])) {
@@ -68,7 +68,7 @@ class ApiPlatformConsumerService
 
     public function fetchPneuById(int $id): ?PneuDTO
     {
-        return $this->fetchResource('pneus/' . $id, PneuDTO::class);
+        return $this->fetchResource('pneus/'.$id, PneuDTO::class);
     }
 
     /**
@@ -77,6 +77,7 @@ class ApiPlatformConsumerService
     public function fetchPneuBySlug(string $slug): ?PneuDTO
     {
         $response = $this->fetchResources('pneus', ['slug' => $slug], PneuDTO::class);
+
         return $response ? $response[0] : null;
     }
 
@@ -85,8 +86,9 @@ class ApiPlatformConsumerService
         try {
             $response = $this->client->request('GET', 'pneus');
             $decodedData = $response->toArray();
+
             return $decodedData['hydra:totalItems'] ?? 0;
-        } catch (ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             return 0;
         }
     }
@@ -129,7 +131,7 @@ class ApiPlatformConsumerService
             $totalItems = $decodedData['hydra:totalItems'] ?? 0;
 
             return ['items' => $items, 'totalItems' => $totalItems];
-        } catch (ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             return ['items' => [], 'totalItems' => 0];
         }
     }
@@ -138,8 +140,9 @@ class ApiPlatformConsumerService
     {
         try {
             $response = $this->client->request('GET', $endpoint);
+
             return $this->serializer->deserialize($response->getContent(), $type, 'json');
-        } catch (ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             return null;
         }
     }
@@ -149,8 +152,9 @@ class ApiPlatformConsumerService
         try {
             $response = $this->client->request('GET', $endpoint, ['query' => $query]);
             $decodedData = $response->toArray();
-            return $this->serializer->deserialize(json_encode($decodedData['hydra:member'], JSON_THROW_ON_ERROR), $type . '[]', 'json');
-        } catch (ClientExceptionInterface | DecodingExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $e) {
+
+            return $this->serializer->deserialize(json_encode($decodedData['hydra:member'], JSON_THROW_ON_ERROR), $type.'[]', 'json');
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             return [];
         }
     }

@@ -24,6 +24,9 @@ class Adherent extends Personne
     #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: Avis::class)]
     private Collection $avis;
 
+    #[ORM\OneToMany(mappedBy: 'adherent', targetEntity: Commande::class)]
+    private Collection $commandes;
+
 
     public function __construct()
     {
@@ -33,6 +36,7 @@ class Adherent extends Personne
         $this->adresses = new ArrayCollection();
         $this->pneuFavLists = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
 
     }
 
@@ -162,6 +166,36 @@ class Adherent extends Personne
             if ($avi->getAdherent() === $this) {
                 $avi->setAdherent(null);
 
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setAdherent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getAdherent() === $this) {
+                $commande->setAdherent(null);
             }
         }
 
