@@ -62,27 +62,25 @@ class OrderSessionStorage implements OrderStorageInterface
 
     public function prixTotalPanier(): float
     {
-        $total = 0.0;
         $panier = $this->recuprerPanier();
         $ligneCommandes = $panier->getLines();
-        foreach ($ligneCommandes as $ligneCommande) {
-            $total += $ligneCommande->getPrix() * $ligneCommande->getQuantity();
-        }
 
-        return $total;
+        return array_reduce($ligneCommandes, static function ($total, $ligneCommande) {
+            return $total + $ligneCommande->getPrix() * $ligneCommande->getQuantity();
+        }, 0.0);
     }
+
 
     public function totalTaxPanier(): float
     {
-        $totalTax = 0.0;
         $panier = $this->recuprerPanier();
         $ligneCommandes = $panier->getLines();
-        foreach ($ligneCommandes as $ligneCommande) {
-            $totalTax += $ligneCommande->getTaxAmount();
-        }
 
-        return $totalTax;
+        return array_reduce($ligneCommandes, static function ($totalTax, $ligneCommande) {
+            return $totalTax + $ligneCommande->getTaxAmount();
+        }, 0.0);
     }
+
 
     public function modifierLignePanier(int $id, int $qte): void
     {

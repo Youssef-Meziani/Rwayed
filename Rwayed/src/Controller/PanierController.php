@@ -23,10 +23,9 @@ class PanierController extends AbstractController
     }
 
     #[Route('/afficherPanier', name: 'afficherPanier')]
-    public function afficherPanier()
+    public function afficherPanier(): Response
     {
         $panier = $this->panierFactory->create();
-        dd($panier);
 
         return $this->render('cart/view.html.twig', [
             'panier' => $panier,
@@ -34,9 +33,9 @@ class PanierController extends AbstractController
     }
 
     #[Route('/fetch', name: 'fetchCart')]
-    public function fetchCartAction(Request $request)
+    public function fetchCartAction(Request $request): Response
     {
-        dd($this->orderStorage->recuprerPanier());
+        return $this->json($this->orderStorage->recuprerPanier());
     }
 
     #[Route('/addToCart', name: 'addToCart')]
@@ -61,20 +60,9 @@ class PanierController extends AbstractController
                 'prixTotal' => $this->orderStorage->prixTotalPanier(),
                 'maxQuantity' => $pneu->getQuantiteStock(),
                 'shippingCost' => 0.00,
-                'tax' => $this->orderStorage->prixTotalPanier() * 0.2,  // Supposons qu'il n'y a pas de taxe
-                'total' => $this->orderStorage->prixTotalPanier() + ($this->orderStorage->prixTotalPanier() * 0.2),  // Total
-                'items' => array_map(function ($item) {
-                    return [
-                        'id' => $item->getId(),
-                        'image' => $this->minioExtension->getMinioUrl($item->getImage()),
-                        'marque' => $item->getMarque(),
-                        'quantity' => $item->getQuantity(),
-                        'prix' => $item->getPrix(),
-                        'totalPrice' => $item->getTotalPrice(),
-                        'taxAmount' => $item->getTaxAmount(),
-                        'withRepair' => $item->isWithRepair(),
-                    ];
-                }, $this->orderStorage->recuprerPanier()->getLines()),
+                'tax' => $this->orderStorage->prixTotalPanier() * 0.2,
+                'total' => $this->orderStorage->prixTotalPanier() * 1.2,
+                'items' => $this->formatCartItems(),
             ]);
         }
 
@@ -84,8 +72,7 @@ class PanierController extends AbstractController
     #[Route('/remove', name: 'removeCart')]
     public function removeAction(Request $request): Response
     {
-        $session = $request->getSession();
-        $session->remove('panier');
+        $request->getSession()->remove('panier');
 
         return $this->redirectToRoute('home');
     }
@@ -94,8 +81,7 @@ class PanierController extends AbstractController
     public function removeLigneAction(Request $request, OrderStorageInterface $orderStorage): Response
     {
         $id = $request->request->get('id');
-        $isRepair = $request->request->get('repair', 'false');
-        $isRepair = filter_var($isRepair, FILTER_VALIDATE_BOOLEAN);
+        $isRepair = filter_var($request->request->get('repair', false), FILTER_VALIDATE_BOOLEAN);
 
         try {
             $orderStorage->supprimerLignePanier((int) $id, (bool) $isRepair);
@@ -109,36 +95,32 @@ class PanierController extends AbstractController
                 'shippingCost' => 0.00,
                 'tax' => $this->orderStorage->prixTotalPanier() * 0.2,
                 'total' => $this->orderStorage->prixTotalPanier() + ($this->orderStorage->prixTotalPanier() * 0.2),  // Total
-                'items' => array_map(function ($item) {
-                    return [
-                        'id' => $item->getId(),
-                        'image' => $this->minioExtension->getMinioUrl($item->getImage()),
-                        'marque' => $item->getMarque(),
-                        'quantity' => $item->getQuantity(),
-                        'prix' => $item->getPrix(),
-                        'totalPrice' => $item->getTotalPrice(),
-                        'taxAmount' => $item->getTaxAmount(),
-                        'withRepair' => $item->isWithRepair(),
-                    ];
-                }, $this->orderStorage->recuprerPanier()->getLines()),
+                'items' => $this->formatCartItems(),
             ]);
         } catch (\Exception $e) {
             return $this->json(['message' => 'Failed to remove item'], Response::HTTP_BAD_REQUEST);
         }
     }
 
-    //    #[Route('/removeL', name:'removeL')]
-    //    public function removeLAction(Request $request):Response
-    //    {
-    //        $id = 67;
-    //        $isRepair = false;
-    //        $this->orderStorage->supprimerLignePanier($id,$isRepair);
-    //        return $this->redirectToRoute("fetchCart");
-    //    }
+    private function formatCartItems(): array
+    {
+        return array_map(function ($item) {
+            return [
+                'id' => $item->getId(),
+                'image' => $this->minioExtension->getMinioUrl($item->getImage()),
+                'marque' => $item->getMarque(),
+                'quantity' => $item->getQuantity(),
+                'prix' => $item->getPrix(),
+                'totalPrice' => $item->getTotalPrice(),
+                'taxAmount' => $item->getTaxAmount(),
+                'withRepair' => $item->isWithRepair(),
+            ];
+        }, $this->orderStorage->recuprerPanier()->getLines());
+    }
 
     #[Route('/getTotal', name: 'Total')]
     public function getTotalAction(Request $request): Response
     {
-        dd($this->orderStorage->prixTotalPanier());
+        return $this->json(['total' => $this->orderStorage->prixTotalPanier()]);
     }
 }

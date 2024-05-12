@@ -35,12 +35,6 @@ services:
             $twig: '@twig'
             $panierFactory: '@App\Order\Factory\PanierFactory'
             $orderStorage: '@App\Order\Storage\OrderSessionStorage'
-#        tags:
-#            - { name: kernel.event_subscriber }
-
-#    App\Order\Factory\PanierFactory:
-#        arguments:
-#            $storage: '@App\Order\Storage\OrderSessionStorage'
 
     App\Controller\PanierController:
         arguments:

@@ -21,11 +21,13 @@ class PanierSubscriber implements EventSubscriberInterface
     public function onKernelController(ControllerEvent $event): void
     {
         $panier = $this->panierFactory->create();
-        $prixTotal = $this->orderStorage->prixTotalPanier();
+        $subTotal = $this->orderStorage->prixTotalPanier();
+        $prixTotal = $this->orderStorage->prixTotalPanier() + $this->orderStorage->totalTaxPanier();
         $totalTax = $this->orderStorage->totalTaxPanier();
         $this->twig->addGlobal('panier', $panier);
         $this->twig->addGlobal('prixTotal', $prixTotal);
         $this->twig->addGlobal('totalTax', $totalTax);
+        $this->twig->addGlobal('subTotal', $subTotal);
     }
 
     public static function getSubscribedEvents()

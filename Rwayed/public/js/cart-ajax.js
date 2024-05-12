@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function updateMobileMenuCartCounter(newCount) {
     const cartCounterElement = document.querySelectorAll('.mobile-indicator__counter[data-counter-cart]');
-    console.log(cartCounterElement);
     if (!cartCounterElement.length) {
         console.error('Mobile Indicator menu cart counter elements with data-item-cart not found');
         return;
@@ -76,7 +75,6 @@ function updateMobileMenuCartCounter(newCount) {
 function updateMobileIndicatorCartCounter(newCount) {
     // Correct the selector by removing the incorrect space and ensuring it targets elements properly
     const cartCounterElements = document.querySelectorAll('.mobile-menu__indicator-counter[data-counter-cart]');
-    console.log(cartCounterElements);
     if (!cartCounterElements.length) {
         console.error('Mobile menu cart counter elements with data-item-cart not found');
         return;
@@ -89,9 +87,10 @@ function updateCartDisplay(totalItems, prixTotal, itemsObject,shippingCost, tax,
 
     document.getElementById('cart-item-count').textContent = totalItems;
     // Formatage du prix total
-    const formattedPrice = prixTotal.toFixed(2); // Assurez-vous que c'est en format décimal avec deux chiffres après la virgule
-    const parts = formattedPrice.split('.'); // Divisez le prix en parties entière et décimale
-    const priceHtml = `${parts[0]}<small>.${parts[1]}</small> DH`;
+    const formattedPrice = total.toFixed(2); // Assurez-vous que c'est en format décimal avec deux chiffres après la virgule
+    const parts = formattedPrice.split('.');
+    document.getElementById('cart-total-price').innerHTML = `${parts[0]}<small>.${parts[1]}</small> DH`; // Utilisation de innerHTML pour respecter le formatage
+
 
     updateMobileMenuCartCounter(totalItems); // Update the cart count in the mobile menu
     updateMobileIndicatorCartCounter(totalItems); // Update the cart count in the mobile indicator button
@@ -104,8 +103,6 @@ function updateCartDisplay(totalItems, prixTotal, itemsObject,shippingCost, tax,
     cartCounterElement_2.textContent = totalItems;
     cartCounterElement_1.setAttribute('data-counter', totalItems); // Ensure the data attribute is also updated
     cartCounterElement_2.setAttribute('data-counter', totalItems); // Ensure the data attribute is also updated
-
-    document.getElementById('cart-total-price').innerHTML = priceHtml; // Utilisation de innerHTML pour respecter le formatage
 
     const cartList = document.querySelector('.dropcart__list');
     cartList.innerHTML = '';  // Vide la liste actuelle
@@ -173,12 +170,6 @@ function updateCartBody(totalItems, prixTotal, itemsObject, shippingCost, tax, t
     const itemCountElement = document.getElementById('cart-item-count');
     if (itemCountElement) {
         itemCountElement.textContent = totalItems;
-    }
-
-    const priceHtml = `${parseInt(prixTotal).toFixed(2)}<small>.${(prixTotal % 1).toFixed(2).substring(2)}</small> DH`;
-    const totalPriceElement = document.getElementById('cart-total-price');
-    if (totalPriceElement) {
-        totalPriceElement.innerHTML = priceHtml;
     }
 
     const cartTable = document.querySelector('.cart-table__table');
@@ -350,7 +341,6 @@ document.addEventListener('DOMContentLoaded', function() {
             Swal.hideLoading();
             if (xhr.status >= 200 && xhr.status < 300) {
                 var response = JSON.parse(xhr.responseText);
-                console.log(response);
                 if (response.maxQuantity && quantity > response.maxQuantity) {
                     Swal.fire({
                         title: 'Exceeded Quantity',
@@ -454,7 +444,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
             }
         };
-        console.log(encodeURIComponent(id),!!isRepair);
         xhr.send(`id=${encodeURIComponent(id)}&repair=${(!!isRepair)}`);
     }
 });

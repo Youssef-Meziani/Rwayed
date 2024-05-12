@@ -6,10 +6,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Twig\Environment;
 
 class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private AuthenticationUtils $authenticationUtils, private \Twig\Environment $twig)
+    public function __construct(private AuthenticationUtils $authenticationUtils, private Environment $twig)
     {
     }
 

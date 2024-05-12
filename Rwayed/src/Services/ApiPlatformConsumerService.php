@@ -6,7 +6,9 @@ use App\DTO\AvisDTO;
 use App\DTO\PneuDTO;
 use App\Entity\Adherent;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -22,53 +24,36 @@ class ApiPlatformConsumerService
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
     private EntityManagerInterface $entityManager;
+    private $cache;
 
     public function __construct(HttpClientInterface $apiPlatformClient, SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
         $this->client = $apiPlatformClient;
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
+        $this->cache = new FilesystemAdapter();
     }
 
     public function fetchPneus(int $page = 1, int $itemsPerPage = self::DEFAULT_COUNT_ITEMS_PER_PAGE): array
     {
-        return $this->fetchResources('pneus', [
-            'page' => $page,
-            'itemsPerPage' => $itemsPerPage,
-        ], PneuDTO::class);
+        $cacheKey = sprintf('fetch_pneus_%d_%d', $page, $itemsPerPage);
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($page, $itemsPerPage) {
+            $item->expiresAfter(300); // Cache for 5 minutes
 
-        // $response = $this->client->request('GET', 'pneus', [
-        //     'query' => [
-        //         'page' => $page,
-        //         'itemsPerPage' => $itemsPerPage,
-        //     ]
-        // ]);
-
-        // if ($response->getStatusCode() !== 200) {
-        //     return [];
-        // }
-
-        // $data = $response->getContent();
-        // $decodedData = json_decode($data, true);
-
-        // if (!isset($decodedData['hydra:member'])) {
-        //     return [];
-        // }
-
-        // $pneusDataJson = json_encode($decodedData['hydra:member']);
-
-        // // return $this->serializer->deserialize($pneusDataJson, 'App\Entity\Pneu[]', 'json');
-        // $similarPneus = $this->serializer->deserialize($pneusDataJson, 'App\DTO\PneuDTO[]', 'json');
-
-        // // Mélangez les pneus similaires
-        // shuffle($similarPneus);
-
-        // return $similarPneus;
+            return $this->fetchResources('pneus', [
+                'page' => $page,
+                'itemsPerPage' => $itemsPerPage,
+            ], PneuDTO::class);
+        });
     }
-
     public function fetchPneuById(int $id): ?PneuDTO
     {
-        return $this->fetchResource('pneus/'.$id, PneuDTO::class);
+        $cacheKey = 'fetch_pneu_by_id_' . $id;
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($id) {
+            $item->expiresAfter(300); // Cache for 5 minutes
+
+            return $this->fetchResource('pneus/'.$id, PneuDTO::class);
+        });
     }
 
     /**
@@ -76,9 +61,13 @@ class ApiPlatformConsumerService
      */
     public function fetchPneuBySlug(string $slug): ?PneuDTO
     {
-        $response = $this->fetchResources('pneus', ['slug' => $slug], PneuDTO::class);
+        $cacheKey = 'fetch_pneu_by_slug_' . $slug;
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($slug) {
+            $item->expiresAfter(300); // Cache for 5 minutes
 
-        return $response ? $response[0] : null;
+            $response = $this->fetchResources('pneus', ['slug' => $slug], PneuDTO::class);
+            return $response ? $response[0] : null;
+        });
     }
 
     public function getTotalItems(): int

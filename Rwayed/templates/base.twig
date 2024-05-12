@@ -450,7 +450,7 @@
                                     <table>
                                         <tr>
                                             <th>Subtotal</th>
-                                            <td data-subtotal>{{ prixTotal | number_format(2, '.', ',') }} DH</td>
+                                            <td data-subtotal>{{ subTotal | number_format(2, '.', ',') }} DH</td>
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
@@ -462,7 +462,7 @@
                                         </tr>
                                         <tr>
                                             <th class="font-weight-bold text-primary">Total</th>
-                                            <td class="font-weight-bold text-primary" data-total>{{ (prixTotal + totalTax) | number_format(2, '.', ',') }} DH</td>
+                                            <td class="font-weight-bold text-primary" data-total>{{ prixTotal | number_format(2, '.', ',') }} DH</td>
                                         </tr>
                                     </table>
                                 </div>
