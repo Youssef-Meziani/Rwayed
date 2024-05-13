@@ -10,7 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 class WishlistService
 {
     private $entityManager;
-    public function __construct( EntityManagerInterface $entityManager)
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -27,9 +28,10 @@ class WishlistService
 
         return null;
     }
+
     public function addToWishlist(Adherent $user, Pneu $pneu): bool
     {
-        if ($this->findPneuInWishlist($user, $pneu) !== null) {
+        if (null !== $this->findPneuInWishlist($user, $pneu)) {
             return false;
         }
         // Créer une nouvelle entité PneuFavList
@@ -48,7 +50,7 @@ class WishlistService
     public function removeFromWishlist(Adherent $user, Pneu $pneu): bool
     {
         $pneuFavList = $this->findPneuInWishlist($user, $pneu);
-        if ($pneuFavList !== null) {
+        if (null !== $pneuFavList) {
             // Supprimer le pneu de la liste de souhaits de l'utilisateur
             $this->entityManager->remove($pneuFavList);
             $this->entityManager->flush();

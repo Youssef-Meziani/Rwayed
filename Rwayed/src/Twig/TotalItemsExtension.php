@@ -12,10 +12,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class TotalItemsExtension extends AbstractExtension
 {
-    public function __construct(private EntityManagerInterface $entityManager, private Security $security)
+    public function __construct(private EntityManagerInterface $entityManager,
+                                private Security $security)
     {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
     }
 
     public function getFunctions()

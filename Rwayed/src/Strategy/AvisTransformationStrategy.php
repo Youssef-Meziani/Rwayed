@@ -30,12 +30,13 @@ class AvisTransformationStrategy implements TransformationStrategyInterface
         $avis->setAuthor($dto->author);
         $avis->setEmail($dto->email);
 
-        if (isset($dto->adherent) && $dto->adherent->id !== null) {
+        if (isset($dto->adherent) && null !== $dto->adherent->id) {
             $adherent = $this->entityManager->getRepository(Adherent::class)->find($dto->adherent->id);
             if ($adherent) {
                 $avis->setAdherent($adherent);
             }
         }
+
         return $avis;
     }
 }

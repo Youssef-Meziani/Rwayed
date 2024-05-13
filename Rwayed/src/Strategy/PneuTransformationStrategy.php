@@ -51,7 +51,6 @@ class PneuTransformationStrategy implements TransformationStrategyInterface
             $pneu->addAvi($avis);
         }
 
-
         return $pneu;
     }
 }

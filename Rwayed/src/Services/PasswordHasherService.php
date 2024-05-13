@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Entity\Personne;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-use Doctrine\ORM\EntityManagerInterface;
 class PasswordHasherService
 {
     private UserPasswordHasherInterface $passwordHasher;
 
     private PasswordHasherService $passwordHasherService;
     private EntityManagerInterface $entityManager;
-    public function __construct(UserPasswordHasherInterface $passwordHasher,EntityManagerInterface $entityManager)
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager)
     {
         $this->passwordHasher = $passwordHasher;
         $this->entityManager = $entityManager;
@@ -40,5 +41,3 @@ class PasswordHasherService
         $this->entityManager->flush();
     }
 }
-
-

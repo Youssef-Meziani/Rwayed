@@ -1,4 +1,4 @@
-<div class="{{ class_name }}">
+<div class="{{ class_name }} {{ tire.isSale() ? 'product-card--disabled' : '' }}">
     <div class="product-card">
         <div class="product-card__actions-list">
             <button class="product-card__action product-card__action--quickview" type="button" aria-label="Quick view" id="{{ tire.id }}">
@@ -34,7 +34,9 @@
                         </svg>
                     </div>
                     <div class="status-badge__text">Part Fit for {{tire.marque}}</div>
-                    <div class="status-badge__tooltip" tabindex="0" data-toggle="tooltip" title="Part&#x20;Fit&#x20;for&#x20;2011&#x20;Ford&#x20;Focus&#x20;S"></div>
+                    <div class="status-badge__tooltip" tabindex="0"
+                         data-toggle="tooltip"
+                         title="Part&#x20;Fit&#x20;for&#x20;{{ tire.marque }}"></div>
                 </div>
             </div>
         </div>
@@ -83,7 +85,7 @@
             <div class="product-card__prices">
                 <div class="product-card__price product-card__price--current">{{ tire.prixUnitaire }} DH</div>
             </div>
-            <button class="product-card__addtocart-icon" type="button" aria-label="Add to cart">
+            <button class="product-card__addtocart-icon" type="button" aria-label="Add to cart" data-product-id = "{{ tire.id }}" data-quantity="{{ tire.quantiteStock }}">
                 <svg width="20" height="20">
                     <circle cx="7" cy="17" r="2" />
                     <circle cx="15" cy="17" r="2" />

@@ -50,6 +50,15 @@
 				</div>
 			</div>
 			<div class="quickview__product">
+				{% if pneu.isSale() %}
+					<div class="tag-badge tag-badge--sale">Unavailable</div>
+				{% endif %}
+				{% if pneu.isNew() %}
+					<div class="product__badge tag-badge tag-badge--new">new</div>
+				{% endif %}
+				{% if pneu.isHot() %}
+					<div class="product__badge tag-badge tag-badge--hot">hot</div>
+				{% endif %}
 				<div class="quickview__product-name">
 					{{pneu.marque ~ ' | ' ~ pneu.taille}}
 				</div>
@@ -57,15 +66,17 @@
 					<div class="quickview__product-rating-stars">
 						<div class="rating">
 							<div class="rating__body">
-								<div class="rating__star rating__star--active"></div>
-								<div class="rating__star rating__star--active"></div>
-								<div class="rating__star rating__star--active"></div>
-								<div class="rating__star"></div>
-								<div class="rating__star"></div>
+								{% for i in 1..5 %}
+									{% if i <= pneu.noteMoyenne %}
+										<div class="rating__star rating__star--active"></div>
+									{% else %}
+										<div class="rating__star"></div>
+									{% endif %}
+								{% endfor %}
 							</div>
 						</div>
 					</div>
-					<div class="quickview__product-rating-title">14 reviews</div>
+					<div class="quickview__product-rating-title">{{ pneu.noteMoyenne|round(0, 'common') }} on {{ pneu.nombreEvaluations }} reviews</div>
 				</div>
 				<div class="quickview__product-meta">
 					<table>
@@ -104,64 +115,51 @@
 						</div>
 					</div>
 				</div>
-				<div class="product-form quickview__product-form">
-					<div class="product-form__body">
-						<div class="product-form__row">
-{#							TODO : on clique sur yes => calcul total price = tire price + repair price #}
-							<div class="product-form__title">Repair service</div>
-							<div class="product-form__control">
-								<div class="input-radio-label">
-									<div class="input-radio-label__list">
-										<label class="input-radio-label__item">
-											<input type="radio" name="material" class="input-radio-label__input">
-											<span class="input-radio-label__title">Yes</span>
-										</label>
-{#										TODO : non : tire price normal #}
-										<label class="input-radio-label__item">
-											<input type="radio" name="material" class="input-radio-label__input">
-											<span class="input-radio-label__title">Non</span>
-										</label>
-										<label class="input-radio-label__item">
-											<input type="radio" name="material" class="input-radio-label__input" disabled>
-											<span class="input-radio-label__title">Thorium</span>
-										</label>
+				<form id="add-to-cart-form" method="post" action="{{ path("addToCart") }}">
+					<input type="hidden" name="id" value="{{ pneu.id }}">
+					<div class="product-form quickview__product-form">
+						<div class="product-form__body">
+							<div class="product-form__row">
+								<div class="product-form__title">Repair service</div>
+								<div class="product-form__control">
+									<div class="input-radio-label">
+										<div class="input-radio-label__list">
+											<label class="input-radio-label__item">
+												<input type="radio" name="repair" required value="true" class="input-radio-label__input" {{ pneu.isSale()  ? 'disabled' : '' }}>
+												<span class="input-radio-label__title">Yes</span>
+											</label>
+											<label class="input-radio-label__item">
+												<input type="radio" name="repair" required value="false" class="input-radio-label__input" {{ pneu.isSale()  ? 'disabled' : '' }}>
+												<span class="input-radio-label__title">No</span>
+											</label>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>						
-					</div>
-				</div>
-				<div class="quickview__product-actions">
-					<div class="quickview__product-actions-item quickview__product-actions-item--quantity">
-						<div class="input-number">
-{#							TODO : repaire price augment with pourcentage , tire price augmente with number of tires selected#}
-							<input class="input-number__input form-control" type="number" min="1" value="1">
-							<div class="input-number__add"></div>
-							<div class="input-number__sub"></div>
 						</div>
 					</div>
-					<div class="quickview__product-actions-item quickview__product-actions-item--addtocart">
-						<button class="btn btn-primary btn-block">Add to cart</button>
+					<div class="quickview__product-actions">
+						<div class="quickview__product-actions-item quickview__product-actions-item--quantity">
+							<div class="input-number">
+								<input class="input-number__input form-control" type="number" {{ pneu.isSale()  ? 'disabled' : '' }} name="quantity" min="1" value="{{ pneu.isSale()  ? '0' : '1' }}" max="{{ pneu.quantiteStock }}">
+								<div class="input-number__add {{ pneu.isSale() ? 'hidden' : '' }}"></div>
+								<div class="input-number__sub {{ pneu.isSale() ? 'hidden' : '' }}"></div>
+							</div>
+						</div>
+						<div class="quickview__product-actions-item quickview__product-actions-item--addtocart">
+							<button class="btn btn-primary btn-block" type="submit" {{ pneu.isSale()  ? 'disabled' : '' }}>Add to cart</button>
+						</div>
+						<div class="quickview__product-actions-item quickview__product-actions-item--wishlist">
+							<button class="btn btn-muted btn-icon" type="button">
+								<svg width="16" height="16">
+									<path d="M13.9,8.4l-5.4,5.4c-0.3,0.3-0.7,0.3-1,0L2.1,8.4c-1.5-1.5-1.5-3.8,0-5.3C2.8,2.4,3.8,2,4.8,2s1.9,0.4,2.6,1.1L8,3.7
+                        l0.6-0.6C9.3,2.4,10.3,2,11.3,2c1,0,1.9,0.4,2.6,1.1C15.4,4.6,15.4,6.9,13.9,8.4z"/>
+								</svg>
+							</button>
+						</div>
 					</div>
-{#					TODO : button wishlist should stay active and should be added in wishlist page, logo in header doiventetre gerer pour afficher le nombre des pneus dans l wishlist#}
-					<div class="quickview__product-actions-item quickview__product-actions-item--wishlist">
-						<button class="btn btn-muted btn-icon" type="button">
-							<svg width="16" height="16">
-								<path d="M13.9,8.4l-5.4,5.4c-0.3,0.3-0.7,0.3-1,0L2.1,8.4c-1.5-1.5-1.5-3.8,0-5.3C2.8,2.4,3.8,2,4.8,2s1.9,0.4,2.6,1.1L8,3.7
-																	l0.6-0.6C9.3,2.4,10.3,2,11.3,2c1,0,1.9,0.4,2.6,1.1C15.4,4.6,15.4,6.9,13.9,8.4z"/>
-							</svg>
-						</button>
-					</div>
-{#					<div class="quickview__product-actions-item quickview__product-actions-item--compare">#}
-{#						<button class="btn btn-muted btn-icon" type="button">#}
-{#							<svg width="16" height="16">#}
-{#								<path d="M9,15H7c-0.6,0-1-0.4-1-1V2c0-0.6,0.4-1,1-1h2c0.6,0,1,0.4,1,1v12C10,14.6,9.6,15,9,15z"/>#}
-{#								<path d="M1,9h2c0.6,0,1,0.4,1,1v4c0,0.6-0.4,1-1,1H1c-0.6,0-1-0.4-1-1v-4C0,9.4,0.4,9,1,9z"/>#}
-{#								<path d="M15,5h-2c-0.6,0-1,0.4-1,1v8c0,0.6,0.4,1,1,1h2c0.6,0,1-0.4,1-1V6C16,5.4,15.6,5,15,5z"/>#}
-{#							</svg>#}
-{#						</button>#}
-{#					</div>#}
-				</div>
+				</form>
+
 			</div>
 		</div>
 		<a href="{{ path('product', {'slug': pneu.slug}) }}" class="quickview__see-details">See full details</a>
