@@ -265,7 +265,7 @@
                                 <ul class="sub-menu" aria-expanded="false">
                                     <li><a href="{{ path('client') }}" data-key="t-user-clients">Clients</a></li>
                                     <li><a href="{{ path('technician') }}" data-key="t-user-techniciens">Techniciens</a></li>
-                                    {% if app.user.isIsSuper() %}
+                                    {% if app.user is not null and app.user.isIsSuper() %}
                                         <li><a href="{{ path('admin') }}" data-key="t-user-admins">Admins</a></li>
                                     {% endif %}
                                 </ul>
@@ -293,6 +293,13 @@
                                 <a href="{{ path('pneu_index') }}">
                                     <i class="bx bx-buoy icon nav-icon"></i>
                                     <span class="menu-item" data-key="t-tires">Tires</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{{ path('app_reviews') }}">
+                                    <i class="bx bx-star icon nav-icon"></i>
+                                    <span class="menu-item" data-key="t-features">Reviews</span>
                                 </a>
                             </li>
 
