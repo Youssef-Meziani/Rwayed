@@ -11,7 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted("ROLE_ADMIN")]
 class ReviewsController extends AbstractController
 {
 
@@ -24,11 +26,9 @@ class ReviewsController extends AbstractController
     public function index(PneuRepository $pneuRepository): Response
     {
         $tiresWithReviews = $pneuRepository->findAllWithReviews();
-        $uploadsBaseUrl = $this->getParameter('uploads_base_url');
 
         return $this->render('reviews/tires.twig', [
             'tiresWithReviews' => $tiresWithReviews,
-            'uploads_base_url' => $uploadsBaseUrl,
         ]);
     }
 

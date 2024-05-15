@@ -47,7 +47,3 @@ services:
               credentials:
                   key: '%env(MINIO_USER)%'
                   secret: '%env(MINIO_PASSWORD)%'
-
-    App\Services\ReviewManager:
-        arguments:
-            $entityManager: '@doctrine.orm.entity_manager'
