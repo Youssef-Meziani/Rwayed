@@ -52,11 +52,6 @@ class AddressesService
             $adresse->setAdherent($adherent);
             $addresses->add($adresse);
         }
-        // Désactiver toutes les adresses par défaut précédemment définies pour l'adhérent
-        foreach ($addresses as $memberAddress) {
-            $memberAddress->setSetasmydefaultaddress(false);
-        }
-
         // Activer l'adresse fournie comme l'adresse par défaut
         $adresse->setSetasmydefaultaddress(true);
 
