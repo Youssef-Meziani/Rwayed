@@ -1,4 +1,4 @@
-<div class="block-products-columns__list-item">
+<div class="block-products-columns__list-item {{ tire.isSale() ? 'product-card--disabled' : '' }}">
     <div class="product-card">
         <div class="product-card__actions-list">
             <button class="product-card__action product-card__action--quickview" type="button" aria-label="Quick view" id="{{ id }}">

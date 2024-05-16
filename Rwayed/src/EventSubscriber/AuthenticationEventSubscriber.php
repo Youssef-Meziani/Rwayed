@@ -26,7 +26,7 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
         $this->twig->addGlobal('last_username', $lastUsername);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => 'onKernelRequest',

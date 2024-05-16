@@ -13018,7 +13018,7 @@ select.form-control::-ms-expand {
 
 [dir=ltr] .checkout__totals th:last-child, [dir=ltr]
 .checkout__totals td:last-child {
-  padding-left: 20px;
+  /*padding-left: 20px;*/
   text-align: right;
 }
 
@@ -13071,7 +13071,7 @@ select.form-control::-ms-expand {
 }
 
 .checkout__totals-footer {
-  font-size: 24px;
+  /*font-size: 24px;*/
 }
 
 .checkout__totals-footer th {

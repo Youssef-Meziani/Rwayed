@@ -96,50 +96,6 @@ function addToWishlist(pneuId) {
     }
 }
 
-
-$(document).ready(function () {
-    $('.reviews-view__form').on('submit', function (e) {
-        e.preventDefault(); // Empêche la soumission normale du formulaire
-
-        var formData = new FormData(this); // Créez un FormData avec les données du formulaire
-
-        $.ajax({
-            url: $(this).attr('action'), // URL de soumission
-            type: 'POST',
-            data: formData,
-            processData: false, // Empêche jQuery de transformer les données en chaîne de requête
-            contentType: false, // Empêche jQuery d'ajouter un en-tête Content-Type
-            success: function (response) {
-                // Utilisez la réponse du serveur pour le titre ou le texte
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Succès!',
-                    text: response.message // Utilisez le message de la réponse JSON
-                });
-                $('#formAvis')[0].reset();
-            },
-            error: function (xhr) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.formErrors) {
-                    var errorMessages = Object.values(response.formErrors).join("\n");
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur...',
-                        text: errorMessages // Show form validation errors
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur...',
-                        text: response.error // Use the generic error message if specific form errors are not provided
-                    });
-                }
-            }
-        });
-    });
-});
-
-
 // wishlist remove
 $(document).ready(function () {
     $('.wishlist__remove').click(function () {

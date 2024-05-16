@@ -79,12 +79,21 @@ class ShopController extends AbstractController
         $similarPneus = $this->getSimilarPneus();
         $avisPagination = $this->getAvisPagination($slug, $request);
 
+        if ($request->isXmlHttpRequest()) {
+            $avisHtml = $this->renderView('partials/_reviews_list.twig', [
+                'avisPagination' => $avisPagination,
+            ]);
+
+            return new JsonResponse(['avisHtml' => $avisHtml]);
+        }
+
         return $this->render('product.twig', array_merge([
             'pneu' => $pneu,
             'formAvis' => $formAvis->createView(),
             'similarPneus' => $similarPneus,
         ], $avisPagination));
     }
+
 
     private function prepareAvisForm(Request $request): FormInterface
     {
