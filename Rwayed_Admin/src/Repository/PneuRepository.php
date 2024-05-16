@@ -21,6 +21,23 @@ class PneuRepository extends ServiceEntityRepository
         parent::__construct($registry, Pneu::class);
     }
 
+
+    /**
+     * Finds all tires with at least one review and their review count.
+     *
+     * @return array
+     */
+    public function findAllWithReviews(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p as tire', 'COUNT(a.id) as reviewCount')
+            ->leftJoin('p.avis', 'a')
+            ->groupBy('p.id')
+            ->having('COUNT(a.id) > 0')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Pneu[] Returns an array of Pneu objects
 //     */

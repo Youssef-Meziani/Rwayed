@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Pneu;
+use App\Order\Factory\PanierFactory;
 use App\Order\Factory\PanierFactoryInterface;
+use App\Order\Persister\CartPersisterInterface;
 use App\Order\Storage\OrderStorageInterface;
 use App\Twig\MinioExtension;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,8 +19,9 @@ class PanierController extends AbstractController
     public function __construct(
         private OrderStorageInterface $orderStorage,
         private EntityManagerInterface $entityManager,
-        private PanierFactoryInterface $panierFactory,
+        private PanierFactory $panierFactory,
         private MinioExtension $minioExtension,
+        private CartPersisterInterface $cartPersister,
     ) {
     }
 
@@ -36,6 +39,14 @@ class PanierController extends AbstractController
     public function fetchCartAction(Request $request): Response
     {
         return $this->json($this->orderStorage->recuprerPanier());
+    }
+
+    #[Route('/create', name: 'fetchCart')]
+    public function createCartAction(Request $request): Response
+    {
+        $commande = $this->panierFactory->create();
+        $this->cartPersister->persist($commande);
+        return $this->redirectToRoute("home");
     }
 
     #[Route('/addToCart', name: 'addToCart')]

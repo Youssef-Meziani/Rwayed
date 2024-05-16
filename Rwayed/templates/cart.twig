@@ -47,7 +47,7 @@
 								<tbody class="cart-table__body">
 									{% for tire in panier.getLines %}
 										{# {% if tire.quantiteStock is not null %} #}
-											{{ include('partials/_cart-item.twig', {price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair(), id:tire.getId()}) }}
+											{{ include('partials/_cart-item.twig', {marque:tire.getMarque(),price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair(), id:tire.getId()}) }}
 										{# {% endif %} #}
 									{% endfor %}
 								</tbody>
@@ -84,8 +84,8 @@
 									<tbody>
 										<tr>
 											<th>Shipping</th>
-											<td data-shipping>
-												0.00 DH
+											<td class="text-primary font-weight-bold" data-shipping>
+												Free
 											</td>
 										</tr>
 										<tr>
@@ -94,7 +94,7 @@
 										</tr>
 									</tbody>
 									<tfoot>
-										<tr>
+										<tr class="text-primary font-weight-bold">
 											<th>Total</th>
 											<td data-total>0.00 DH</td>
 										</tr>

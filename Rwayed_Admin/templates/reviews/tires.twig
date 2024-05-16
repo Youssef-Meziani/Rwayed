@@ -1,0 +1,97 @@
+{% extends 'base-sidebar.twig' %}
+
+{% block title %} - Reviews{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <!-- swiper css -->
+    <link rel="stylesheet" href="{{ asset("libs/swiper/swiper-bundle.min.css") }}">
+
+    <!-- nouisliderribute css -->
+    <link rel="stylesheet" href="{{ asset("libs/nouislider/nouislider.min.css") }}">
+
+{% endblock %}
+
+{% block content %}
+    <div class="p-4 border-top" style="display: none">
+        <div>
+            <h5 class="font-size-14 mb-3">Price</h5>
+            <div id="priceslider" class="mb-4"></div>
+        </div>
+    </div>
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="swiper-container slider rounded overflow-hidden">
+                                <div class="swiper-wrapper" dir="ltr">
+
+                                    {% for tireWithReview in tiresWithReviews %}
+                                        {% set tire = tireWithReview.tire %}
+                                        {% set reviewCount = tireWithReview.reviewCount %}
+                                        <div class="swiper-slide rounded overflow-hidden ecommerce-slide-bg">
+                                            <div class="row justify-content-center">
+                                                <div class="col-xl-11 col-lg-11">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-6">
+                                                            <div class="p-4 p-xl-0">
+                                                                <img src="{{ uploads_base_url }}/{{ tire.image }}" class="img-fluid" alt="{{ tire.marque }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="p-4 p-xl-0">
+                                                                <h3 class="mb-2 text-truncate"><a href="#">{{ tire.marque }} {{ tire.typeVehicule }}</a></h3>
+                                                                <ul class="list-unstyled px-0 mb-0 mt-4">
+                                                                    <li><p class="text-muted mb-1 text-truncate"><i class="mdi mdi-circle-medium align-middle me-1"></i> {{ tire.quantiteStock }} in Stock Available</p></li>
+                                                                    <li><p class="text-muted mb-1 text-truncate"><i class="mdi mdi-circle-medium align-middle me-1"></i> Load rating: {{ tire.indiceCharge }}</p></li>
+                                                                    <li><p class="text-muted mb-1 text-truncate"><i class="mdi mdi-circle-medium align-middle me-1"></i> Speed rating: {{ tire.indiceVitesse }}</p></li>
+                                                                    <li><p class="text-muted mb-1 text-truncate"><i class="mdi mdi-circle-medium align-middle me-1"></i> Season: {{ tire.saison }}</p></li>
+                                                                </ul>
+                                                                <h2 class="mb-0 mt-4 text-truncate"><span class="font-size-20">Number of Reviews: </span><b class="text-primary"> {{ reviewCount }} <span class="font-size-20" >Reviews.</span> </b> <span class="text-muted me-2"></span></h2>
+                                                                <div class="mt-4">
+                                                                    <a href="{{ path('app_tire_reviews', {slug: tire.slug}) }}" class="btn btn-success w-lg waves-effect waves-light">View reviews</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+
+
+                                </div>
+
+                                <div class="d-none d-lg-block">
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- container-fluid -->
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <!-- swiper js -->
+    <script src="{{ asset("libs/swiper/swiper-bundle.min.js") }}"></script>
+
+    <!-- nouisliderribute js -->
+    <script src="{{ asset("libs/nouislider/nouislider.min.js") }}"></script>
+    <script src="{{ asset("libs/wnumb/wNumb.min.js") }}"></script>
+
+    <!-- init js -->
+    <script src="{{ asset("js/pages/product-filter-range.init.js") }}"></script>
+
+{% endblock %}
