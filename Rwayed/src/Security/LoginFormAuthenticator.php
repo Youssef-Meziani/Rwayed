@@ -82,13 +82,27 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        // $refererUrl = $request->headers->get('referer');
+        // Récupérer la session
+        $session = $request->getSession();
+
         $refererUrl = $request->headers->get('referer');
+
         // Exemple de redirection basée sur des rôles avec support pour les rôles hérités
         if ($this->authorizationChecker->isGranted('ROLE_TECHNICIEN')) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
         }
 
         if ($this->authorizationChecker->isGranted('ROLE_ADHERENT')) {
+            // Récupérer l'URL de la session
+            $redirectUrl = $session->get('redirect_after_login');
+            if ($redirectUrl) {
+                // Supprimer l'URL de la session après l'avoir utilisée
+                $session->remove('redirect_after_login');
+
+                return new RedirectResponse($redirectUrl);
+            }
+
             return new RedirectResponse($refererUrl);
         }
 
