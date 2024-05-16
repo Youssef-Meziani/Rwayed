@@ -2,20 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Adherent;
 use App\Entity\Pneu;
+use App\Entity\Adherent;
 use App\Entity\PneuFavList;
 use App\Services\WishlistService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\PneuFavListRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class WishlistController extends AbstractController
 {
@@ -36,7 +37,7 @@ class WishlistController extends AbstractController
         // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
-        //gestion ROLE_ADHERENT dans security.yaml
+        // gestion ROLE_ADHERENT dans security.yaml
         if (!$user instanceof Adherent) {
             // Rediriger les non connecter vers la page login
             return new RedirectResponse($urlGenerator->generate('login'));
@@ -54,7 +55,6 @@ class WishlistController extends AbstractController
     #[Route('/wishlist/add/{id}', name: 'wishlist_add', methods: ['GET', 'POST'], options: ['expose' => true])]
     public function addToWishlist(Pneu $pneu, Request $request, UrlGeneratorInterface $urlGenerator): Response
     {
-        // Todo WishlistObserverCD  !!!!!!!!!!!!
         $user = $this->getUser();
 
         if (!$user instanceof Adherent) {
@@ -78,6 +78,19 @@ class WishlistController extends AbstractController
         }
     }
 
+    #[Route('/wishlist/total', name: 'wishlist_total', methods: ['GET'], options: ['expose' => true])]
+    public function getWishlistTotal(PneuFavListRepository $pneuFavListRepository): JsonResponse
+    {
+        $user = $this->security->getUser();
+
+        if ($user instanceof Adherent) {
+            $totalItems = $pneuFavListRepository->count(['adherent' => $user]);
+            return new JsonResponse(['totalItems' => $totalItems]);
+        }
+
+        return new JsonResponse(['totalItems' => 0]);
+    }
+    
     #[Route('/wishlist/remove/{id}', name: 'wishlist_remove', methods: ['POST'], options: ['expose' => true])]
     public function removeFromWishlist(Pneu $pneu, Request $request, UrlGeneratorInterface $urlGenerator): Response
     {

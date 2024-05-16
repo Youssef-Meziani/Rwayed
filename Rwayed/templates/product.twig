@@ -885,11 +885,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        var wishlistAddUrl = '{{ path('wishlist_add', {'id': 'pneuId'}) }}';
-    </script>
-    <script src="{{ asset('js/sweetalert.js') }}"></script>
-    <script src="{{ asset('js/wishlist.js') }}"></script>
+    
     <script src="{{ asset('js/avis.js') }}"></script>
 {% endblock %}

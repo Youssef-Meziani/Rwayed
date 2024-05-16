@@ -2,19 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\Adherent;
 use App\Entity\Avis;
 use App\Entity\Pneu;
 use App\Form\AvisType;
 use App\Services\ApiPlatformConsumerService;
 use App\Strategy\AvisTransformationStrategy;
 use App\Strategy\PneuTransformationStrategy;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -26,13 +21,15 @@ class ShopController extends AbstractController
         private ApiPlatformConsumerService $apiService,
         private PneuTransformationStrategy $pneuTransformationStrategy,
         private AvisTransformationStrategy $avisTransformationStrategy
-    ) {}
+    ) {
+    }
 
     #[Route('/shop', name: 'shop')]
     public function index(Request $request, SessionInterface $session): Response
     {
         if ($request->isMethod(Request::METHOD_POST)) {
             $this->handleItemsPerPageUpdate($request, $session);
+
             return $this->redirectToRoute('shop');
         }
 
@@ -44,9 +41,9 @@ class ShopController extends AbstractController
     private function handleItemsPerPageUpdate(Request $request, SessionInterface $session): void
     {
         $itemsPerPage = filter_var($request->request->get('itemsPerPage'), FILTER_VALIDATE_INT, [
-            "options" => [
-                "default" => ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE,
-                "min_range" => 1,
+            'options' => [
+                'default' => ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE,
+                'min_range' => 1,
             ],
         ]);
         $session->set('itemsPerPage', $itemsPerPage);
@@ -57,7 +54,7 @@ class ShopController extends AbstractController
         $itemsPerPage = $session->get('itemsPerPage', ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE);
         $page = max($request->query->getInt('page', 1), 1);
         $tiresDTOs = $this->apiService->fetchPneus($page, $itemsPerPage);
-        $tires = array_map(fn($pneuDTO) => $this->pneuTransformationStrategy->transform($pneuDTO), $tiresDTOs);
+        $tires = array_map(fn ($pneuDTO) => $this->pneuTransformationStrategy->transform($pneuDTO), $tiresDTOs);
 
         $totalItems = $this->apiService->getTotalItems();
         $totalPages = ceil($totalItems / $itemsPerPage);
@@ -103,6 +100,7 @@ class ShopController extends AbstractController
         $avis = new Avis();
         $formAvis = $this->createForm(AvisType::class, $avis);
         $formAvis->handleRequest($request);
+
         return $formAvis;
     }
 
@@ -112,13 +110,15 @@ class ShopController extends AbstractController
         if (!$pneuDTO) {
             throw $this->createNotFoundException('Le pneu demandé n\'existe pas.');
         }
+
         return $this->pneuTransformationStrategy->transform($pneuDTO);
     }
 
     private function getSimilarPneus(): array
     {
         $similarPneusDTO = $this->apiService->fetchPneus(1, 10);
-        return array_map(fn($pneuDTO) => $this->pneuTransformationStrategy->transform($pneuDTO), $similarPneusDTO);
+
+        return array_map(fn ($pneuDTO) => $this->pneuTransformationStrategy->transform($pneuDTO), $similarPneusDTO);
     }
 
     /**
@@ -126,10 +126,10 @@ class ShopController extends AbstractController
      */
     private function getAvisPagination(string $slug, Request $request): array
     {
-        $page = max((int)$request->query->get('page', 1), 1);
+        $page = max((int) $request->query->get('page', 1), 1);
         $result = $this->apiService->fetchAvisByPneuSlug($slug, $page);
 
-        $avis = array_map(fn($avisDTO) => $this->avisTransformationStrategy->transform($avisDTO), $result['avis']);
+        $avis = array_map(fn ($avisDTO) => $this->avisTransformationStrategy->transform($avisDTO), $result['avis']);
         $totalPages = ceil($result['totalAvis'] / ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE_AVIS);
 
         return [
@@ -137,7 +137,7 @@ class ShopController extends AbstractController
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'itemsPerPage' => ApiPlatformConsumerService::DEFAULT_COUNT_ITEMS_PER_PAGE_AVIS,
-            'totalAvis' => $result['totalAvis']
+            'totalAvis' => $result['totalAvis'],
         ];
     }
 }
