@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AccountController extends AbstractController
 {
@@ -41,7 +42,7 @@ class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/addresses', name: 'addresses')]
+    #[Route('/address', name: 'addresses')]
     #[IsGranted('ROLE_ADHERENT')]
     public function addresses(): Response
     {
@@ -133,15 +134,20 @@ class AccountController extends AbstractController
     }
     
 
-    #[Route('/address/delete/{id}', name: 'address_delete')]
+    #[Route('/address/delete/{id}', name: 'address_delete',methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADHERENT')]
-    public function deleteAddress(Adresse $adresse, AddressesService $addressesService): Response
+    public function deleteAddress(Adresse $adresse, AddressesService $addressesService,Request $request): Response
     {
-         // Appeler la méthode deleteAddress du service AddressesService pour supprimer l'adresse
-         $addressesService->deleteAddress($adresse);
-           $this->addFlash('success', 'Address successfully deleted.');
-         // Rediriger vers la page des adresses après la suppression réussie
-         return $this->redirectToRoute('addresses');
+        // Vérifier si la requête est AJAX
+        if ($request->isXmlHttpRequest()) {
+            // Supprimer l'adresse
+            $addressesService->deleteAddress($adresse);
+
+            // Réponse JSON pour indiquer que la suppression a réussi
+            return new JsonResponse(['success' => true, 'flashMessage' => 'Address successfully deleted.']);
+        }
+
+        return $this->redirectToRoute('addresses');
     }
 
 

@@ -52,6 +52,10 @@ class AddressesService
             $adresse->setAdherent($adherent);
             $addresses->add($adresse);
         }
+        foreach($addresses as $memberAdresss)
+        {
+            $memberAdresss->setSetasmyDefaultAddress(false);
+        }
         // Activer l'adresse fournie comme l'adresse par défaut
         $adresse->setSetasmydefaultaddress(true);
 
