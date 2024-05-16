@@ -31,7 +31,7 @@
             <div class="container container--max--xl">
                 <div class="row">
                     <div class="col-12 mb-3">
-                        <div class="alert alert-lg alert-primary">Returning customer? <a href="">Click here to login</a></div>
+                        <div class="alert alert-lg alert-primary">Returning customer? <a href="{{ path('app_login') }}">Click here to login</a></div>
                     </div>
                     <div class="col-12 col-lg-6 col-xl-7">
                         <div class="card mb-lg-0">
@@ -147,37 +147,27 @@
                                     </tr>
                                     </thead>
                                     <tbody class="checkout__totals-products">
+                                    {% for tire in panier.getLines %}
                                     <tr>
-                                        <td>Glossy Gray 19" Aluminium Wheel AR-19 × 2</td>
-                                        <td>$1398.00</td>
+                                        <td>{{ tire.getMarque() }} <span class="text-primary">× {{ tire.getQuantity()}}</span></td>
+                                        <td>{{ tire.getPrix() | number_format(2, '.', ',') }} DH</td>
                                     </tr>
-                                    <tr>
-                                        <td>Brandix Brake Kit BDX-750Z370-S × 1</td>
-                                        <td>$849.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Twin Exhaust Pipe From Brandix Z54 × 3</td>
-                                        <td>$3630.00</td>
-                                    </tr>
+                                    {% endfor %}
                                     </tbody>
                                     <tbody class="checkout__totals-subtotals">
                                     <tr>
                                         <th>Subtotal</th>
-                                        <td>$5877.00</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Store Credit</th>
-                                        <td>$-20.00</td>
+                                        <td>{{ subTotal | number_format(2, '.', ',') }} DH</td>
                                     </tr>
                                     <tr>
                                         <th>Shipping</th>
-                                        <td>$25.00</td>
+                                        <td class="text-primary h6">Free</td>
                                     </tr>
                                     </tbody>
-                                    <tfoot class="checkout__totals-footer">
+                                    <tfoot class="checkout__totals-footer h5 text-primary">
                                     <tr>
                                         <th>Total</th>
-                                        <td>$5882.00</td>
+                                        <td>{{ prixTotal | number_format(2, '.', ',') }} DH</td>
                                     </tr>
                                     </tfoot>
                                 </table>

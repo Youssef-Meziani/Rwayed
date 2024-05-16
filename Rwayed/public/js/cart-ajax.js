@@ -5,26 +5,16 @@ document.addEventListener('DOMContentLoaded', function () {
             var xhr = new XMLHttpRequest();
             var formData = new FormData(e.target);
 
-            // Afficher le loader
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Please wait while we add the item to your cart.',
-                icon: 'info',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                willOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            showLoadingSwal();
 
             xhr.open('POST', e.target.action, true);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');  // Important pour Symfony pour détecter une requête AJAX
 
             xhr.onload = function () {
+                Swal.hideLoading();
                 if (xhr.status >= 200 && xhr.status < 300) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.message) {
-                        Swal.hideLoading();
                         Swal.fire({  // Utilisation de SweetAlert
                             title: 'Success!',
                             text: response.message,
@@ -37,29 +27,212 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     }
                 } else {
-                    Swal.fire({  // Affichage d'une erreur avec SweetAlert
-                        title: 'Error!',
-                        text: 'The request failed!',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+                    showErrorSwal('The request failed!');
                     console.error('The request failed!', xhr.status, xhr.statusText);
                 }
             };
 
             xhr.onerror = function () {
-                Swal.fire({  // SweetAlert pour les erreurs de connexion
-                    title: 'Error!',
-                    text: 'The request encountered an error.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
+                showErrorSwal('The request encountered an error.');
             };
 
             xhr.send(formData);
         }
     });
 
+    // Add event listener for wishlist "Add to cart" button
+    document.body.addEventListener('click', function (event) {
+        if (event.target.matches('.btn-primary') || event.target.closest('.btn-primary')) {
+            const button = event.target.closest('.btn-primary');
+            const wishlistRow = button.closest('.wishlist__row');
+            const productId = wishlistRow.querySelector('.wishlist__remove').getAttribute('data-pneu-id');
+            const quantityAvailable = 1; // assuming quantity is 1 for wishlist items
+
+            openQuantityModal(productId, quantityAvailable);
+        }
+
+        // Add event listener for product-card__addtocart-icon button
+        if (event.target.matches('.product-card__addtocart-icon') || event.target.closest('.product-card__addtocart-icon')) {
+            const button = event.target.closest('.product-card__addtocart-icon');
+            const productId = button.getAttribute('data-product-id');
+            const quantityAvailable = button.getAttribute('data-quantity');
+
+            openQuantityModal(productId, quantityAvailable);
+        }
+    });
+
+    function openQuantityModal(productId, quantityAvailable) {
+        Swal.fire({
+            title: 'Select Quantity and Repair Option',
+            html: `
+            <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div style="margin-right: 20px;">
+                    <label for="swal-input-quantity" class="swal2-input-label">Quantity:</label>
+                    <input id="swal-input-quantity" type="number" min="1" value="1" max="${quantityAvailable}" class="swal2-input" required>
+                </div>
+                <div>
+                    <div class="swal2-input-label">Repair service:</div>
+                    <label class="input-radio-label__item">
+                        <input type="radio" name="repair" value="true" class="input-radio-label__input">
+                        <span class="input-radio-label__title">Yes</span>
+                    </label>
+                    <label class="input-radio-label__item">
+                        <input type="radio" name="repair" value="false" class="input-radio-label__input" checked>
+                        <span class="input-radio-label__title">No</span>
+                    </label>
+                </div>
+            </div>
+        `,
+            showCancelButton: true,
+            focusConfirm: false,
+            preConfirm: () => {
+                const quantity = document.getElementById('swal-input-quantity').value;
+                const repair = document.querySelector('input[name="repair"]:checked').value;
+                if (quantity && quantity > 0) {
+                    return {
+                        quantity: quantity,
+                        repair: repair === 'true'
+                    };
+                } else {
+                    Swal.showValidationMessage('Please enter a valid quantity.');
+                    return false;
+                }
+            },
+            confirmButtonText: 'Add to Cart'
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                addToCart(productId, result.value.quantity, result.value.repair);
+            }
+        });
+    }
+
+    function addToCart(productId, quantity, repair) {
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+        formData.append('id', productId);
+        formData.append('quantity', quantity);
+        formData.append('repair', repair);
+
+        showLoadingSwal();
+
+        xhr.open('POST', '/addToCart', true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        xhr.onload = function() {
+            Swal.hideLoading();
+            if (xhr.status >= 200 && xhr.status < 300) {
+                var response = JSON.parse(xhr.responseText);
+                if (response.maxQuantity && quantity > response.maxQuantity) {
+                    showErrorSwal(`Only ${response.maxQuantity} items available in stock.`);
+                } else {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            updateCartDisplay(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
+                            updateCartBody(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
+                            updateCheckoutDisplay(response.prixTotal, response.total, response.items);
+                        }
+                    });
+                }
+            } else {
+                showErrorSwal('Failed to add tire to cart');
+            }
+        };
+
+        xhr.onerror = function() {
+            showErrorSwal('The request encountered a network error.');
+        };
+
+        xhr.send(formData);
+    }
+
+    document.body.addEventListener('click', function(event) {
+        if (event.target.matches('.dropcart__item-remove, .cart-table__remove') || event.target.closest('.dropcart__item-remove, .cart-table__remove')) {
+            const button = event.target.closest('.dropcart__item-remove, .cart-table__remove');
+            const id = button.getAttribute('data-id');
+            const isRepair = button.getAttribute('data-repair') === 'true';
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    removeItemFromCart(id, isRepair);
+                }
+            });
+        }
+    });
+
+    function removeItemFromCart(id, isRepair) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/removeLigne', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+        showLoadingSwal();
+
+        xhr.onload = function() {
+            Swal.hideLoading();
+            if (xhr.status >= 200 && xhr.status < 300) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your tire has been deleted.',
+                    'success'
+                );
+
+                // Supprimer l'élément de la liste
+                const itemElement = document.getElementById(`cart-item-${id}`);
+                if (itemElement) {
+                    itemElement.parentNode.removeChild(itemElement);
+                }
+
+                // Mettre à jour le total du panier et autres détails si la réponse inclut ces données
+                const response = JSON.parse(xhr.responseText);
+                updateCartDisplay(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
+                updateCartBody(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
+                updateCheckoutDisplay(response.prixTotal, response.total, response.items);
+            } else {
+                showErrorSwal('Failed to delete the item.');
+            }
+        };
+
+        xhr.onerror = function() {
+            showErrorSwal('The request encountered a network error.');
+        };
+
+        xhr.send(`id=${encodeURIComponent(id)}&repair=${(!!isRepair)}`);
+    }
+
+    function showLoadingSwal() {
+        Swal.fire({
+            title: 'Processing...',
+            text: 'Please wait while we process your request.',
+            icon: 'info',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
+
+    function showErrorSwal(message) {
+        Swal.fire({
+            title: 'Error!',
+            text: message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
 });
 
 function updateMobileMenuCartCounter(newCount) {
@@ -83,14 +256,12 @@ function updateMobileIndicatorCartCounter(newCount) {
         element.textContent = newCount;
     });
 }
-function updateCartDisplay(totalItems, prixTotal, itemsObject,shippingCost, tax, total) {
-
+function updateCartDisplay(totalItems, prixTotal, itemsObject, shippingCost, tax, total) {
     document.getElementById('cart-item-count').textContent = totalItems;
     // Formatage du prix total
     const formattedPrice = total.toFixed(2); // Assurez-vous que c'est en format décimal avec deux chiffres après la virgule
     const parts = formattedPrice.split('.');
     document.getElementById('cart-total-price').innerHTML = `${parts[0]}<small>.${parts[1]}</small> DH`; // Utilisation de innerHTML pour respecter le formatage
-
 
     updateMobileMenuCartCounter(totalItems); // Update the cart count in the mobile menu
     updateMobileIndicatorCartCounter(totalItems); // Update the cart count in the mobile indicator button
@@ -183,7 +354,7 @@ function updateCartBody(totalItems, prixTotal, itemsObject, shippingCost, tax, t
         }
 
         if (cartTotalsTable) {
-            cartTotalsTable.querySelectorAll('[data-subtotal], [data-shipping], [data-tax], [data-total]').forEach(element => {
+            cartTotalsTable.querySelectorAll('[data-subtotal], [data-tax], [data-total]').forEach(element => {
                 element.textContent = '0.00 DH';
             });
         }
@@ -234,7 +405,6 @@ function updateCartBody(totalItems, prixTotal, itemsObject, shippingCost, tax, t
 
             // Update totals if the element exists
             document.querySelector('.cart__totals-table [data-subtotal]').textContent = prixTotal.toFixed(2) + ' DH';
-            document.querySelector('.cart__totals-table [data-shipping]').textContent = shippingCost.toFixed(2) + ' DH';
             document.querySelector('.cart__totals-table [data-tax]').textContent = tax.toFixed(2) + ' DH';
             document.querySelector('.cart__totals-table [data-total]').textContent = total.toFixed(2) + ' DH';
 
@@ -251,200 +421,24 @@ function updateCartBody(totalItems, prixTotal, itemsObject, shippingCost, tax, t
         }
     }
 }
-document.addEventListener('DOMContentLoaded', function() {
-    // Attach event listener to the body and delegate to the target button
-    document.body.addEventListener('click', function(event) {
-        // Check if the clicked element or any of its parents have the specific class
-        if (event.target.matches('.product-card__addtocart-icon') || event.target.closest('.product-card__addtocart-icon')) {
-            const productId = event.target.closest('.product-card__addtocart-icon').getAttribute('data-product-id');
-            const quantityAvailable = parseInt(event.target.closest('.product-card__addtocart-icon').getAttribute('data-quantity'));
-            if (quantityAvailable <= 0) {
-                Swal.fire({
-                    title: 'Unavailable',
-                    text: 'This tire is currently unavailable for purchase.',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
-            } else {
-            openQuantityModal(productId,quantityAvailable);
-            }
-        }
+
+function updateCheckoutDisplay(subTotal, total, itemObject) {
+    const checkoutProductsBody = document.querySelector('.checkout__totals-products');
+    const subtotalElement = document.querySelector('.checkout__totals-subtotals tr:nth-child(1) td');
+    const totalElement = document.querySelector('.checkout__totals-footer tr td');
+
+    subtotalElement.textContent = subTotal.toFixed(2) + ' DH';
+    totalElement.textContent = total.toFixed(2) + ' DH';
+
+    checkoutProductsBody.innerHTML = '';
+    const items = Object.values(itemObject);
+    items.forEach(item => {
+        const productRow = `
+            <tr>
+                <td>${item.marque} <span class="text-primary">× ${item.quantity}</span></td>
+                <td>${item.prix.toFixed(2)} DH</td>
+            </tr>
+        `;
+        checkoutProductsBody.insertAdjacentHTML('beforeend', productRow);
     });
-    function openQuantityModal(productId, quantityAvailable) {
-        Swal.fire({
-            title: 'Select Quantity and Repair Option',
-            html: `
-            <div style="display: flex; justify-content: space-around; align-items: center;">
-                <div style="margin-right: 20px;">
-                    <label for="swal-input-quantity" class="swal2-input-label">Quantity:</label>
-                    <input id="swal-input-quantity" type="number" min="1" value="1" max="${quantityAvailable}" class="swal2-input" required>
-                </div>
-                <div>
-                    <div class="swal2-input-label">Repair service:</div>
-                    <label class="input-radio-label__item">
-                        <input type="radio" name="repair" value="true" class="input-radio-label__input">
-                        <span class="input-radio-label__title">Yes</span>
-                    </label>
-                    <label class="input-radio-label__item">
-                        <input type="radio" name="repair" value="false" class="input-radio-label__input" checked>
-                        <span class="input-radio-label__title">No</span>
-                    </label>
-                </div>
-            </div>
-        `,
-            showCancelButton: true,
-            focusConfirm: false,
-            preConfirm: () => {
-                const quantity = document.getElementById('swal-input-quantity').value;
-                const repair = document.querySelector('input[name="repair"]:checked').value;
-                if (quantity && quantity > 0) {
-                    return {
-                        quantity: quantity,
-                        repair: repair === 'true'
-                    };
-                } else {
-                    Swal.showValidationMessage('Please enter a valid quantity.');
-                    return false;
-                }
-            },
-            confirmButtonText: 'Add to Cart'
-        }).then((result) => {
-            if (result.isConfirmed && result.value) {
-                addToCart(productId, result.value.quantity, result.value.repair);
-            }
-        });
-    }
-
-
-    function addToCart(productId, quantity, repair) {
-        var xhr = new XMLHttpRequest();
-        var formData = new FormData();
-        formData.append('id', productId);
-        formData.append('quantity', quantity);
-        formData.append('repair', repair);
-
-        Swal.fire({
-            title: 'Processing...',
-            text: 'Please wait while we add the item to your cart.',
-            icon: 'info',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            willOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        xhr.open('POST', '/addToCart', true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-        xhr.onload = function() {
-            Swal.hideLoading();
-            if (xhr.status >= 200 && xhr.status < 300) {
-                var response = JSON.parse(xhr.responseText);
-                if (response.maxQuantity && quantity > response.maxQuantity) {
-                    Swal.fire({
-                        title: 'Exceeded Quantity',
-                        text: `Only ${response.maxQuantity} items available in stock.`,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-                else {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            updateCartDisplay(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
-                            updateCartBody(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
-                        }
-                    });
-                }
-                // if (response.message) {
-                //     Swal.hideLoading();
-                //     Swal.fire({
-                //         title: 'Success!',
-                //         text: response.message,
-                //         icon: 'success',
-                //         confirmButtonText: 'OK'
-                //     }).then((result) => {
-                //         if (result.isConfirmed) {
-                //             updateCartDisplay(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
-                //         }
-                //     });
-                // }
-            } else {
-                Swal.fire('Error!', 'Failed to add tire to cart', 'error');
-            }
-        };
-
-        xhr.onerror = function() {
-            Swal.fire('Error!', 'The request encountered a network error.', 'error');
-        };
-
-        xhr.send(formData);
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.body.addEventListener('click', function(event) {
-        if (event.target.matches('.dropcart__item-remove, .cart-table__remove') || event.target.closest('.dropcart__item-remove, .cart-table__remove')) {
-            const button = event.target.closest('.dropcart__item-remove, .cart-table__remove');
-            const id = button.getAttribute('data-id');
-            const isRepair = button.getAttribute('data-repair') === 'true';
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    removeItemFromCart(id, isRepair);
-                }
-            });
-        }
-    });
-
-    function removeItemFromCart(id, isRepair) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/removeLigne', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your tire has been deleted.',
-                    'success'
-                );
-
-                // Supprimer l'élément de la liste
-                const itemElement = document.getElementById(`cart-item-${id}`);
-                if (itemElement) {
-                    itemElement.parentNode.removeChild(itemElement);
-                }
-
-                // Mettre à jour le total du panier et autres détails si la réponse inclut ces données
-                const response = JSON.parse(xhr.responseText);
-                updateCartDisplay(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
-                updateCartBody(response.totalItems, response.prixTotal, response.items, response.shippingCost, response.tax, response.total);
-                // Actualisez l'affichage du panier ici
-            } else {
-                Swal.fire(
-                    'Error!',
-                    'Failed to delete the item.',
-                    'error'
-                );
-            }
-        };
-        xhr.send(`id=${encodeURIComponent(id)}&repair=${(!!isRepair)}`);
-    }
-});
-
+}
