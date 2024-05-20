@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="address-card__footer">
                                         <a href="{{ path('address_edit', {'id': address.id}) }}">Edit</a>&nbsp;&nbsp;
-                                        <a href="{{ path('address_delete', {'id': address.id}) }}">Remove</a>
+                                          <a href="{{ path('address_delete', {'id': address.id}) }}" class="delete-address-link" data-address-id="{{ address.id }}">Remove</a>
                                     </div>
                                 </div>
                             </div>
