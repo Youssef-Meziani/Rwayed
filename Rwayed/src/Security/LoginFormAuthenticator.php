@@ -88,6 +88,14 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         $refererUrl = $request->headers->get('referer');
 
+
+        $myReferer = $request->getSession()->get('referer_checkout');
+        $request->getSession()->remove('referer_checkout');
+
+        if ($myReferer !== null) {
+            return new RedirectResponse($myReferer);
+        }
+
         // Exemple de redirection basée sur des rôles avec support pour les rôles hérités
         if ($this->authorizationChecker->isGranted('ROLE_TECHNICIEN')) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
@@ -124,6 +132,9 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
             return new RedirectResponse($url);
         }
+
+
+
         // Stocker un message d'erreur dans la session pour le form login
         $request->getSession()->set('authentication_error', $exception->getMessage());
 

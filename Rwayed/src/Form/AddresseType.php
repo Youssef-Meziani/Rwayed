@@ -2,6 +2,7 @@
 namespace App\Form;
 
 use App\Entity\Adresse;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,6 +45,8 @@ class AddresseType extends AbstractType
             ->add('setasmydefaultaddress', CheckboxType::class, [
                 'label' => 'Set as my default address',
                 'required' => false,
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'add_address',
             ]);
           
     }

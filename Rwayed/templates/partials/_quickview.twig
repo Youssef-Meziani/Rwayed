@@ -50,13 +50,13 @@
 				</div>
 			</div>
 			<div class="quickview__product">
-				{% if pneu.isSale() %}
+				{% if is_pneu_on_sale(pneu) %}
 					<div class="tag-badge tag-badge--sale">Unavailable</div>
 				{% endif %}
-				{% if pneu.isNew() %}
+				{% if is_pneu_new(pneu) %}
 					<div class="product__badge tag-badge tag-badge--new">new</div>
 				{% endif %}
-				{% if pneu.isHot() %}
+				{% if is_pneu_hot(pneu) %}
 					<div class="product__badge tag-badge tag-badge--hot">hot</div>
 				{% endif %}
 				<div class="quickview__product-name">

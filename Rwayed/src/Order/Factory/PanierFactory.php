@@ -22,7 +22,7 @@ class PanierFactory
         $commande = new Commande();
         $commande->setAdherent($this->security->getUser());
         $commande->setDateCommande(new \DateTimeImmutable());
-        $commande->setStatutsCommande(PanierStatus::placed);
+        $commande->setStatutsCommande(PanierStatus::PENDING);
         $commande->setFastLivraison(true);
         $commande->setFraisLivraisons(0.0);
         $commande->setTotal(1000.0);

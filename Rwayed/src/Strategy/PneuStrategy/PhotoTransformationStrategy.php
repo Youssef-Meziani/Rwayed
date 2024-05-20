@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Strategy;
+namespace App\Strategy\PneuStrategy;
 
 use App\DTO\PhotoDTO;
 use App\Entity\Photo;
+use App\Strategy\TransformationStrategyInterface;
 
 class PhotoTransformationStrategy implements TransformationStrategyInterface
 {

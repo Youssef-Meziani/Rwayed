@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Personne;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -67,6 +68,8 @@ class RegistrationFormType extends AbstractType
                 'constraints' => new IsTrue([
                     'message' => 'You should agree to our terms.',
                 ]),
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'register',
             ]);
     }
 

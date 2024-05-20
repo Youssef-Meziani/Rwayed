@@ -6,6 +6,7 @@ use App\Entity\Pneu;
 use App\Order\Factory\PanierFactory;
 use App\Order\Factory\PanierFactoryInterface;
 use App\Order\Persister\CartPersisterInterface;
+use App\Order\Storage\OrderSessionStorage;
 use App\Order\Storage\OrderStorageInterface;
 use App\Twig\MinioExtension;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,6 +50,30 @@ class PanierController extends AbstractController
         return $this->redirectToRoute("home");
     }
 
+    #[Route('/order-success', name: 'order-success')]
+    public function orderSuccessAction(Request $request): Response
+    {
+        $commande =  $request->getSession()->get('commande');
+        $defaultAddress =  $request->getSession()->get('defaultAddress');
+
+
+        $request->getSession()->remove('commande');
+        $request->getSession()->remove('defaultAddress');
+
+        $totalSub = $request->query->get('totalSub');
+        $totalCredit = $request->query->get('totalCredit');
+        $tax = $request->query->get('tax');
+
+
+        return $this->render('order-success.twig', [
+            'order' => $commande,
+            'billingAddress' => $defaultAddress,
+            'totalSub' => $totalSub,
+            'totalCredit' => $totalCredit,
+            'tax' => $tax,
+        ]);
+    }
+
     #[Route('/addToCart', name: 'addToCart')]
     public function addToCartAction(Request $request): Response
     {
@@ -78,14 +103,6 @@ class PanierController extends AbstractController
         }
 
         return $this->redirectToRoute('fetchCart');
-    }
-
-    #[Route('/remove', name: 'removeCart')]
-    public function removeAction(Request $request): Response
-    {
-        $request->getSession()->remove('panier');
-
-        return $this->redirectToRoute('home');
     }
 
     #[Route('/removeLigne', name: 'removeLigne', methods: ['POST'])]

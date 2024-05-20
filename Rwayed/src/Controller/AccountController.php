@@ -4,21 +4,25 @@ namespace App\Controller;
 
 use App\Entity\Adresse;
 use App\Entity\Adherent;
+use App\Entity\Commande;
 use App\Entity\Personne;
 use App\Form\AddresseType;
 use App\Form\ChangeCurrentPasswordType;
 use App\Repository\AdresseRepository;
+use App\Repository\CommandeRepository;
 use App\Services\AddressesService;
 use App\Services\PasswordHasherService;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
+#[IsGranted('ROLE_ADHERENT')]
 class AccountController extends AbstractController
 {
 
@@ -30,19 +34,50 @@ class AccountController extends AbstractController
         $this->passwordHasherService = $passwordHasherService;
 
     }
-    
+
     #[Route('/dashboard', name: 'dashboard')]
-    #[IsGranted('ROLE_ADHERENT')]
-    public function dashboard():Response
+    public function dashboard(): Response
     {
         $user = $this->getUser();
+        $orders = $this->entityManager
+            ->getRepository(Commande::class)
+            ->findBy(['adherent' => $user], ['dateCommande' => 'DESC'], 3);
+
         return $this->render('account/dashboard.twig', [
-            'user' => $user
+            'user' => $user,
+            'orders' => $orders
         ]);
     }
 
+    #[Route('/order-details/{codeUnique}', name: 'order_details')]
+    public function orderDetails(string $codeUnique, CommandeRepository $commandeRepository, AdresseRepository $addressRepository): Response
+    {
+        $user = $this->getUser();
+        $order = $commandeRepository->findOneBy([
+            'codeUnique' => $codeUnique]);
+
+        if (!$order || $order->getAdherent() !== $user) {
+            throw $this->createNotFoundException('Order not found or access denied.');
+        }
+        $orderLines = $order->getLigneCommandes();
+
+        $total = 0;
+        foreach ($orderLines as $line) {
+            $total += $line->getPrix() * $line->getQuantity();
+        }
+
+        $defaultAddress = $addressRepository->findDefaultAddressByAdherent($user);
+
+        return $this->render('account/order-details.twig', [
+            'order' => $order,
+            'orderLines' => $orderLines,
+            'total' => $total,
+            'billingAddress' => $defaultAddress,
+        ]);
+    }
+
+
     #[Route('/addresses', name: 'addresses')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function addresses(): Response
     {
         // Récupérer l'utilisateur connecté
@@ -61,7 +96,6 @@ class AccountController extends AbstractController
         ]);
     }
     #[Route('/address/add', name: 'address_add')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function addAddress(Request $request, AddressesService $addressesService): Response
     {
         // Récupérer l'utilisateur connecté (l'adhérent)
@@ -104,7 +138,6 @@ class AccountController extends AbstractController
     
 
     #[Route('/address/edit/{id}', name: 'address_edit')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function editAddress(Request $request, Adresse $adresse, AddressesService $addressesService): Response
     {
        // Créer le formulaire à partir du type de formulaire AdresseType et pré-remplir avec les données de l'adresse existante
@@ -134,7 +167,6 @@ class AccountController extends AbstractController
     
 
     #[Route('/address/delete/{id}', name: 'address_delete')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function deleteAddress(Adresse $adresse, AddressesService $addressesService): Response
     {
          // Appeler la méthode deleteAddress du service AddressesService pour supprimer l'adresse
@@ -146,7 +178,6 @@ class AccountController extends AbstractController
 
 
     #[Route('/profile', name: 'profile')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function profile(Request $request): Response
     {
      
@@ -184,14 +215,18 @@ class AccountController extends AbstractController
     }
 
     #[Route('/acount-orders', name: 'acount-orders')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function acountOrders(): Response
     {
-        return $this->render('account/orders.twig');
+        $user = $this->getUser();
+        $orders = $this->entityManager->getRepository(Commande::class)
+            ->findBy(['adherent' => $user], ['dateCommande' => 'DESC']);
+
+        return $this->render('account/orders.twig', [
+            'orders' => $orders
+        ]);
     }
 
     #[Route('/change-password', name: 'change-password')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function changePassword(Request $request): Response
     {
         /** @var Personne $user */

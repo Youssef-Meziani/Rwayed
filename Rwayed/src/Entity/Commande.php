@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enums\PanierStatus;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Commande
 {
     #[ORM\Id]
@@ -26,7 +28,7 @@ class Commande
     private ?bool $FastLivraison = null;
 
     #[ORM\Column(length: 20)]
-    private ?string $statutsCommande = null;
+    private ?PanierStatus $statutsCommande = null;
 
     #[ORM\Column]
     private ?float $total = null;
@@ -36,6 +38,12 @@ class Commande
 
     #[ORM\OneToMany(mappedBy: 'commande', targetEntity: LigneCommande::class)]
     private Collection $ligneCommandes;
+
+    #[ORM\ManyToOne(inversedBy: 'commande')]
+    private ?CodePromo $codePromo = null;
+
+    #[ORM\Column(length: 20, unique: true)]
+    private ?string $codeUnique = null;
 
     public function __construct()
     {
@@ -83,16 +91,21 @@ class Commande
         return $this;
     }
 
-    public function getStatutsCommande(): ?string
+    public function getStatutsCommande(): ?PanierStatus
     {
         return $this->statutsCommande;
     }
 
-    public function setStatutsCommande(string $statutsCommande): static
+    public function setStatutsCommande(PanierStatus $statutsCommande): static
     {
         $this->statutsCommande = $statutsCommande;
 
         return $this;
+    }
+
+    public function getStatutsCommandeLabel(): string
+    {
+        return $this->statutsCommande->label();
     }
 
     public function getTotal(): ?float
@@ -148,4 +161,55 @@ class Commande
 
         return $this;
     }
+
+    public function getCodePromo(): ?CodePromo
+    {
+        return $this->codePromo;
+    }
+
+    public function setCodePromo(?CodePromo $codePromo): static
+    {
+        $this->codePromo = $codePromo;
+
+        return $this;
+    }
+
+    public function computeTotal(): float
+    {
+        return \array_reduce(
+            $this->getLigneCommandes()->toArray(),
+            static fn (float $total, LigneCommande $item) => $total += $item->getItemTotal() * 1.2,
+            0
+        );
+    }
+
+    public function getCodeUnique(): ?string
+    {
+        return $this->codeUnique;
+    }
+
+    public function setCodeUnique(string $codeUnique): self
+    {
+        $this->codeUnique = $codeUnique;
+
+        return $this;
+    }
+
+//    #[ORM\PrePersist]
+//    public function generateCodeUnique(): void
+//    {
+//        if ($this->codeUnique === null) {
+//            $this->codeUnique = 'MA' . date('dmYHi');
+//        }
+//    }
+
+    #[ORM\PrePersist]
+    public function generateCodeUnique(): void
+    {
+        if ($this->codeUnique === null) {
+            $this->codeUnique = 'MA' . date('dmYHi') . substr(microtime(false), 2, 6);
+        }
+    }
+
+
 }

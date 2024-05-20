@@ -3,6 +3,7 @@
 parameters:
     uploads_base_url: '%env(UPLOADS_BASE_URL)%'
     admin_email_address: '%env(ADMIN_EMAIL_ADDRESS)%'
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
 
 # services.yaml
 # Configuration des services de l'application.
@@ -22,8 +23,8 @@ services:
             $apiPlatformClient: '@my.api.platform.client'
             $adminEmail: '%env(ADMIN_EMAIL_ADDRESS)%'
             $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
-            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
-            $avisStrategy: '@App\Strategy\AvisStrategyInterface'
+            $photoStrategy: '@App\Strategy\PneuStrategy\PhotoStrategyInterface'
+            $avisStrategy: '@App\Strategy\PneuStrategy\AvisStrategyInterface'
 
     # Services spécifiques
     App\Services\EmailService:
@@ -46,15 +47,19 @@ services:
             $authenticationUtils: '@security.authentication_utils'
             $twig: '@twig'
         tags:
-            - { name: 'kernel.event_subscriber' }            
+            - { name: 'kernel.event_subscriber' }
+
+    App\EventSubscriber\PneuStockListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'pneu.stock', method: 'onOrderPlaced', when: 'PneuStockListener' }
 
     # Stratégies
-    App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
-    App\Strategy\AvisStrategyInterface: '@App\Strategy\AvisTransformationStrategy'
-    App\Strategy\PneuTransformationStrategy:
+    App\Strategy\PneuStrategy\PhotoStrategyInterface: '@App\Strategy\PneuStrategy\PhotoTransformationStrategy'
+    App\Strategy\PneuStrategy\AvisStrategyInterface: '@App\Strategy\PneuStrategy\AvisTransformationStrategy'
+    App\Strategy\PneuStrategy\PneuTransformationStrategy:
         arguments:
-            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
-            $avisStrategy: '@App\Strategy\AvisStrategyInterface'
+            $photoStrategy: '@App\Strategy\PneuStrategy\PhotoStrategyInterface'
+            $avisStrategy: '@App\Strategy\PneuStrategy\AvisStrategyInterface'
 
     # HttpClient personnalisé pour l'API Platform
     my.api.platform.client:

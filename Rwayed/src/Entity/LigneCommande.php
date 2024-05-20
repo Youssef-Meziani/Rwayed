@@ -92,4 +92,9 @@ class LigneCommande
 
         return $this;
     }
+
+    public function getItemTotal()
+    {
+        return $this->getQuantity() * $this->getPrix();
+    }
 }
