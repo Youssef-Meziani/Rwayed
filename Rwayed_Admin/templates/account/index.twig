@@ -41,8 +41,12 @@
                                         <div class="p-4 pt-0">
                                             
                                             <div class="mt-n5 position-relative text-center border-bottom pb-3">
-                                                <img src="{{ asset('images/users/avatar-3.jpg') }}" alt="" class="avatar-xl rounded-circle img-thumbnail">
-                                              
+                                                {% if app.user.sexe == 'Male' %}
+                                                    <img src="{{ asset('images/profile_homme.png') }}" class="avatar-xl rounded-circle img-thumbnail" alt="Profile homme">
+                                                {% else %}
+                                                    <img src="{{ asset('images/profile_femme.png') }}" class="avatar-xl rounded-circle img-thumbnail" alt="Profile femme">
+                                                {% endif %}
+
                                                 <div class="mt-3">
                                                    <h5 class="mb-1">Martin Gurley</h5>
                                                     <p class="text-muted mb-0">

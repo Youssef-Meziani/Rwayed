@@ -190,8 +190,11 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown-v"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="{{ asset('images/users/avatar-3.jpg') }}"
-                                alt="Header Avatar">
+                                {% if app.user.sexe == 'Male' %}
+                                    <img src="{{ asset('images/profile_homme.png') }}" class="rounded-circle header-profile-user" alt="Profile homme">
+                                {% else %}
+                                    <img src="{{ asset('images/profile_femme.png') }}" class="rounded-circle header-profile-user" alt="Profile femme">
+                                {% endif %}
                                 {% if app.user %}
                                     <span class="d-none d-xl-inline-block ms-2 fw-medium font-size-15">{{ app.user.nom }} {{ app.user.prenom }}</span>
                                 {% endif %}
@@ -304,12 +307,11 @@
                             </li>
 
                             <li>
-                                <a href="javascript: void(0);">
-                                    <i class="bx bx-list-plus icon nav-icon"></i>
-                                    <span class="menu-item" data-key="t-features">Features</span>
+                                <a href="{{ path('coupon_index') }}">
+                                    <i class="bx bx-gift icon nav-icon"></i>
+                                    <span class="menu-item" data-key="t-coupons">Coupons</span>
                                 </a>
                             </li>
-
 
                             <li class="menu-title" data-key="t-products">Others</li>
 
