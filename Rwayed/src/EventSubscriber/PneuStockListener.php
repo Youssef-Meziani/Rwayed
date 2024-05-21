@@ -14,7 +14,7 @@ class PneuStockListener
     {
     }
 
-    public function onOrderPlaced(PneuStockEvent $event)
+    public function onOrderPlaced(PneuStockEvent $event): void
     {
         foreach ($event->getPneus() as $item) {
             $item->getPneu()->decreaseStock($item->getQuantity());

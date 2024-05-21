@@ -63,18 +63,6 @@ C45.2,71.4,44.6,71.4,44.2,71z" />
                                     </td>
                                     <td class="order-list__column-product">
                                         <a href="{{ path('product', {'slug': item.pneu.slug}) }}">{{ item.pneu.marque }}</a>
-{#                                        <div class="order-list__options">#}
-{#                                            <ul class="order-list__options-list">#}
-{#                                                <li class="order-list__options-item">#}
-{#                                                        <span class="order-list__options-label">#}
-{#                                                            Reparation:#}
-{#                                                        </span>#}
-{#                                                    <span class="order-list__options-value">#}
-{#                                                            {{ item.withRepair }}#}
-{#                                                        </span>#}
-{#                                                </li>#}
-{#                                            </ul>#}
-{#                                        </div>#}
                                     </td>
                                     <td class="order-list__column-quantity" data-title="Quantity:">
                                         {{ item.quantity }}
@@ -109,32 +97,37 @@ C45.2,71.4,44.6,71.4,44.2,71z" />
                     </div>
                 </div>
                 {% if billingAddress %}
-                <div class="order-success__addresses">
-                    <div class="order-success__address card address-card">
-                        <div class="address-card__badge tag-badge tag-badge--theme">
-                            Shipping Address
-                        </div>
-                        <div class="address-card__body">
-                            <div class="address-card__name">{{ billingAddress.adherent.nom }} {{ billingAddress.adherent.prenom }}</div>
-                            <div class="address-card__row">
-                                {{ billingAddress.street }}<br>
-                                {{ billingAddress.city }}<br>
-                                {{ billingAddress.postcode }}
+                    <div class="order-success__addresses">
+                        <div class="order-success__address card address-card">
+                            <div class="address-card__badge tag-badge tag-badge--theme">
+                                Shipping Address
                             </div>
-                            <div class="address-card__row">
-                                <div class="address-card__row-title">Phone Number</div>
-                                <div class="address-card__row-content">{{ billingAddress.adherent.tele }}</div>
-                            </div>
-                            <div class="address-card__row">
-                                <div class="address-card__row-title">Email Address</div>
-                                <div class="address-card__row-content">{{ billingAddress.adherent.email }}</div>
+                            <div class="address-card__body">
+                                <div class="address-card__name">{{ billingAddress.adherent.nom }} {{ billingAddress.adherent.prenom }}</div>
+                                <div class="address-card__row">
+                                    {{ billingAddress.street }}<br>
+                                    {{ billingAddress.city }}<br>
+                                    {{ billingAddress.postcode }}
+                                </div>
+                                <div class="address-card__row">
+                                    <div class="address-card__row-title">Phone Number</div>
+                                    <div class="address-card__row-content">{{ billingAddress.adherent.tele }}</div>
+                                </div>
+                                <div class="address-card__row">
+                                    <div class="address-card__row-title">Email Address</div>
+                                    <div class="address-card__row-content">{{ billingAddress.adherent.email }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
             </div>
         </div>
     </div>
     <div class="block-space block-space--layout--before-footer"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/order-success.js') }}"></script>
 {% endblock %}

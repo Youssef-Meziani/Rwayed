@@ -53,6 +53,10 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'pneu.stock', method: 'onOrderPlaced', when: 'PneuStockListener' }
 
+    App\EventSubscriber\LoyaltyPointsSubscriber:
+        tags:
+            - { name: 'kernel.event_listener', event: 'commande.placed', method: 'onCommandePlaced' }
+
     # Stratégies
     App\Strategy\PneuStrategy\PhotoStrategyInterface: '@App\Strategy\PneuStrategy\PhotoTransformationStrategy'
     App\Strategy\PneuStrategy\AvisStrategyInterface: '@App\Strategy\PneuStrategy\AvisTransformationStrategy'

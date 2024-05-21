@@ -6,8 +6,10 @@ namespace App\Coupon;
 
 use App\Contract\DiscountedObjectInterface;
 use App\Contract\DiscountModelInterface;
+use App\Entity\CodePromo;
 use App\Entity\Commande;
 use App\Strategy\CouponStrategyInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -18,6 +20,7 @@ class DefaultCoupon implements CouponInterface
     public function __construct(
         private readonly RequestStack $stack,
         private readonly CouponStrategyInterface $strategy,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -47,6 +50,15 @@ class DefaultCoupon implements CouponInterface
         $session = $this->stack->getSession();
 
         return $session->has('coupon_code') ? $session->get('coupon_code') : null;
+    }
+
+    public function findCouponByCode(string $code): ?CodePromo
+    {
+        $coupon = $this->entityManager->getRepository(CodePromo::class)->findOneBy(['code' => $code]);
+        if (!$coupon) {
+            throw new \Exception("Coupon with code $code does not exist.");
+        }
+        return $coupon;
     }
 
     public function placeNewVoucher(string $couponIdentifier): bool

@@ -50,7 +50,7 @@ class DoctrineStrategy implements CouponStrategyInterface
 
             public function getPourcentage(): float
             {
-                return $this->adaptedObject->getPourcentge();
+                return $this->adaptedObject->getPourcentage();
             }
         };
     }

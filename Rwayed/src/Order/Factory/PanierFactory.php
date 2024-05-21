@@ -5,7 +5,7 @@ namespace App\Order\Factory;
 use App\Entity\Commande;
 use App\Entity\LigneCommande;
 use App\Entity\Pneu;
-use App\Enums\PanierStatus;
+use App\Enum\PanierStatus;
 use App\Order\Storage\OrderSessionStorage;
 use App\OrderManager\OrderManager;
 use Doctrine\ORM\EntityManagerInterface;

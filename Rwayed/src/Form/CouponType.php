@@ -20,12 +20,7 @@ class CouponType extends AbstractType
                     'placeholder' => 'Coupon Code',
                 ],
             ])
-            ->add('apply', SubmitType::class, [
-                'label' => 'Apply Coupon',
-                'attr' => [
-                    'class' => 'btn btn-sm btn-primary',
-                ],
-            ])->add('captcha', Recaptcha3Type::class, [
+            ->add('captcha', Recaptcha3Type::class, [
                 'action_name' => 'add_coupon',
             ]);
     }

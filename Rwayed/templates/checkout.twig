@@ -3,7 +3,6 @@
 {% block title %} - Checkout{% endblock %}
 
 {% block body %}
-    <!-- site__body -->
     <div class="site__body">
         <div class="block-header block-header--has-breadcrumb block-header--has-title">
             <div class="container">
@@ -31,71 +30,71 @@
             <div class="container container--max--xl">
                 <div class="{{ app.user ? 'row' : '' }}">
                     {% if app.user %}
-                    <div class="col-12 col-lg-6 col-xl-7">
-                        <div class="card mb-lg-0">
-                            {{ form_start(form_billign) }}
-                            <div class="card-body card-body--padding--2">
-                                <h3 class="card-title">Billing details</h3>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        {{ form_label(form_billign.first_name) }}
-                                        {{ form_widget(form_billign.first_name) }}
+                        <div class="col-12 col-lg-6 col-xl-7">
+                            <div class="card mb-lg-0">
+                                {{ form_start(form_billign) }}
+                                <div class="card-body card-body--padding--2">
+                                    <h3 class="card-title">Billing details</h3>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form_billign.first_name) }}
+                                            {{ form_widget(form_billign.first_name) }}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form_billign.last_name) }}
+                                            {{ form_widget(form_billign.last_name) }}
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        {{ form_label(form_billign.last_name) }}
-                                        {{ form_widget(form_billign.last_name) }}
+                                    <div class="form-group">
+                                        {{ form_label(form_billign.company_name) }}
+                                        {{ form_widget(form_billign.company_name) }}
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    {{ form_label(form_billign.company_name) }}
-                                    {{ form_widget(form_billign.company_name) }}
-                                </div>
-                                <div class="form-group">
-                                    {{ form_label(form_billign.street_address) }}
-                                    {{ form_widget(form_billign.street_address) }}
-                                </div>
-                                <div class="form-group">
-                                    {{ form_label(form_billign.apartment) }}
-                                    {{ form_widget(form_billign.apartment) }}
-                                </div>
-                                <div class="form-group">
-                                    {{ form_label(form_billign.city) }}
-                                    {{ form_widget(form_billign.city) }}
-                                </div>
-                                <div class="form-group">
-                                    {{ form_label(form_billign.postcode) }}
-                                    {{ form_widget(form_billign.postcode) }}
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        {{ form_label(form_billign.email) }}
-                                        {{ form_widget(form_billign.email) }}
+                                    <div class="form-group">
+                                        {{ form_label(form_billign.street_address) }}
+                                        {{ form_widget(form_billign.street_address) }}
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        {{ form_label(form_billign.phone) }}
-                                        {{ form_widget(form_billign.phone) }}
+                                    <div class="form-group">
+                                        {{ form_label(form_billign.apartment) }}
+                                        {{ form_widget(form_billign.apartment) }}
                                     </div>
+                                    <div class="form-group">
+                                        {{ form_label(form_billign.city) }}
+                                        {{ form_widget(form_billign.city) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form_billign.postcode) }}
+                                        {{ form_widget(form_billign.postcode) }}
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form_billign.email) }}
+                                            {{ form_widget(form_billign.email) }}
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            {{ form_label(form_billign.phone) }}
+                                            {{ form_widget(form_billign.phone) }}
+                                        </div>
+                                    </div>
+                                    <div class="checkout__agree form-group">
+                                        <div class="form-check">
+                                            {{ form_widget(form_billign.terms) }}
+                                            <label class="form-check-label" for="checkout-terms">
+                                                I have read and agree to the website <a target="_blank" href="{{ path('terms') }}">terms and conditions</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% if app.user %}
+                                        <button type="submit" class="btn btn-primary btn-xl btn-block">Place Order</button>
+                                    {% else %}
+                                        <div class="col-12 mb-3">
+                                            <div class="alert alert-lg alert-primary">Returning customer? <a href="{{ path('app_login') }}">Click here to login</a></div>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                                <div class="checkout__agree form-group">
-                                    <div class="form-check">
-                                        {{ form_widget(form_billign.terms) }}
-                                        <label class="form-check-label" for="checkout-terms">
-                                            I have read and agree to the website <a target="_blank" href="{{ path('terms') }}">terms and conditions</a>
-                                        </label>
-                                    </div>
-                                </div>
-                                {% if app.user %}
-                                    <button type="submit" class="btn btn-primary btn-xl btn-block">Place Order</button>
-                                {% else %}
-                                    <div class="col-12 mb-3">
-                                        <div class="alert alert-lg alert-primary">Returning customer? <a href="{{ path('app_login') }}">Click here to login</a></div>
-                                    </div>
-                                {% endif %}
+                                {{ form_end(form_billign) }}
+                                <div class="card-divider"></div>
                             </div>
-                            {{ form_end(form_billign) }}
-                            <div class="card-divider"></div>
                         </div>
-                    </div>
                     {% endif %}
                     <div class="{{ app.user ? 'col-12 col-lg-6 col-xl-5 mt-4 mt-lg-0' : '' }}">
                         <div class="card mb-0">
@@ -110,10 +109,10 @@
                                     </thead>
                                     <tbody class="checkout__totals-products">
                                     {% for tire in panier.getLines %}
-                                    <tr>
-                                        <td>{{ tire.getMarque() }} <span class="text-primary">× {{ tire.getQuantity()}}</span></td>
-                                        <td>{{ tire.getPrix() | number_format(2, '.', ',') }} DH</td>
-                                    </tr>
+                                        <tr>
+                                            <td>{{ tire.getMarque() }} <span class="text-primary">× {{ tire.getQuantity()}}</span></td>
+                                            <td>{{ tire.getPrix() | number_format(2, '.', ',') }} DH</td>
+                                        </tr>
                                     {% endfor %}
                                     </tbody>
                                     <tbody class="checkout__totals-subtotals">
@@ -164,12 +163,12 @@
                                             <div class="card-body">
                                                 <h3 class="card-title text-center">Coupon Code</h3>
                                                 <div class="form-group">
-                                                    {{ form_start(form_coupon, {'attr': {'class': 'cart-table__coupon-form form-row'}}) }}
+                                                    {{ form_start(form_coupon, {'attr': {'class': 'cart-table__coupon-form form-row', 'id': 'couponForm'}}) }}
                                                     <div class="form-group mb-0 col flex-grow-1">
                                                         {{ form_widget(form_coupon.coupon_code) }}
                                                     </div>
                                                     <div class="form-group mb-0 col-auto">
-                                                        {{ form_widget(form_coupon.apply) }}
+                                                        <button type="button" class="btn btn-sm btn-primary" id="applyCouponButton">Apply Coupon</button>
                                                     </div>
                                                     {{ form_end(form_coupon) }}
                                                 </div>
@@ -185,5 +184,6 @@
         </div>
         <div class="block-space block-space--layout--before-footer"></div>
     </div>
-    <!-- site__body / end -->
+
+    <script src="{{ asset('js/checkout.js') }}"></script>
 {% endblock %}

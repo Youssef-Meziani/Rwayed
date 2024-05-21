@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\CouponStatus;
 use App\Repository\CodePromoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CodePromoRepository::class)]
+#[ORM\UniqueConstraint(columns: ['code'])]
 class CodePromo
 {
     #[ORM\Id]
@@ -16,20 +18,20 @@ class CodePromo
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 10)]
+    #[ORM\Column(length: 10, unique: true)]
     private ?string $code = null;
 
     #[ORM\Column(length: 200, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?int $pourcentge = null;
+    private ?int $pourcentage = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateExpiration = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $status = null;
+    #[ORM\Column(type: 'string', enumType: CouponStatus::class)]
+    private ?CouponStatus $status = null;
 
     #[ORM\OneToMany(mappedBy: 'codePromo', targetEntity: Commande::class)]
     private Collection $commande;
@@ -39,11 +41,11 @@ class CodePromo
         $this->commande = new ArrayCollection();
     }
 
-
     public function getId(): ?int
     {
         return $this->id;
     }
+
 
     public function getCode(): ?string
     {
@@ -68,16 +70,18 @@ class CodePromo
 
         return $this;
     }
-
-    public function getPourcentge(): ?int
+    public function getStatusAsString(): string
     {
-        return $this->pourcentge;
+        return $this->status->value;
+    }
+    public function getStatus(): ?CouponStatus
+    {
+        return $this->status;
     }
 
-    public function setPourcentge(int $pourcentge): static
+    public function setStatus(CouponStatus $status): self
     {
-        $this->pourcentge = $pourcentge;
-
+        $this->status = $status;
         return $this;
     }
 
@@ -86,21 +90,19 @@ class CodePromo
         return $this->dateExpiration;
     }
 
+    public function getPourcentage(): ?int
+    {
+        return $this->pourcentage;
+    }
+
+    public function setPourcentage(?int $pourcentage): void
+    {
+        $this->pourcentage = $pourcentage;
+    }
+
     public function setDateExpiration(\DateTimeInterface $dateExpiration): static
     {
         $this->dateExpiration = $dateExpiration;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Enums\PanierStatus;
+use App\Enum\PanierStatus;
 use App\Repository\CommandeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -96,10 +96,12 @@ class Commande
         return $this->statutsCommande;
     }
 
-    public function setStatutsCommande(PanierStatus $statutsCommande): static
+    public function setStatutsCommande($statutsCommande): self
     {
+        if (is_string($statutsCommande)) {
+            $statutsCommande = PanierStatus::from($statutsCommande);
+        }
         $this->statutsCommande = $statutsCommande;
-
         return $this;
     }
 

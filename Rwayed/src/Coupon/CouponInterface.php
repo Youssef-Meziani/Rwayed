@@ -2,6 +2,7 @@
 
 namespace App\Coupon;
 
+use App\Entity\CodePromo;
 use App\Entity\Commande;
 use App\Contract\DiscountedObjectInterface;
 use App\Contract\DiscountModelInterface;
@@ -19,6 +20,8 @@ interface CouponInterface
 
     
     public function getVoucherIdentifier(): ?string;
+
+    public function findCouponByCode(string $code): ?CodePromo;
 
     public function getDiscountedCommande(Commande $object, ?DiscountModelInterface $voucherInstance): DiscountedObjectInterface;
 
