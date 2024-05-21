@@ -5,7 +5,7 @@ namespace App\Order\Factory;
 use App\Entity\Commande;
 use App\Entity\LigneCommande;
 use App\Entity\Pneu;
-use App\Enums\PanierStatus;
+use App\Enum\PanierStatus;
 use App\Order\Storage\OrderSessionStorage;
 use App\OrderManager\OrderManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +22,7 @@ class PanierFactory
         $commande = new Commande();
         $commande->setAdherent($this->security->getUser());
         $commande->setDateCommande(new \DateTimeImmutable());
-        $commande->setStatutsCommande(PanierStatus::placed);
+        $commande->setStatutsCommande(PanierStatus::PENDING);
         $commande->setFastLivraison(true);
         $commande->setFraisLivraisons(0.0);
         $commande->setTotal(1000.0);

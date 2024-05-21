@@ -114,6 +114,17 @@ class Pneu
         return $this;
     }
 
+    public function decreaseStock(int $quantity): void
+    {
+        if ($quantity > $this->quantiteStock) {
+            throw new \LogicException("Cannot decrease stock by $quantity. Only $this->quantiteStock items in stock.");
+        }
+        $this->quantiteStock -= $quantity;
+
+        if ($this->quantiteStock < 0) {
+            $this->quantiteStock = 0;
+        }
+    }
 
     public function getImageFile(): ?File
     {
@@ -318,12 +329,6 @@ class Pneu
         return $interval->days <= 30; // nouveau s'il a été ajouté il y a moins de 30 jours
     }
 
-    public function isHot(): bool
-    {
-//        $nombreDeCommandes = $this->getNombreDeCommandes();   // TODO : remplacer ici la methode prochainement
-//        return $nombreDeCommandes > 10; // Considéré comme hot s'il a été commandé plus de 10 fois  (DEMO : on peut ameliorer cette logique prochainement)
-        return 30 > 10;
-    }
 
     public function isSale(): bool
     {

@@ -4,6 +4,7 @@ namespace App\Form;
 
 
 use App\Form\ChangePasswordFormType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +22,9 @@ class ChangeCurrentPasswordType extends AbstractType
                     new UserPassword()
 
                 ]
-            ]);  
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'change_cuurent_password',
+            ]);
 
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,8 +21,9 @@ class ResetPasswordRequestFormType extends AbstractType
                         'message' => 'Please enter your email',
                     ]),
                 ],
-            ])
-        ;
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'reset_password',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -6,8 +6,6 @@ use App\Entity\Adherent;
 use App\Entity\Avis;
 use App\Entity\Pneu;
 use App\Form\AvisType;
-use App\Services\ApiPlatformConsumerService;
-use App\Strategy\AvisTransformationStrategy;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;

@@ -1,0 +1,123 @@
+{# templates/user/partials/adherents_list.html.twig #}
+<div class="container-fluid">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h5 class="card-title">Contact List <span class="text-muted fw-normal ms-2">({{ totalAdherents }})</span></h5>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                <div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target=".add-new" class="btn btn-primary"><i class="bx bx-plus me-1"></i> Add New</a>
+                </div>
+                <div class="dropdown">
+                    <a class="btn btn-link text-muted py-1 font-size-16 shadow-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bx bx-dots-horizontal-rounded"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div id="adherents-list">
+                        <table class="table table-nowrap align-middle">
+                            <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="ps-4" style="width: 50px;">
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="contacusercheck">
+                                        <label class="form-check-label" for="contacusercheck"></label>
+                                    </div>
+                                </th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Points Fidelite</th>
+                                <th scope="col" style="width: 200px;">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for adherent in adherents %}
+                                <tr>
+                                    <th scope="row" class="ps-4">
+                                        <div class="form-check font-size-16">
+                                            <input type="checkbox" class="form-check-input" id="contacusercheck{{ loop.index }}">
+                                            <label class="form-check-label" for="contacusercheck{{ loop.index }}"></label>
+                                        </div>
+                                    </th>
+                                    <td>
+                                        {% if adherent.sexe == 'Male' %}
+                                            <img src="{{ asset('images/profile_homme.png') }}" class="rounded-circle avatar img-thumbnail" alt="Profile homme">
+                                        {% else %}
+                                            <img src="{{ asset('images/profile_femme.png') }}" class="rounded-circle avatar img-thumbnail" alt="Profile femme">
+                                        {% endif %}
+                                        <a href="#" class="text-body">{{ adherent.nom }} {{ adherent.prenom }}</a>
+                                    </td>
+                                    <td>{{ adherent.email }}</td>
+                                    <td>{{ adherent.tele }}</td>
+                                    <td>{{ adherent.pointsFidelite }}</td>
+                                    <td>
+                                        <ul class="list-inline mb-0">
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="px-2 text-primary"><i class="bx bx-pencil font-size-18"></i></a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="px-2 text-danger"><i class="bx bx-trash-alt font-size-18"></i></a>
+                                            </li>
+                                            <li class="list-inline-item dropdown">
+                                                <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-end">
+                                                    <a class="dropdown-item" href="#">Action</a>
+                                                    <a class="dropdown-item" href="#">Another action</a>
+                                                    <a class="dropdown-item" href="#">Something else here</a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-0 align-items-center pb-4">
+        <div class="col-sm-6">
+            <div>
+                <p class="mb-sm-0">Showing {{ adherents|length }} of {{ totalAdherents }} entries</p>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="float-sm-end">
+                <ul class="pagination mb-sm-0">
+                    <li class="page-item {% if currentPage == 1 %}disabled{% endif %}">
+                        <a href="#" class="page-link" data-page="{{ currentPage - 1 }}"><i class="mdi mdi-chevron-left"></i></a>
+                    </li>
+                    {% for i in 1..totalPages %}
+                        <li class="page-item {% if currentPage == i %}active{% endif %}">
+                            <a href="#" class="page-link" data-page="{{ i }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                    <li class="page-item {% if currentPage == totalPages %}disabled{% endif %}">
+                        <a href="#" class="page-link" data-page="{{ currentPage + 1 }}"><i class="mdi mdi-chevron-right"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

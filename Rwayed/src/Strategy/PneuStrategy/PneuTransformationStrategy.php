@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Strategy;
+namespace App\Strategy\PneuStrategy;
 
 use App\DTO\PneuDTO;
 use App\Entity\Pneu;
+use App\Strategy\TransformationStrategyInterface;
 
 class PneuTransformationStrategy implements TransformationStrategyInterface
 {

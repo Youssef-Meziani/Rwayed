@@ -60,15 +60,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                {{ form_label(registrationForm.email) }}
-                                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'customer@example.com'}}) }}
-                                {% if registrationForm.email.vars.errors %}
-                                    {% for error in registrationForm.email.vars.errors %}
-                                        <span class="text-danger">{{ error.message }}</span>
-                                    {% endfor %}
-                                {% endif %}
-
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(registrationForm.email) }}
+                                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control', 'placeholder': 'customer@example.com'}}) }}
+                                        {% if registrationForm.email.vars.errors %}
+                                            {% for error in registrationForm.email.vars.errors %}
+                                                <span class="text-danger">{{ error.message }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_label(registrationForm.sexe) }}
+                                        {{ form_widget(registrationForm.sexe, {'attr': {'class': 'form-control'}}) }}
+                                        {% if registrationForm.sexe.vars.errors %}
+                                            {% for error in registrationForm.sexe.vars.errors %}
+                                                <span class="text-danger">{{ error.message }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">

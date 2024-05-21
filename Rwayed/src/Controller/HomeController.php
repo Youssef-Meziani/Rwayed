@@ -3,10 +3,8 @@
 namespace App\Controller;
 
 use App\Services\ApiPlatformConsumerService;
-use App\Strategy\PneuTransformationStrategy;
+use App\Strategy\PneuStrategy\PneuTransformationStrategy;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 

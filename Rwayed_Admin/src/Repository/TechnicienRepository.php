@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Technicien;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +22,17 @@ class TechnicienRepository extends ServiceEntityRepository
         parent::__construct($registry, Technicien::class);
     }
 
-//    /**
-//     * @return Technicien[] Returns an array of Technicien objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @throws Exception
+     */
+    public function getTotalTechniciensCount(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
 
-//    public function findOneBySomeField($value): ?Technicien
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $sql = 'SELECT COUNT(*) as total_techniciens FROM technicien';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        return (int) $resultSet->fetchOne();
+    }
 }

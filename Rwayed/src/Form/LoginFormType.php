@@ -3,6 +3,7 @@
 
 namespace App\Form;
 
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -50,6 +51,8 @@ class LoginFormType extends AbstractType
             ])
             ->add('_csrf_token', HiddenType::class, [
                 'data' => $this->csrfTokenManager->getToken('authenticate')->getValue(),
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'login',
             ]);
     }
 

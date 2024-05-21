@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Pneu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +23,18 @@ class PneuRepository extends ServiceEntityRepository
         parent::__construct($registry, Pneu::class);
     }
 
-//    /**
-//     * @return PneuDTO[] Returns an array of PneuDTO objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?PneuDTO
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countOrdersForPneu($pneuId): int
+    {
+        return $this->createQueryBuilder('p')
+            ->select('count(lc.id)')
+            ->innerJoin('p.ligneCommandes', 'lc')
+            ->where('p.id = :id')
+            ->setParameter('id', $pneuId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

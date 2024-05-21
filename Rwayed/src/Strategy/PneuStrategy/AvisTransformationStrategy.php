@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Strategy;
+namespace App\Strategy\PneuStrategy;
 
 use App\DTO\AvisDTO;
 use App\Entity\Adherent;
 use App\Entity\Avis;
+use App\Strategy\TransformationStrategyInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class AvisTransformationStrategy implements TransformationStrategyInterface

@@ -45,13 +45,13 @@
             <div class="product-card__name">
                 <div>
                     <div class="product-card__badges">
-                        {% if tire.isSale() %}
+                        {% if is_pneu_on_sale(tire) %}
                             <div class="tag-badge tag-badge--sale">Unavailable</div>
                         {%  endif %}
-                        {% if tire.isNew() %}
+                        {% if is_pneu_new(tire) %}
                             <div class="tag-badge tag-badge--new">new</div>
                         {% endif %}
-                        {% if tire.isHot() %}
+                        {% if is_pneu_hot(tire) %}
                             <div class="tag-badge tag-badge--hot">hot</div>
                         {% endif %}
                     </div>

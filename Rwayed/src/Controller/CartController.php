@@ -2,24 +2,25 @@
 
 namespace App\Controller;
 
+use App\Coupon\CouponInterface;
+use App\Form\CouponType;
+use App\Order\Factory\PanierFactory;
+use App\Processor\CartProcessor;
 use App\Services\ApiPlatformConsumerService;
-use App\Strategy\PneuTransformationStrategy;
+use App\Strategy\PneuStrategy\PneuTransformationStrategy;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CartController extends AbstractController
 {
-    private ApiPlatformConsumerService $apiService;
-    private $pneuTransformationStrategy;
-
-    public function __construct(ApiPlatformConsumerService $apiService, PneuTransformationStrategy $pneuTransformationStrategy)
-    {
-        $this->apiService = $apiService;
-        $this->pneuTransformationStrategy = $pneuTransformationStrategy;
-    }
+    public function __construct(
+        private ApiPlatformConsumerService $apiService,
+        private PneuTransformationStrategy $pneuTransformationStrategy,
+    ) {}
     #[Route('/cart', name: 'cart')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $tiresDTO = $this->apiService->fetchPneus(1, 4);
         if (!$tiresDTO) {
@@ -29,7 +30,7 @@ class CartController extends AbstractController
         foreach ($tiresDTO as $pneu) {
             $tires[] = $this->pneuTransformationStrategy->transform($pneu);
         }
-        
+
         return $this->render('cart.twig', [
             'tires' => $tires,
         ]);
