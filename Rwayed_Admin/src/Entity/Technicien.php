@@ -18,7 +18,9 @@ class Technicien extends Personne
     public function __construct()
     {
         $this->date_recrutement = new \DateTime();
+        $this->roles = ['ROLE_TECHNICIEN'];
     }
+
     public function getDateRecrutement(): ?\DateTimeInterface
     {
         return $this->date_recrutement;

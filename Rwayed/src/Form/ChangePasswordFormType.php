@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -47,8 +48,9 @@ class ChangePasswordFormType extends AbstractType
                 // Instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-            ])
-        ;
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'change_password',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

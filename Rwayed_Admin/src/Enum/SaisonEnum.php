@@ -2,9 +2,9 @@
 
 namespace App\Enum;
 
-final class SaisonEnum
+enum  SaisonEnum
 {
-    public const SPRING = 'spring';
+    public const SPRING = 'Spring';
     public const SUMMER = 'Summer';
     public const AUTUMN = 'Autumn';
     public const WINTER = 'Winter';

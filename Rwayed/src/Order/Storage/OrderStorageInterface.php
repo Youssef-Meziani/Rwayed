@@ -17,5 +17,5 @@ interface OrderStorageInterface
 
     public function prixTotalPanier(): float;
 
-    public function modifierLignePanier(int $id, int $qte);
+    public function modifierLignePanier(string $id, int $qte);
 }

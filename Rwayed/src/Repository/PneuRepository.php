@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Pneu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,28 +23,43 @@ class PneuRepository extends ServiceEntityRepository
         parent::__construct($registry, Pneu::class);
     }
 
-//    /**
-//     * @return PneuDTO[] Returns an array of PneuDTO objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countOrdersForPneu($pneuId): int
+    {
+        return $this->createQueryBuilder('p')
+            ->select('count(lc.id)')
+            ->innerJoin('p.ligneCommandes', 'lc')
+            ->where('p.id = :id')
+            ->setParameter('id', $pneuId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-//    public function findOneBySomeField($value): ?PneuDTO
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function countPneusBySeason(): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p.saison, COUNT(p.id) as count')
+            ->groupBy('p.saison');
+
+        $results = $qb->getQuery()->getResult();
+
+        $seasonCounts = [];
+        foreach ($results as $result) {
+            $seasonCounts[$result['saison']] = $result['count'];
+        }
+
+        return $seasonCounts;
+    }
+
+    public function findAllPneusWithRatings(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.nombreEvaluations > 0');
+
+        return $qb->getQuery()->getResult();
+    }
 }

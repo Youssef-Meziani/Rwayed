@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -85,6 +86,8 @@ class ContactFormType extends AbstractType
                         'maxMessage' => 'The message cannot have more than {{ limit }} characters'
                     ])
                 ]
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'contact',
             ]);
     }
 }

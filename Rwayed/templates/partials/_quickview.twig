@@ -50,13 +50,13 @@
 				</div>
 			</div>
 			<div class="quickview__product">
-				{% if pneu.isSale() %}
+				{% if is_pneu_on_sale(pneu) %}
 					<div class="tag-badge tag-badge--sale">Unavailable</div>
 				{% endif %}
-				{% if pneu.isNew() %}
+				{% if is_pneu_new(pneu) %}
 					<div class="product__badge tag-badge tag-badge--new">new</div>
 				{% endif %}
-				{% if pneu.isHot() %}
+				{% if is_pneu_hot(pneu) %}
 					<div class="product__badge tag-badge tag-badge--hot">hot</div>
 				{% endif %}
 				<div class="quickview__product-name">
@@ -76,30 +76,26 @@
 							</div>
 						</div>
 					</div>
-					<div class="quickview__product-rating-title">{{ pneu.noteMoyenne|round(0, 'common') }} on {{ pneu.nombreEvaluations }} reviews</div>
+					<div class="quickview__product-rating-title">{{ pneu.noteMoyenne|round(0, 'common') }} on {{ pneu.avis|length }} reviews</div>
 				</div>
 				<div class="quickview__product-meta">
 					<table>
 						<tr>
-							<th>UGP</th>
-							<td>201902-0057</td>
-						</tr>
-						<tr>
 							<th>Brand</th>
-							<td>{{pneu.marque}}</td>
+							<td>{{ brand }}</td>
 						</tr>
 						<tr>
 							<th>Country</th>
-							<td>Japan</td>
+							<td>Morocco</td>
 						</tr>
 						<tr>
 							<th>Season</th>
 							<td>{{pneu.saison}}</td>
 						</tr>
-						<tr>
-							<th>Vendor code</th>
-							<td>BDX-750Z370-S</td>
-						</tr>
+{#						<tr>#}
+{#							<th>Vendor code</th>#}
+{#							<td>BDX-750Z370-S</td>#}
+{#						</tr>#}
 					</table>
 				</div>
 				<div class="quickview__product-description">
@@ -115,7 +111,7 @@
 						</div>
 					</div>
 				</div>
-				<form id="add-to-cart-form" method="post" action="{{ path("addToCart") }}">
+				<form id="add-to-cart-form-wishlist" method="post" action="{{ path("addToCart") }}">
 					<input type="hidden" name="id" value="{{ pneu.id }}">
 					<div class="product-form quickview__product-form">
 						<div class="product-form__body">
@@ -141,13 +137,13 @@
 					<div class="quickview__product-actions">
 						<div class="quickview__product-actions-item quickview__product-actions-item--quantity">
 							<div class="input-number">
-								<input class="input-number__input form-control" type="number" {{ pneu.isSale()  ? 'disabled' : '' }} name="quantity" min="1" value="{{ pneu.isSale()  ? '0' : '1' }}" max="{{ pneu.quantiteStock }}">
-								<div class="input-number__add {{ pneu.isSale() ? 'hidden' : '' }}"></div>
-								<div class="input-number__sub {{ pneu.isSale() ? 'hidden' : '' }}"></div>
+								<input class="input-number__input form-control" type="number" {{ is_pneu_on_sale(pneu)  ? 'disabled' : '' }} name="quantity" min="1" value="{{ pneu.isSale()  ? '0' : '1' }}" max="{{ pneu.quantiteStock }}">
+								<div class="input-number__add {{ is_pneu_on_sale(pneu) ? 'hidden' : '' }}"></div>
+								<div class="input-number__sub {{ is_pneu_on_sale(pneu) ? 'hidden' : '' }}"></div>
 							</div>
 						</div>
 						<div class="quickview__product-actions-item quickview__product-actions-item--addtocart">
-							<button class="btn btn-primary btn-block" type="submit" {{ pneu.isSale()  ? 'disabled' : '' }}>Add to cart</button>
+							<button class="btn btn-primary btn-block" data-product-id="{{ pneu.id }}" data-quantity="1" type="submit" {{ is_pneu_on_sale(pneu) ? 'disabled' : '' }}>Add to cart</button>
 						</div>
 						<div class="quickview__product-actions-item quickview__product-actions-item--wishlist">
 							<button class="btn btn-muted btn-icon" type="button" onclick="addToWishlist({{ pneu.id }})">

@@ -1,3 +1,4 @@
+{# templates/track-order.twig #}
 {% extends 'base.twig' %}
 
 {% block title %} - Track Order{% endblock %}
@@ -12,21 +13,23 @@
                         <div class="card-body card-body--padding--2">
                             <h1 class="card-title card-title--lg">Track Order</h1>
                             <p class="mb-4">
-                                Enter the order ID and email address that was used to create the order, and then click the track button.
+                                Enter the <b>order code</b> and <b>email address</b> that was used to create the order, and then click the track button.
                             </p>
-                            <form>
-                                <div class="form-group">
-                                    <label for="track-order-id">Order ID</label>
-                                    <input id="track-order-id" type="text" class="form-control" placeholder="Order ID">
-                                </div>
-                                <div class="form-group">
-                                    <label for="track-email">Email address</label>
-                                    <input id="track-email" type="email" class="form-control" placeholder="Email address">
-                                </div>
-                                <div class="form-group pt-4 mb-1">
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Track</button>
-                                </div>
-                            </form>
+                            {{ form_start(form, {'attr': {'id': 'track-order-form'}}) }}
+                            <div class="form-group">
+                                {{ form_label(form.order_id) }}
+                                {{ form_widget(form.order_id) }}
+                                {{ form_errors(form.order_id) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                            <div class="form-group pt-4 mb-1">
+                                {{ form_widget(form.track) }}
+                            </div>
+                            {{ form_end(form) }}
                         </div>
                     </div>
                 </div>
@@ -34,4 +37,87 @@
         </div>
     </div>
     <div class="block-space block-space--layout--before-footer"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    <script>
+        document.getElementById('track-order-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let form = event.target;
+            let formData = new FormData(form);
+
+            Swal.fire({
+                title: 'Tracking your order...',
+                text: 'Please wait while we fetch the status of your order.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.close(); // Close the loading alert
+                    if (data.status === 'error') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message,
+                            footer: '<a href="{{ path("contact") }}">Need help? Contact our support team</a>'
+                        });
+                    } else {
+                        let statusMessage;
+                        let statusIcon;
+                        let statusTitle;
+
+                        switch (data.orderStatus) {
+                            case 'Pending':
+                                statusTitle = 'Order Pending';
+                                statusMessage = 'Your order is currently pending. We are processing it and will update you once it is ready to be shipped.';
+                                statusIcon = 'info';
+                                break;
+                            case 'Shipped':
+                                statusTitle = 'Order Shipped';
+                                statusMessage = 'Good news! Your order has been shipped. It is on its way and will reach you soon.';
+                                statusIcon = 'success';
+                                break;
+                            case 'Delivered':
+                                statusTitle = 'Order Delivered';
+                                statusMessage = 'Your order has been successfully delivered. We hope you enjoy your purchase!';
+                                statusIcon = 'success';
+                                break;
+                            default:
+                                statusTitle = 'Unknown Status';
+                                statusMessage = 'The status of your order is currently unknown. Please contact customer support for further assistance.';
+                                statusIcon = 'warning';
+                                break;
+                        }
+                        Swal.fire({
+                            icon: statusIcon,
+                            title: statusTitle,
+                            text: statusMessage,
+                            footer: '<a href="{{ path("contact") }}">Need help? Contact our support team</a>'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.close(); // Close the loading alert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while tracking your order. Please try again later.',
+                    });
+                });
+        });
+    </script>
 {% endblock %}

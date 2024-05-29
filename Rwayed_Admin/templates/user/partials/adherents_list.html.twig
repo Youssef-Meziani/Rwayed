@@ -1,0 +1,101 @@
+<div class="container-fluid">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h5 class="card-title">Customers List <span class="text-muted fw-normal ms-2">({{ totalAdherents }})</span></h5>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                <input type="text" id="search-adherents" class="form-control" placeholder="Search adherents...">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body" style="height: calc(100vh - 150px); overflow-y: auto;">
+                    <div id="adherents-list">
+                        <table class="table table-nowrap align-middle">
+                            <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
+                            <tr>
+                                <th scope="col" class="ps-4" style="width: 50px;">
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="contacusercheck">
+                                        <label class="form-check-label" for="contacusercheck"></label>
+                                    </div>
+                                </th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Points Fidelite</th>
+                                <th scope="col" style="width: 200px;">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody id="adherents-tbody">
+                            {% for adherent in adherents %}
+                                <tr class="adherent-row">
+                                    <th scope="row" class="ps-4">
+                                        <div class="form-check font-size-16">
+                                            <input type="checkbox" class="form-check-input" id="contacusercheck{{ loop.index }}">
+                                            <label class="form-check-label" for="contacusercheck{{ loop.index }}"></label>
+                                        </div>
+                                    </th>
+                                    <td>
+                                        {% if adherent.sexe == 'Male' %}
+                                            <img src="{{ asset('images/profile_homme.png') }}" class="rounded-circle avatar img-thumbnail" alt="Profile homme">
+                                        {% else %}
+                                            <img src="{{ asset('images/profile_femme.png') }}" class="rounded-circle avatar img-thumbnail" alt="Profile femme">
+                                        {% endif %}
+                                        <a href="#" class="text-body">{{ adherent.nom }} {{ adherent.prenom }}</a>
+                                    </td>
+                                    <td>{{ adherent.email }}</td>
+                                    <td>{{ adherent.tele }}</td>
+                                    <td>{{ adherent.pointsFidelite }}</td>
+                                    <td>
+                                        <ul class="list-inline mb-0">
+                                            <li class="list-inline-item">
+                                                <button class="btn btn-link text-{{ adherent.desactive ? 'danger' : 'success' }}" onclick="toggleAdherent('{{ adherent.id }}')">
+                                                    <i class="bx {{ adherent.desactive ? 'bx-x-circle' : 'bx-check-circle' }} font-size-18"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function initSearch() {
+                const searchInput = document.getElementById('search-adherents');
+                searchInput.addEventListener('keyup', () => {
+                    const searchValue = searchInput.value.toLowerCase();
+                    const adherentRows = document.querySelectorAll('.adherent-row');
+                    adherentRows.forEach(row => {
+                        const name = row.querySelector('.text-body').innerText.toLowerCase();
+                        const email = row.querySelector('td:nth-child(3)').innerText.toLowerCase();
+                        const phone = row.querySelector('td:nth-child(4)').innerText.toLowerCase();
+                        const points = row.querySelector('td:nth-child(5)').innerText.toLowerCase();
+                        if (name.includes(searchValue) || email.includes(searchValue) || phone.includes(searchValue) || points.includes(searchValue)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            initSearch();
+        });
+    </script>
+{% endblock %}

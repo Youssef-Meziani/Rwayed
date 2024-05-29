@@ -58,21 +58,12 @@ class PneuType extends AbstractType
                 ],
             ])
             ->add('imageFile', VichImageType::class, [
-                'required' => false,
+                'required' => true,
                 'allow_delete' => false, // Ne pas afficher la case à cocher de suppression
                 'download_uri' => false, // Ne pas afficher le lien de téléchargement
                 'download_label' => false, // Ne pas afficher le label de téléchargement
                 'image_uri' => false, // Ne pas afficher l'image existante
             ])
-//            ->add('photos', CollectionType::class, [
-//                'entry_type' => PhotoType::class,
-//                'entry_options' => ['label' => false],
-//                'allow_add' => false,
-//                'allow_delete' => false,
-//                'by_reference' => false, // Important for Doctrine to recognize each photo as a separate entity
-//                'prototype' => true, // Allows form to know how to create a new Photo form
-//                'required' => false,
-//            ])
             ->add('taille', TextType::class, [
                 'label' => 'Taille',
                 'required' => true,

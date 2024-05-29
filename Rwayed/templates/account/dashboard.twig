@@ -13,7 +13,11 @@
                         <div class="dashboard__profile card profile-card">
                             <div class="card-body profile-card__body">
                                 <div class="profile-card__avatar">
-                                    <img src="{{ asset('images/avatars/avatar-4.jpg') }}" alt="">
+                                    {% if app.user.sexe == 'Male' %}
+                                        <img src="{{ asset('images/profile_homme.png') }}" alt="Profile homme">
+                                    {% else %}
+                                        <img src="{{ asset('images/profile_femme.png') }}" alt="Profile femme">
+                                    {% endif %}
                                 </div>
                                 <div class="profile-card__name">{{ app.user.Nom }} {{  app.user.Prenom }}</div>
                                 <div class="profile-card__email">{{  app.user.Email }}</div>
@@ -57,32 +61,22 @@
                                 <div class="table-responsive-sm">
                                     <table>
                                         <thead>
-                                            <tr>
-                                                <th>Order</th>
-                                                <th>Date</th>
-                                                <th>Status</th>
-                                                <th>Total</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Order</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
+                                        {% for order in orders %}
                                             <tr>
-                                                <td><a href="account-order-details.html">#8132</a></td>
-                                                <td>02 April, 2019</td>
-                                                <td>Pending</td>
-                                                <td>$2,719.00 for 5 item(s)</td>
+                                                <td><a href="{{ path('order_details', {'codeUnique': order.codeUnique}) }}">#{{ order.codeUnique }}</a></td>
+                                                <td>{{ order.dateCommande|date('d M, Y') }}</td>
+                                                <td>{{ order.getStatutsCommandeLabel() }}</td>
+                                                <td>${{ order.total }} for {{ order.ligneCommandes|length }} item(s)</td>
                                             </tr>
-                                            <tr>
-                                                <td><a href="account-order-details.html">#7592</a></td>
-                                                <td>28 March, 2019</td>
-                                                <td>Pending</td>
-                                                <td>$374.00 for 3 item(s)</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="account-order-details.html">#7192</a></td>
-                                                <td>15 March, 2019</td>
-                                                <td>Shipped</td>
-                                                <td>$791.00 for 4 item(s)</td>
-                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

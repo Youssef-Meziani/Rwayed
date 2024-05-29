@@ -4,22 +4,27 @@ namespace App\Controller;
 
 use App\Entity\Adresse;
 use App\Entity\Adherent;
+use App\Entity\Commande;
 use App\Entity\Personne;
 use App\Form\AddresseType;
 use App\Form\ChangeCurrentPasswordType;
+use App\Form\ProfileType;
 use App\Repository\AdresseRepository;
+use App\Repository\CommandeRepository;
 use App\Services\AddressesService;
 use App\Services\PasswordHasherService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
+#[IsGranted('ROLE_ADHERENT')]
 class AccountController extends AbstractController
 {
 
@@ -31,19 +36,53 @@ class AccountController extends AbstractController
         $this->passwordHasherService = $passwordHasherService;
 
     }
-    
+
     #[Route('/dashboard', name: 'dashboard')]
-    #[IsGranted('ROLE_ADHERENT')]
-    public function dashboard():Response
+    public function dashboard(): Response
     {
         $user = $this->getUser();
+        $orders = $this->entityManager
+            ->getRepository(Commande::class)
+            ->findBy(['adherent' => $user], ['dateCommande' => 'DESC'], 3);
+
         return $this->render('account/dashboard.twig', [
-            'user' => $user
+            'user' => $user,
+            'orders' => $orders
         ]);
     }
 
-    #[Route('/address', name: 'addresses')]
-    #[IsGranted('ROLE_ADHERENT')]
+    /**
+     * @throws NonUniqueResultException
+     */
+    #[Route('/order-details/{codeUnique}', name: 'order_details')]
+    public function orderDetails(string $codeUnique, CommandeRepository $commandeRepository, AdresseRepository $addressRepository): Response
+    {
+        $user = $this->getUser();
+        $order = $commandeRepository->findOneBy([
+            'codeUnique' => $codeUnique]);
+
+        if (!$order || $order->getAdherent() !== $user) {
+            throw $this->createNotFoundException('Order not found or access denied.');
+        }
+        $orderLines = $order->getLigneCommandes();
+
+        $total = 0;
+        foreach ($orderLines as $line) {
+            $total += $line->getPrix() * $line->getQuantity();
+        }
+
+        $defaultAddress = $addressRepository->findDefaultAddressByAdherent($user);
+
+        return $this->render('account/order-details.twig', [
+            'order' => $order,
+            'orderLines' => $orderLines,
+            'total' => $total,
+            'billingAddress' => $defaultAddress,
+        ]);
+    }
+
+
+    #[Route('/addresses', name: 'addresses')]
     public function addresses(): Response
     {
         // Récupérer l'utilisateur connecté
@@ -62,7 +101,6 @@ class AccountController extends AbstractController
         ]);
     }
     #[Route('/address/add', name: 'address_add')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function addAddress(Request $request, AddressesService $addressesService): Response
     {
         // Récupérer l'utilisateur connecté (l'adhérent)
@@ -105,7 +143,6 @@ class AccountController extends AbstractController
     
 
     #[Route('/address/edit/{id}', name: 'address_edit')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function editAddress(Request $request, Adresse $adresse, AddressesService $addressesService): Response
     {
        // Créer le formulaire à partir du type de formulaire AdresseType et pré-remplir avec les données de l'adresse existante
@@ -134,70 +171,57 @@ class AccountController extends AbstractController
     }
     
 
-    #[Route('/address/delete/{id}', name: 'address_delete',methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADHERENT')]
-    public function deleteAddress(Adresse $adresse, AddressesService $addressesService,Request $request): Response
+    #[Route('/address/delete/{id}', name: 'address_delete')]
+    public function deleteAddress(Adresse $adresse, AddressesService $addressesService): Response
     {
-        // Vérifier si la requête est AJAX
-        if ($request->isXmlHttpRequest()) {
-            // Supprimer l'adresse
-            $addressesService->deleteAddress($adresse);
-
-            // Réponse JSON pour indiquer que la suppression a réussi
-            return new JsonResponse(['success' => true, 'flashMessage' => 'Address successfully deleted.']);
-        }
-
-        return $this->redirectToRoute('addresses');
+         // Appeler la méthode deleteAddress du service AddressesService pour supprimer l'adresse
+         $addressesService->deleteAddress($adresse);
+           $this->addFlash('success', 'Address successfully deleted.');
+         // Rediriger vers la page des adresses après la suppression réussie
+         return $this->redirectToRoute('addresses');
     }
 
 
+    // src/Controller/AccountController.php
+
     #[Route('/profile', name: 'profile')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function profile(Request $request): Response
     {
-     
         $user = $this->getUser();
 
         if (!$user instanceof Adherent) {
             throw $this->createNotFoundException('User not found');
         }
 
-        // Handle form submission
-        if ($request->isMethod('POST')) {
-            $firstName = $request->request->get('nom');
-            $lastName = $request->request->get('prenom');
-            $email = $request->request->get('email');
-            $phoneNumber = $request->request->get('tele');
+        $form = $this->createForm(ProfileType::class, $user);
+        $form->handleRequest($request);
 
-            // Update user profile information
-            $user->setNom($firstName);
-            $user->setPrenom($lastName);
-            $user->setEmail($email);
-            $user->setTele($phoneNumber);
-
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            
-           $this->addFlash('success', 'Profile successfully updated.');
+            $this->addFlash('success', 'Profile successfully updated.');
 
-            // Redirect back to the profile page
             return $this->redirectToRoute('profile');
         }
 
         return $this->render('account/profile.twig', [
-            'user' => $user,
+            'form' => $form->createView(),
         ]);
-     
     }
 
+
     #[Route('/acount-orders', name: 'acount-orders')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function acountOrders(): Response
     {
-        return $this->render('account/orders.twig');
+        $user = $this->getUser();
+        $orders = $this->entityManager->getRepository(Commande::class)
+            ->findByAdherent($user->getId());
+
+        return $this->render('account/orders.twig', [
+            'orders' => $orders
+        ]);
     }
 
     #[Route('/change-password', name: 'change-password')]
-    #[IsGranted('ROLE_ADHERENT')]
     public function changePassword(Request $request): Response
     {
         /** @var Personne $user */
@@ -216,19 +240,16 @@ class AccountController extends AbstractController
                 $this->passwordHasherService->setPassword($user, $newPassword);
 
                 $this->addFlash('success', 'Password changed successfully.');
-                return $this->redirectToRoute('profile');
-            } else {
-                // Display an error message if the current password is incorrect
-                $this->addFlash('error', 'Current password is incorrect.');
+                return $this->redirectToRoute('change-password');
             }
+
+            $this->addFlash('error', 'Current password is incorrect.');
         }
 
         return $this->render('account/password.twig', [
             'form' => $form->createView(),
         ]);
     }
-
-    
 
     #[Route('/garage', name: 'garage')]
     public function garage(AuthorizationCheckerInterface $authorizationChecker): Response

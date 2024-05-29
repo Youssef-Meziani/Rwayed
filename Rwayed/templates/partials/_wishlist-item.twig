@@ -10,19 +10,19 @@
 		<div class="wishlist__product-name">
 			<a href="{{ path('product', {'slug': item.pneu.slug}) }}">{{ item.pneu.marque }}</a>
 		</div>
-		<div class="wishlist__product-rating">
-			<div class="wishlist__product-rating-stars">
-				<div class="rating">
-					<div class="rating__body">
-						<div class="rating__star rating__star--active"></div>
-						<div class="rating__star rating__star--active"></div>
-						<div class="rating__star rating__star--active"></div>
-						<div class="rating__star rating__star--active"></div>
-						<div class="rating__star"></div>
-					</div>
+		<div class="product-card__rating">
+			<div class="rating product-card__rating-stars">
+				<div class="rating__body">
+					{% for i in 1..5 %}
+						{% if i <= item.pneu.noteMoyenne %}
+							<div class="rating__star rating__star--active"></div>
+						{% else %}
+							<div class="rating__star"></div>
+						{% endif %}
+					{% endfor %}
 				</div>
 			</div>
-			<div class="wishlist__product-rating-title">3 reviews</div>
+			<div class="product-card__rating-label">{{ item.pneu.noteMoyenne|round(0, 'common') }} on {{ item.pneu.avis|length }} reviews</div>
 		</div>
 	</td>
 	<td class="wishlist__column wishlist__column--body wishlist__column--stock">

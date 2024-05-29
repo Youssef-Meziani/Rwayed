@@ -45,28 +45,10 @@
 									</tr>
 								</thead>
 								<tbody class="cart-table__body">
-									{% for tire in panier.getLines %}
-										{# {% if tire.quantiteStock is not null %} #}
-											{{ include('partials/_cart-item.twig', {marque:tire.getMarque(),price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair(), id:tire.getId()}) }}
-										{# {% endif %} #}
-									{% endfor %}
+								{% for tire in panier.getLines %}
+									{{ include('partials/_cart-item.twig', {idPneu: tire.getId(), id: tire.getId() ~ (tire.isWithRepair() ? '_repaired' : '_not_repaired'), tire: tire, marque: tire.getMarque(), price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair()}) }}
+								{% endfor %}
 								</tbody>
-								<tfoot class="cart-table__foot">
-									<tr>
-										<td colspan="6">
-											<div class="cart-table__actions">
-												<form class="cart-table__coupon-form form-row">
-													<div class="form-group mb-0 col flex-grow-1">
-														<input type="text" class="form-control form-control-sm" placeholder="Coupon Code">
-													</div>
-													<div class="form-group mb-0 col-auto">
-														<button type="button" class="btn btn-sm btn-primary">Apply Coupon</button>
-													</div>
-												</form>
-											</div>
-										</td>
-									</tr>
-								</tfoot>
 							{% endif %}
 						</table>
 					</div>
@@ -115,11 +97,12 @@
 {% endblock %}
 
 {% block javascripts %}
+	{{ parent() }}
 	 <script>
 	        document.addEventListener("DOMContentLoaded", function() {
 	            // Get all quantity input fields
 	            var quantityInputs = document.querySelectorAll('.cart-table__column--quantity input');
-	
+
 	            // Function to calculate total for a row
 	            function calculateTotalForRow(input) {
 	                var row = input.closest('.cart-table__row');
@@ -128,12 +111,12 @@
 	                var total = price * quantity;
 	                row.querySelector('.cart-table__column--total').textContent = total.toFixed(2) + ' DH';
 	            }
-	
+
 	            // Calculate total for each row when the page loads
 	            quantityInputs.forEach(function(input) {
 	                calculateTotalForRow(input);
 	            });
-	
+
 	            // Attach event listener to each quantity input field
 	            quantityInputs.forEach(function(input) {
 	                input.addEventListener('change', function() {
@@ -142,17 +125,17 @@
 	                    calculateTotals();
 	                });
 	            });
-	
-	
-	
+
+
+
 	            // Define the tax rate in Morocco
 	            var taxRate = 0.2;
-	
+
 	            // Get the subtotal and total elements
 	            var subtotalElement = document.querySelector('.cart__totals-table thead tr:first-child td');
 	            var taxElement = document.querySelector('.cart__totals-table tbody tr:last-child td');
 	            var totalElement = document.querySelector('.cart__totals-table tfoot td');
-	
+
 	            function calculateSubTotal() {
 	                var subtotal = 0;
 	                var totalElements = document.querySelectorAll('td.cart-table__column--total');
@@ -162,27 +145,27 @@
 	                });
 	                document.querySelector('.cart__totals-table thead tr:first-child td').textContent = subtotal.toFixed(2) + ' DH';
 	            }
-	
+
 	            calculateSubTotal();
-	
+
 	            // Function to calculate totals
 	            function calculateTotals() {
 	                // Parse the subtotal value
 	                var subtotal = parseFloat(subtotalElement.textContent.replace(' DH', '').replace(',', ''));
-	
+
 	                // Calculate the tax amount
 	                var tax = (subtotal * taxRate).toFixed(2);
-	
+
 	                // Update the tax element
 	                taxElement.textContent = tax + ' DH';
-	
+
 	                // Calculate the total including tax
 	                var total = subtotal + parseFloat(tax);
-	
+
 	                // Update the total element
 	                totalElement.textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' DH';
 	            }
-	
+
 	            // Calculate totals when the page loads
 	            calculateTotals();
 	        });

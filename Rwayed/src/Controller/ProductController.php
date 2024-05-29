@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Services\ApiPlatformConsumerService;
-use App\Strategy\PneuTransformationStrategy;
+use App\Strategy\PneuStrategy\PneuTransformationStrategy;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,6 +40,7 @@ class ProductController extends AbstractController
         return $this->render('partials/_quickview.twig', [
             'pneu' => $pneu,
             'id' => $id,
+            'brand' => explode(' ', $pneu->getMarque())[0],
         ]);
     }
 }

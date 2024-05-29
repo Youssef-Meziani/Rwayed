@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-class TypeVehiculeEnum
+enum TypeVehiculeEnum
 {
     public const CAR = 'Car';
 //    public const MOTO = 'Moto';
