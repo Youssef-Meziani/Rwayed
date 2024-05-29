@@ -1,0 +1,157 @@
+{# templates/user/partials/technicians_list.html.twig #}
+<div id="technicians-list-wrapper" class="container-fluid">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <h5 class="card-title">Technicians List <span class="text-muted fw-normal ms-2">({{ totalTechnicians }})</span></h5>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                <input type="text" id="search-technicians" class="form-control" placeholder="Search technicians...">
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2" id="technicians-list" style="height: calc(100vh - 150px); overflow-y: auto;">
+        {% for technician in technicians %}
+            <div class="col-xl-4 col-sm-6 technician-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="dropdown float-end">
+                            <a class="text-muted dropdown-toggle font-size-16" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true">
+                                <i class="bx bx-dots-horizontal text-muted font-size-20"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#" onclick="changeStatus('{{ technician.id }}')">Change Status</a>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div>
+                                {% if technician.sexe == 'Male' %}
+                                    <img src="{{ asset('images/profile_homme.png') }}" alt="" class="avatar-md rounded-circle img-thumbnail">
+                                {% else %}
+                                    <img src="{{ asset('images/profile_femme.png') }}" alt="" class="avatar-md rounded-circle img-thumbnail">
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 ms-3">
+                                <h5 class="font-size-16 mb-1"><a href="#" class="text-body">{{ technician.nom }} {{ technician.prenom }}</a></h5>
+                                {% if technician.status == 'actif' %}
+                                    <span class="badge bg-success-subtle text-success mb-0">{{ technician.status }}</span>
+                                {% elseif technician.status == 'en congé' %}
+                                    <span class="badge bg-warning-subtle text-warning mb-0">{{ technician.status }}</span>
+                                {% elseif technician.status == 'retiré' %}
+                                    <span class="badge bg-danger-subtle text-danger mb-0">{{ technician.status }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary-subtle text-secondary mb-0">{{ technician.status }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <p class="text-muted mt-3 mb-0">Curabitur non magna lobortis tempus gravida ornare libero sed diam sed fringilla est.</p>
+
+                        <div class="mt-3 pt-1">
+                            <p class="mb-0"><i class="mdi mdi-phone font-size-15 align-middle pe-2 text-primary"></i>
+                                {{ technician.tele }}</p>
+                            <p class="mb-0 mt-2"><i class="mdi mdi-email font-size-15 align-middle pe-2 text-primary"></i>
+                                {{ technician.email }}</p>
+                            <p class="mb-0 mt-2"><i class="mdi mdi-google-maps font-size-15 align-middle pe-2 text-primary"></i>
+                                123 Street, City, Country</p>
+                        </div>
+
+                        <div class="d-flex gap-2 pt-4">
+                            <button type="button" class="btn btn-subtle-primary btn-sm w-50"><i class="bx bx-user me-1"></i> Profile</button>
+                            <button type="button" class="btn btn-primary btn-sm w-50"><i class="bx bx-message-square-dots me-1"></i> Contact</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- end card -->
+            </div>
+            <!-- end col -->
+        {% endfor %}
+    </div>
+    <!-- end row -->
+</div>
+
+{% block javascripts %}
+    <script>
+        function changeStatus(technicianId) {
+            Swal.fire({
+                title: 'Change Status',
+                html: `
+                        <select id="technician-status" class="swal2-input">
+                            <option value="actif">Actif</option>
+                            <option value="en congé">En congé</option>
+                            <option value="retiré">Retiré</option>
+                        </select>
+                    `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'Change',
+                preConfirm: () => {
+                    const status = document.getElementById('technician-status').value;
+                    Swal.fire({
+                        title: 'Processing...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    return fetch(`/technician/change-status/${technicianId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ status })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            Swal.fire({
+                                title: 'Changed!',
+                                text: 'Technician status has been updated.',
+                                icon: 'success'
+                            }).then(() => location.reload());
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: `Request failed: ${error}`,
+                                icon: 'error'
+                            });
+                        });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            function initSearch() {
+                const searchInput = document.getElementById('search-technicians');
+                searchInput.addEventListener('keyup', () => {
+                    const searchValue = searchInput.value.toLowerCase();
+                    const technicianCards = document.querySelectorAll('.technician-card');
+                    technicianCards.forEach(card => {
+                        const name = card.querySelector('.text-body').innerText.toLowerCase();
+                        const email = card.querySelector('.mdi-email').parentElement.innerText.toLowerCase();
+                        const phone = card.querySelector('.mdi-phone').parentElement.innerText.toLowerCase();
+                        const status = card.querySelector('.badge').innerText.toLowerCase();
+                        if (name.includes(searchValue) || email.includes(searchValue) || phone.includes(searchValue) || status.includes(searchValue)) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            initSearch();
+        });
+    </script>
+{% endblock %}

@@ -17,7 +17,7 @@
 								<a href="{{ path('home') }}" class="breadcrumb__item-link">Home</a>
 							</li>
 							<li class="breadcrumb__item breadcrumb__item--current breadcrumb__item--last" aria-current="page">
-								<span class="breadcrumb__item-link">Whishlist</span>
+								<span class="breadcrumb__item-link">Wishlist</span>
 							</li>
 							<li class="breadcrumb__title-safe-area" role="presentation"></li>
 						</ol>
@@ -29,8 +29,13 @@
 		<div class="block">
 			<div class="container container--max--xl">
 				<div class="wishlist">
-					<table class="wishlist__table">
-						<thead class="wishlist__head">
+					{% if wishlist is empty %}
+						<div class="wishlist__empty-message" style="text-align: center; padding: 50px; background-color: #f8f9fa; border-radius: 5px; font-size: 18px;">
+							Your wishlist is currently empty. Start adding items to your wishlist now!
+						</div>
+					{% else %}
+						<table class="wishlist__table">
+							<thead class="wishlist__head">
 							<tr class="wishlist__row wishlist__row--head">
 								<th class="wishlist__column wishlist__column--head wishlist__column--image">Image</th>
 								<th class="wishlist__column wishlist__column--head wishlist__column--product">Product</th>
@@ -39,13 +44,14 @@
 								<th class="wishlist__column wishlist__column--head wishlist__column--button"></th>
 								<th class="wishlist__column wishlist__column--head wishlist__column--remove"></th>
 							</tr>
-						</thead>
-						<tbody class="wishlist__body">
+							</thead>
+							<tbody class="wishlist__body">
 							{% for item in wishlist %}
 								{{ include('partials/_wishlist-item.twig', { price: item.pneu.getFormattedPrice() }) }}
 							{% endfor %}
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -57,9 +63,8 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script>
-        var wishlistRemoveUrl = '{{ path('wishlist_remove', {'id': 'pneuId'}) }}';
-    </script>
+		var wishlistRemoveUrl = '{{ path('wishlist_remove', {'id': 'pneuId'}) }}';
+	</script>
 	<script src="{{ asset('js/sweetalert.js') }}"></script>
 	<script src="{{ asset('js/wishlist.js') }}"></script>
-	
 {% endblock %}

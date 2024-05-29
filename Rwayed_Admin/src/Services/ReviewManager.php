@@ -4,12 +4,15 @@
 namespace App\Services;
 
 use App\Entity\Avis;
+use App\Events\AvisDeletedEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ReviewManager
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private EventDispatcherInterface $eventDispatcher,
     )
     {}
 
@@ -24,5 +27,8 @@ class ReviewManager
 
         $this->entityManager->remove($review);
         $this->entityManager->flush();
+
+        $event = new AvisDeletedEvent($review);
+        $this->eventDispatcher->dispatch($event, AvisDeletedEvent::NAME);
     }
 }

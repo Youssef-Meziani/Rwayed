@@ -57,6 +57,10 @@ services:
         tags:
             - { name: 'kernel.event_listener', event: 'commande.placed', method: 'onCommandePlaced' }
 
+    App\EventSubscriber\AvisListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'avis.submitted', method: 'onAvisSubmitted' }
+
     # Stratégies
     App\Strategy\PneuStrategy\PhotoStrategyInterface: '@App\Strategy\PneuStrategy\PhotoTransformationStrategy'
     App\Strategy\PneuStrategy\AvisStrategyInterface: '@App\Strategy\PneuStrategy\AvisTransformationStrategy'

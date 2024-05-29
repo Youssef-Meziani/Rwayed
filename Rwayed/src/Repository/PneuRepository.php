@@ -37,4 +37,29 @@ class PneuRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function countPneusBySeason(): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('p.saison, COUNT(p.id) as count')
+            ->groupBy('p.saison');
+
+        $results = $qb->getQuery()->getResult();
+
+        $seasonCounts = [];
+        foreach ($results as $result) {
+            $seasonCounts[$result['saison']] = $result['count'];
+        }
+
+        return $seasonCounts;
+    }
+
+    public function findAllPneusWithRatings(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.nombreEvaluations > 0');
+
+        return $qb->getQuery()->getResult();
+    }
 }

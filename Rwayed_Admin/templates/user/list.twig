@@ -10,6 +10,9 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
     <!-- SweetAlert Script -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -51,5 +54,54 @@
 
             initPagination();
         });
+
+        function toggleAdherent(adherentId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to change the status of this adherent?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, change it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait a moment',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
+
+                    fetch(`/adherent/toggle/${adherentId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token('toggle') }}'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire(
+                                'Changed!',
+                                data.message,
+                                'success'
+                            ).then(() => location.reload());
+                        })
+                        .catch(error => {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while toggling the adherent status.',
+                                'error'
+                            );
+                        });
+                }
+            })
+        }
+
     </script>
 {% endblock %}

@@ -8,11 +8,13 @@ use App\Entity\Commande;
 use App\Entity\Personne;
 use App\Form\AddresseType;
 use App\Form\ChangeCurrentPasswordType;
+use App\Form\ProfileType;
 use App\Repository\AdresseRepository;
 use App\Repository\CommandeRepository;
 use App\Services\AddressesService;
 use App\Services\PasswordHasherService;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,6 +51,9 @@ class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     #[Route('/order-details/{codeUnique}', name: 'order_details')]
     public function orderDetails(string $codeUnique, CommandeRepository $commandeRepository, AdresseRepository $addressRepository): Response
     {
@@ -177,49 +182,39 @@ class AccountController extends AbstractController
     }
 
 
+    // src/Controller/AccountController.php
+
     #[Route('/profile', name: 'profile')]
     public function profile(Request $request): Response
     {
-     
         $user = $this->getUser();
 
         if (!$user instanceof Adherent) {
             throw $this->createNotFoundException('User not found');
         }
 
-        // Handle form submission
-        if ($request->isMethod('POST')) {
-            $firstName = $request->request->get('nom');
-            $lastName = $request->request->get('prenom');
-            $email = $request->request->get('email');
-            $phoneNumber = $request->request->get('tele');
+        $form = $this->createForm(ProfileType::class, $user);
+        $form->handleRequest($request);
 
-            // Update user profile information
-            $user->setNom($firstName);
-            $user->setPrenom($lastName);
-            $user->setEmail($email);
-            $user->setTele($phoneNumber);
-
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            
-           $this->addFlash('success', 'Profile successfully updated.');
+            $this->addFlash('success', 'Profile successfully updated.');
 
-            // Redirect back to the profile page
             return $this->redirectToRoute('profile');
         }
 
         return $this->render('account/profile.twig', [
-            'user' => $user,
+            'form' => $form->createView(),
         ]);
-     
     }
+
 
     #[Route('/acount-orders', name: 'acount-orders')]
     public function acountOrders(): Response
     {
         $user = $this->getUser();
         $orders = $this->entityManager->getRepository(Commande::class)
-            ->findBy(['adherent' => $user], ['dateCommande' => 'DESC']);
+            ->findByAdherent($user->getId());
 
         return $this->render('account/orders.twig', [
             'orders' => $orders
@@ -245,19 +240,16 @@ class AccountController extends AbstractController
                 $this->passwordHasherService->setPassword($user, $newPassword);
 
                 $this->addFlash('success', 'Password changed successfully.');
-                return $this->redirectToRoute('profile');
-            } else {
-                // Display an error message if the current password is incorrect
-                $this->addFlash('error', 'Current password is incorrect.');
+                return $this->redirectToRoute('change-password');
             }
+
+            $this->addFlash('error', 'Current password is incorrect.');
         }
 
         return $this->render('account/password.twig', [
             'form' => $form->createView(),
         ]);
     }
-
-    
 
     #[Route('/garage', name: 'garage')]
     public function garage(AuthorizationCheckerInterface $authorizationChecker): Response

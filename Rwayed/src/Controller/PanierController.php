@@ -142,6 +142,7 @@ class PanierController extends AbstractController
                 'totalPrice' => $item->getTotalPrice(),
                 'taxAmount' => $item->getTaxAmount(),
                 'withRepair' => $item->isWithRepair(),
+                'slug' => $item->getSlug(),
             ];
         }, $this->orderStorage->recuprerPanier()->getLines());
     }

@@ -79,7 +79,6 @@ class CheckoutController extends AbstractController
 
             $event = new CommandeEvent($commande);
             $this->eventDispatcher->dispatch($event, CommandeEvent::NAME);
-
             $this->couponManager->invalidateCoupon($session->get('voucher_code'));
 
             $subTotal = $this->orderStorage->prixTotalPanier();

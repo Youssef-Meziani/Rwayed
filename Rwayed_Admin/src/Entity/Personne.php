@@ -177,4 +177,10 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
         $this->sexe = $sexe?->value;
         return $this;
     }
+
+    public function toggleDesactive(): self
+    {
+        $this->desactive = !$this->desactive;
+        return $this;
+    }
 }

@@ -6,62 +6,70 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <style>
+        .page-content, .container-fluid, .row, .col-12, .card, .card-body, .col-12 {
+            height: 100%;
+        }
+        .page-content {
+            min-height: 100vh; /* Assurer que le contenu occupe toute la hauteur de la fenêtre */
+        }
+        .scrollable-content {
+            max-height: calc(100vh - 220px); /* Ajuster cette valeur selon la hauteur des autres éléments */
+            overflow-y: auto;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
     <div class="page-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="">
-                                        <div class="">
-                                            <h5 class="font-size-14 mb-3">Reviews for {{ tire.marque }} {{ tire.typeVehicule }}:</h5>
-                                            <div class="text-muted mb-3">
-                                                {% if tire.nombreEvaluations > 0 %}
-                                                    <span class="badge bg-success font-size-14 me-1">
-                                                    <i class="mdi mdi-star"></i> {{ (tire.scoreTotal / tire.nombreEvaluations)|number_format(2) }}
-                                                </span>
-                                                {% else %}
-                                                    <span class="badge bg-success font-size-14 me-1">
-                                                    <i class="mdi mdi-star"></i> 0.00
-                                                </span>
-                                                {% endif %}
-                                                {{ tire.nombreEvaluations }} Reviews
-                                            </div>
+        <div class="container-fluid h-100">
+            <div class="row h-100">
+                <div class="col-12 h-100">
+                    <div class="card h-100">
+                        <div class="card-body h-100">
+                            <div class="row h-100">
+                                <div class="col-12 h-100">
+                                    <h5 class="font-size-14 mb-3">Reviews for {{ tire.marque }} {{ tire.typeVehicule }}:</h5>
+                                    <div class="text-muted mb-3">
+                                        {% if tire.nombreEvaluations > 0 %}
+                                            <span class="badge bg-success font-size-14 me-1">
+                                                <i class="mdi mdi-star"></i> {{ (tire.scoreTotal / tire.nombreEvaluations)|number_format(2) }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success font-size-14 me-1">
+                                                <i class="mdi mdi-star"></i> 0.00
+                                            </span>
+                                        {% endif %}
+                                        {{ tire.nombreEvaluations }} Reviews
+                                    </div>
 
-                                            <div class="border py-4 rounded">
-                                                <div class="px-4" data-simplebar style="max-height: 360px;">
-                                                    {% for review in reviews %}
-                                                        <div class="border-bottom py-3">
-                                                            <p class="float-sm-end text-muted font-size-13">{{ review.dateCreation|date('d M, Y') }}</p>
-                                                            <div class="badge bg-success mb-2"><i class="mdi mdi-star"></i> {{ review.note }}</div>
-                                                            <p class="text-muted mb-4">{{ review.commentaire }}</p>
-                                                            <div class="d-flex align-items-start">
-                                                                <div class="flex-grow-1">
-                                                                    <div class="d-flex">
-                                                                        <img src="{{ asset('images/users/avatar-3.jpg') }}" class="avatar-sm rounded-circle" alt="">
-                                                                        <div class="flex-1 ms-2 ps-1">
-                                                                            <h5 class="font-size-16 mb-0">{{ review.adherentName }}</h5>
-                                                                            <p class="text-muted mb-0 mt-1">{{ review.adherentEmail }}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="flex-shrink-0">
-                                                                    <button type="button" class="btn btn-danger btn-sm delete-review" data-review-id="{{ review.id }}">
-                                                                        <i class="bx bx-trash"></i>
-                                                                    </button>
+                                    <div class="border py-4 rounded h-100">
+                                        <div class="px-4 scrollable-content" data-simplebar>
+                                            {% for review in reviews %}
+                                                <div class="border-bottom py-3">
+                                                    <p class="float-sm-end text-muted font-size-13">{{ review.dateCreation|date('d M, Y') }}</p>
+                                                    <div class="badge bg-success mb-2"><i class="mdi mdi-star"></i> {{ review.note }}</div>
+                                                    <p class="text-muted mb-4">{{ review.commentaire }}</p>
+                                                    <div class="d-flex align-items-start">
+                                                        <div class="flex-grow-1">
+                                                            <div class="d-flex">
+                                                                <img src="{{ asset('images/users/avatar-3.jpg') }}" class="avatar-sm rounded-circle" alt="">
+                                                                <div class="flex-1 ms-2 ps-1">
+                                                                    <h5 class="font-size-16 mb-0">{{ review.adherentName }}</h5>
+                                                                    <p class="text-muted mb-0 mt-1">{{ review.adherentEmail }}</p>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    {% else %}
-                                                        <p class="text-muted">No reviews yet for this tire.</p>
-                                                    {% endfor %}
+                                                        <div class="flex-shrink-0">
+                                                            <button type="button" class="btn btn-danger btn-sm delete-review" data-review-id="{{ review.id }}">
+                                                                <i class="bx bx-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            {% else %}
+                                                <p class="text-muted">No reviews yet for this tire.</p>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
