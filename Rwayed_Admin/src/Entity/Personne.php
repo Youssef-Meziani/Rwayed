@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\SexeEnum;
 use App\Repository\PersonneRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,6 +24,9 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
 
     #[ORM\Column(length: 20)]
     protected ?string $nom = null;
+
+    #[ORM\Column(type: "string", length: 20, nullable: true)]
+    private ?string $sexe = null;
 
     #[ORM\Column(length: 20)]
     protected ?string $prenom = null;
@@ -161,6 +165,22 @@ abstract class Personne implements PasswordAuthenticatedUserInterface,UserInterf
     {
         $this->isVerified = $isVerified;
 
+        return $this;
+    }
+    public function getSexe(): ?string
+    {
+        return $this->sexe;
+    }
+
+    public function setSexe(?SexeEnum $sexe): self
+    {
+        $this->sexe = $sexe?->value;
+        return $this;
+    }
+
+    public function toggleDesactive(): self
+    {
+        $this->desactive = !$this->desactive;
         return $this;
     }
 }

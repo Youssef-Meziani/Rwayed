@@ -75,22 +75,33 @@ class Pneu
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private \DateTimeInterface $dateAjout;
 
+    #[ORM\Column]
+    private int $scoreTotal = 0;
+
+    #[ORM\Column]
+    private int $nombreEvaluations = 0;
+
     #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Photo::class, cascade: ['persist', 'remove'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $photos;
+
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
+    private Collection $avis;
+
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: LigneCommande::class)]
+    private Collection $ligneCommandes;
 
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->avis = new ArrayCollection();
+        $this->ligneCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-
-
 
     public function getImageFile(): ?File
     {
@@ -248,6 +259,28 @@ class Pneu
         return $this;
     }
 
+    public function getScoreTotal(): ?int
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(int $scoreTotal): self
+    {
+        $this->scoreTotal = $scoreTotal;
+        return $this;
+    }
+
+    public function getNombreEvaluations(): ?int
+    {
+        return $this->nombreEvaluations;
+    }
+
+    public function setNombreEvaluations(int $nombreEvaluations): self
+    {
+        $this->nombreEvaluations = $nombreEvaluations;
+        return $this;
+    }
+
     /**
      * @return Collection<int, Photo>
      */
@@ -272,6 +305,66 @@ class Pneu
             // set the owning side to null (unless already changed)
             if ($photo->getPneu() === $this) {
                 $photo->setPneu(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Avis>
+     */
+    public function getAvis(): Collection
+    {
+        return $this->avis;
+    }
+
+    public function addAvi(Avis $avi): static
+    {
+        if (!$this->avis->contains($avi)) {
+            $this->avis->add($avi);
+            $this->scoreTotal += $avi->getNote();
+            $this->nombreEvaluations++;
+        }
+
+        return $this;
+    }
+    public function removeAvi(Avis $avi): static
+    {
+        if ($this->avis->removeElement($avi)) {
+            if ($avi->getPneu() === $this) {
+                $this->scoreTotal -= $avi->getNote();
+                $this->nombreEvaluations--;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneCommande>
+     */
+    public function getLigneCommandes(): Collection
+    {
+        return $this->ligneCommandes;
+    }
+
+    public function addLigneCommande(LigneCommande $ligneCommande): static
+    {
+        if (!$this->ligneCommandes->contains($ligneCommande)) {
+            $this->ligneCommandes->add($ligneCommande);
+            $ligneCommande->setPneu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneCommande(LigneCommande $ligneCommande): static
+    {
+        if ($this->ligneCommandes->removeElement($ligneCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneCommande->getPneu() === $this) {
+                $ligneCommande->setPneu(null);
             }
         }
 

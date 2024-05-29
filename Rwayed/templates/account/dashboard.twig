@@ -13,37 +13,45 @@
                         <div class="dashboard__profile card profile-card">
                             <div class="card-body profile-card__body">
                                 <div class="profile-card__avatar">
-                                    <img src="images/avatars/avatar-4.jpg" alt="">
+                                    {% if app.user.sexe == 'Male' %}
+                                        <img src="{{ asset('images/profile_homme.png') }}" alt="Profile homme">
+                                    {% else %}
+                                        <img src="{{ asset('images/profile_femme.png') }}" alt="Profile femme">
+                                    {% endif %}
                                 </div>
-                                <div class="profile-card__name">Helena Garcia</div>
-                                <div class="profile-card__email">{{ company_email }}</div>
+                                <div class="profile-card__name">{{ app.user.Nom }} {{  app.user.Prenom }}</div>
+                                <div class="profile-card__email">{{  app.user.Email }}</div>
                                 <div class="profile-card__edit">
                                     <a href="{{ path('profile') }}" class="btn btn-secondary btn-sm">Edit Profile</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="dashboard__address card address-card address-card--featured">
-                            <div class="address-card__badge tag-badge tag-badge--theme">Default</div>
-                            <div class="address-card__body">
-                                <div class="address-card__name">Helena Garcia</div>
-                                <div class="address-card__row">
-                                    Random Federation<br>
-                                    115302, Moscow<br>
-                                    ul. Varshavskaya, 15-2-178
+                        {% for adresse in app.user.Adresses%}
+                            {% if adresse.isSetasmydefaultaddress() %}
+                                <div class="dashboard__address card address-card address-card--featured">
+                                    <div class="address-card__badge tag-badge tag-badge--theme">Default</div>
+                                    <div class="address-card__body">
+                                        <div class="address-card__name">{{ adresse.City }}</div>
+                                        <div class="address-card__row">
+                                            {{ adresse.Street }}
+                                            <br>
+                                            {{ adresse.Postcode }}, {{ adresse.City }}
+                                        </div>
+                                        <div class="address-card__row">
+                                            <div class="address-card__row-title">Phone Number</div>
+                                            <div class="address-card__row-content">{{ app.user.Tele }}</div>
+                                        </div>
+                                        <div class="address-card__row">
+                                            <div class="address-card__row-title">Email Address</div>
+                                            <div class="address-card__row-content">{{ app.user.Email }}</div>
+                                        </div>
+                                        <div class="address-card__footer">
+                                            <a href="{{ path('address_edit',{'id': adresse.id}) }}">Edit Address</a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Phone Number</div>
-                                    <div class="address-card__row-content">38 972 588-42-36</div>
-                                </div>
-                                <div class="address-card__row">
-                                    <div class="address-card__row-title">Email Address</div>
-                                    <div class="address-card__row-content">helena@example.com</div>
-                                </div>
-                                <div class="address-card__footer">
-                                    <a href="{{ path('addresses') }}">Edit Address</a>
-                                </div>
-                            </div>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                         <div class="dashboard__orders card">
                             <div class="card-header">
                                 <h5>Recent Orders</h5>
@@ -53,32 +61,22 @@
                                 <div class="table-responsive-sm">
                                     <table>
                                         <thead>
-                                            <tr>
-                                                <th>Order</th>
-                                                <th>Date</th>
-                                                <th>Status</th>
-                                                <th>Total</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Order</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Total</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
+                                        {% for order in orders %}
                                             <tr>
-                                                <td><a href="account-order-details.html">#8132</a></td>
-                                                <td>02 April, 2019</td>
-                                                <td>Pending</td>
-                                                <td>$2,719.00 for 5 item(s)</td>
+                                                <td><a href="{{ path('order_details', {'codeUnique': order.codeUnique}) }}">#{{ order.codeUnique }}</a></td>
+                                                <td>{{ order.dateCommande|date('d M, Y') }}</td>
+                                                <td>{{ order.getStatutsCommandeLabel() }}</td>
+                                                <td>${{ order.total }} for {{ order.ligneCommandes|length }} item(s)</td>
                                             </tr>
-                                            <tr>
-                                                <td><a href="account-order-details.html">#7592</a></td>
-                                                <td>28 March, 2019</td>
-                                                <td>Pending</td>
-                                                <td>$374.00 for 3 item(s)</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="account-order-details.html">#7192</a></td>
-                                                <td>15 March, 2019</td>
-                                                <td>Shipped</td>
-                                                <td>$791.00 for 4 item(s)</td>
-                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

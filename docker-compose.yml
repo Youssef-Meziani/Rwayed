@@ -1,135 +1,157 @@
-version: '3.8'
+version: "3.8"
 
 services:
-    www:
-        build:
-            context: ./Rwayed
-            dockerfile: ../docker/server/Dockerfile
-        expose:
-            - "9000"
-            - "9003"
-        ports:
-            - "80:80"
-        working_dir: /var/www/html
-        volumes:
-            - ./Rwayed:/var/www/html
-            - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
-            - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
-        extra_hosts:
-            - host.docker.internal:host-gateway
-        depends_on:
-            - database
-        networks:
-            - inner_net
+  www:
+    build:
+      context: ./Rwayed
+      dockerfile: ../docker/server/Dockerfile
+    expose:
+      - "9000"
+      - "9003"
+    ports:
+      - "80:80"
+    working_dir: /var/www/html
+    volumes:
+      - ./Rwayed:/var/www/html
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - database
+    networks:
+      - inner_net
 
-    www_admin:
-        build:
-            context: ./Rwayed_Admin
-            dockerfile: ../docker/server/Dockerfile
-        expose:
-            - "9000"
-            - "9003"
-        ports:
-            - "81:80"
-        working_dir: /var/www/html
-        volumes:
-            - ./Rwayed_Admin:/var/www/html
-            - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
-            - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
-        extra_hosts:
-            - host.docker.internal:host-gateway
-        depends_on:
-            - database
-        networks:
-            - inner_net
-    www_api:
-        build:
-            context: ./Rwayed_API
-            dockerfile: ../docker/server/Dockerfile
-        expose:
-            - "9000"
-            - "9003"
-        ports:
-            - "82:80" # Le port 82 est utilisé ici comme exemple, assurez-vous qu'il ne soit pas en conflit
-        working_dir: /var/www/html
-        volumes:
-            - ./Rwayed_API:/var/www/html # Chemin vers le dossier de votre API
-            - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
-            - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
-        extra_hosts:
-            - host.docker.internal:host-gateway
-        depends_on:
-            - database
-        networks:
-            - inner_net
-#    elasticsearch:
-#        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0 # Utilisez la version qui convient à vos besoins
-#        environment:
-#            - discovery.type=single-node # Pour le développement, en production considérez une configuration de cluster
-#        ports:
-#            - "9200:9200" # Port par défaut d'Elasticsearch
-#            - "9300:9300" # Port pour la communication entre les nœuds
-#        networks:
-#            - inner_net
-#        volumes:
-#            - es_data:/usr/share/elasticsearch/data # Persiste les données d'Elasticsearch
-    minio:
-        image: minio/minio
-        volumes:
-            - minio_data:/data
-        ports:
-            - "9000:9000"
-            - "9001:9001"
-        environment:
-            MINIO_ROOT_USER: rwayed123       #!!! a les maitres dans .env.local
-            MINIO_ROOT_PASSWORD: rwayed123   #!!! a les maitres dans .env.local
-        command: server /data --console-address ":9001"
-        networks:
-            - inner_net
-    mailcatcher:
-        networks:
-            - inner_net
-        image: yappabe/mailcatcher
-        ports:
-            - "1025:1025"
-            - "1080:1080"
+  www_admin:
+    build:
+      context: ./Rwayed_Admin
+      dockerfile: ../docker/server/Dockerfile
+    expose:
+      - "9000"
+      - "9003"
+    ports:
+      - "81:80"
+    working_dir: /var/www/html
+    volumes:
+      - ./Rwayed_Admin:/var/www/html
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - database
+    networks:
+      - inner_net
+  www_api:
+    build:
+      context: ./Rwayed_API
+      dockerfile: ../docker/server/Dockerfile
+    expose:
+      - "9000"
+      - "9003"
+    ports:
+      - "82:80" # Le port 82 est utilisé ici comme exemple, assurez-vous qu'il ne soit pas en conflit
+    working_dir: /var/www/html
+    volumes:
+      - ./Rwayed_API:/var/www/html # Chemin vers le dossier de votre API
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      - database
+    networks:
+      - inner_net
+  #    elasticsearch:
+  #        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0 # Utilisez la version qui convient à vos besoins
+  #        environment:
+  #            - discovery.type=single-node # Pour le développement, en production considérez une configuration de cluster
+  #        ports:
+  #            - "9200:9200" # Port par défaut d'Elasticsearch
+  #            - "9300:9300" # Port pour la communication entre les nœuds
+  #        networks:
+  #            - inner_net
+  #        volumes:
+  #            - es_data:/usr/share/elasticsearch/data # Persiste les données d'Elasticsearch
 
-    database:
-        healthcheck:
-            test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
-            interval: 5s
-            retries: 5
-        image: mysql
-        volumes:
-            - db_data:/var/lib/mysql
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_ROOT_PASSWORD: 'jC5#u!7r^aPm'
-            MYSQL_USER: 'user'
-            MYSQL_PASSWORD: 'P@ssw0rd!'
-            MYSQL_DATABASE: 'db_rwayed'
-        networks:
-            - inner_net
+  database:
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 5
+    image: mysql
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "jC5#u!7r^aPm"
+      MYSQL_USER: "user"
+      MYSQL_PASSWORD: "P@ssw0rd!"
+      MYSQL_DATABASE: "db_rwayed"
+    networks:
+      - inner_net
 
-    myadmin:
-        image: phpmyadmin/phpmyadmin:5
-        environment:
-            PMA_HOST: database
-        ports:
-            - "8080:80"
-        depends_on:
-            - database
-        networks:
-            - inner_net
-        volumes:
-            - db_admin_data:/var/www/html
+  myadmin:
+    image: phpmyadmin/phpmyadmin:5
+    environment:
+      PMA_HOST: database
+    ports:
+      - "8080:80"
+    depends_on:
+      - database
+    networks:
+      - inner_net
+    volumes:
+      - db_admin_data:/var/www/html
+
+  mailcatcher:
+    networks:
+      - inner_net
+    image: yappabe/mailcatcher
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
+  mercure:
+    networks:
+      - inner_net
+    image: dunglas/mercure
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: ":80"
+      MERCURE_PUBLISHER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+      MERCURE_SUBSCRIBER_JWT_KEY: "!ChangeThisMercureHubJWTSecretKey!"
+      MERCURE_EXTRA_DIRECTIVES: "cors_origins http://localhost:8000"
+    command: /usr/bin/caddy run --config /etc/caddy/Caddyfile.dev
+    ports:
+      - "9797:80"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      #- ./docker/caddy/:/etc/caddy/
+
+  minio:
+    image: minio/minio
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: rwayed123 #!!! a les maitres dans .env.local
+      MINIO_ROOT_PASSWORD: rwayed123 #!!! a les maitres dans .env.local
+    command: server /data --console-address ":9001"
+    networks:
+      - inner_net
 
 volumes:
-    es_data:
-    db_data:
-    db_admin_data:
-    minio_data:
+  es_data:
+  db_data:
+  db_admin_data:
+  minio_data:
+  caddy_data:
+  caddy_config:
 
 networks:
-    inner_net:
+  inner_net:

@@ -7,7 +7,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#1a79ff">
     <title>Rwayed{% block title %}{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.svg')}}" id="favicon">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.svg') }}" id="favicon">
 
     <script>
         function updateFavicon() {
@@ -24,7 +24,7 @@
     <!--<script src="{{ asset('vendor/turbo/turbo.index.js') }}"></script>-->
 
     <!-- fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,500i,700,700i"/>
     <!-- css -->
     <link rel="stylesheet" href="{{ asset('vendor/bootstrap/css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/owl-carousel/assets/owl.carousel.min.css') }}">
@@ -34,678 +34,714 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
-        <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-three.css') }}" media="(min-width: 1200px)">
-        <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-two.css') }}" media="(max-width: 1200px)">
+        <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-three.css') }}"
+              media="(min-width: 1200px)">
+        <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-two.css') }}"
+              media="(max-width: 1200px)">
     {% else %}
-        <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-one.css') }}" media="(min-width: 1200px)">
-        <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-one.css') }}" media="(max-width: 1200px)">
+        <link rel="stylesheet" href="{{ asset('css/style.header-spaceship-variant-one.css') }}"
+              media="(min-width: 1200px)">
+        <link rel="stylesheet" href="{{ asset('css/style.mobile-header-variant-one.css') }}"
+              media="(max-width: 1200px)">
     {% endif %}
 
     <!-- font - fontawesome -->
     <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/all.min.css') }}">
-    {% block stylesheets %} {% endblock %}
+    <style>
+        .dropcart__empty {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 18px;
+            color: #555;
+            border-radius: 8px;
+            margin: 20px;
+            font-weight: bold;
+        }
+        .hidden {
+             display: none !important;
+         }
+         a[disabled] {
+             pointer-events: none;
+             opacity: 0.5;
+         }
+        .product-card--disabled {
+            opacity: 0.5;
+            pointer-events: none;  /* This disables all interactions with the elements in the card */
+        }
+
+        .product-card--disabled .product-card__action,
+        .product-card--disabled .product-card__addtocart-icon,
+        .product-card--disabled .product-card__addtocart-full,
+        .product-card--disabled .product-card__wishlist,
+        .product-card--disabled .product-card__compare {
+            cursor: not-allowed;
+        }
+    </style>
+    {% block stylesheets %}
+    {% endblock %}
 
 </head>
 
 <body>
-    <!-- site -->
-    <div class="site">
-        <!-- site__mobile-header -->
-        <header class="site__mobile-header">
-            <div class="mobile-header">
-                <div class="container">
-                    <div class="mobile-header__body">
-                        <button class="mobile-header__menu-button" type="button">
-                            <svg width="18px" height="14px">
-                                <path d="M-0,8L-0,6L18,6L18,8L-0,8ZM-0,-0L18,-0L18,2L-0,2L-0,-0ZM14,14L-0,14L-0,12L14,12L14,14Z" />
-                            </svg>
-                        </button>
-                        <a class="mobile-header__logo" href="{{ path('home') }}">
-                            <!-- mobile-logo -->
-                            {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
-                                <img src="{{ asset('images/logo light.svg') }}" height="80%"/>
-                            {% else %}
-                                <img src="{{ asset('images/logo.svg') }}" height="80%"/>
-                            {% endif %}
-                            <!-- mobile-logo / end -->
-                        </a>
-                        <div class="mobile-header__indicators">
-                            <div class="mobile-indicator d-none d-md-block">
-                                <a href="{{ path('dashboard') }}" class="mobile-indicator__button">
+<!-- site -->
+<div class="site">
+    <!-- site__mobile-header -->
+    <header class="site__mobile-header">
+        <div class="mobile-header">
+            <div class="container">
+                <div class="mobile-header__body">
+                    <button class="mobile-header__menu-button" type="button">
+                        <svg width="18px" height="14px">
+                            <path d="M-0,8L-0,6L18,6L18,8L-0,8ZM-0,-0L18,-0L18,2L-0,2L-0,-0ZM14,14L-0,14L-0,12L14,12L14,14Z"/>
+                        </svg>
+                    </button>
+                    <a class="mobile-header__logo" href="{{ path('home') }}">
+                        <!-- mobile-logo -->
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+                            <img src="{{ asset('images/logo light.svg') }}" height="80%"/>
+                        {% else %}
+                            <img src="{{ asset('images/logo.svg') }}" height="80%"/>
+                        {% endif %}
+                        <!-- mobile-logo / end -->
+                    </a>
+                    <div class="mobile-header__indicators">
+                        <div class="mobile-indicator d-none d-md-block">
+                            <a href="{{ path('dashboard') }}" class="mobile-indicator__button">
                                     <span class="mobile-indicator__icon"><svg width="20" height="20">
                                             <path d="M20,20h-2c0-4.4-3.6-8-8-8s-8,3.6-8,8H0c0-4.2,2.6-7.8,6.3-9.3C4.9,9.6,4,7.9,4,6c0-3.3,2.7-6,6-6s6,2.7,6,6
-	c0,1.9-0.9,3.6-2.3,4.7C17.4,12.2,20,15.8,20,20z M14,6c0-2.2-1.8-4-4-4S6,3.8,6,6s1.8,4,4,4S14,8.2,14,6z" />
+	c0,1.9-0.9,3.6-2.3,4.7C17.4,12.2,20,15.8,20,20z M14,6c0-2.2-1.8-4-4-4S6,3.8,6,6s1.8,4,4,4S14,8.2,14,6z"/>
                                         </svg>
                                     </span>
-                                </a>
-                            </div>
-                            <div class="mobile-indicator d-none d-md-block">
-                                <a href="{{ path('wishlist') }}" class="mobile-indicator__button">
+                            </a>
+                        </div>
+                        <div class="mobile-indicator d-none d-md-block">
+                            <a href="{{ path('wishlist') }}" class="mobile-indicator__button">
                                     <span class="mobile-indicator__icon">
                                         <svg width="20" height="20">
                                             <path d="M14,3c2.2,0,4,1.8,4,4c0,4-5.2,10-8,10S2,11,2,7c0-2.2,1.8-4,4-4c1,0,1.9,0.4,2.7,1L10,5.2L11.3,4C12.1,3.4,13,3,14,3 M14,1
-	c-1.5,0-2.9,0.6-4,1.5C8.9,1.6,7.5,1,6,1C2.7,1,0,3.7,0,7c0,5,6,12,10,12s10-7,10-12C20,3.7,17.3,1,14,1L14,1z" />
+	c-1.5,0-2.9,0.6-4,1.5C8.9,1.6,7.5,1,6,1C2.7,1,0,3.7,0,7c0,5,6,12,10,12s10-7,10-12C20,3.7,17.3,1,14,1L14,1z"/>
                                         </svg>
+                                        <span class="mobile-indicator__counter"></span>
                                     </span>
-                                </a>
-                            </div>
-                            <div class="mobile-indicator">
-                                <a href="{{ url('cart') }}" class="mobile-indicator__button">
+                            </a>
+                        </div>
+                        <div class="mobile-indicator">
+                            <a href="{{ url('cart') }}" class="mobile-indicator__button">
                                     <span class="mobile-indicator__icon">
                                         <svg width="20" height="20">
-                                            <circle cx="7" cy="17" r="2" />
-                                            <circle cx="15" cy="17" r="2" />
+                                            <circle cx="7" cy="17" r="2"/>
+                                            <circle cx="15" cy="17" r="2"/>
                                             <path d="M20,4.4V5l-1.8,6.3c-0.1,0.4-0.5,0.7-1,0.7H6.7c-0.4,0-0.8-0.3-1-0.7L3.3,3.9C3.1,3.3,2.6,3,2.1,3H0.4C0.2,3,0,2.8,0,2.6
 	V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
-	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
+	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z"/>
                                         </svg>
-                                        <span class="mobile-indicator__counter">3</span>
+                                        <span class="mobile-indicator__counter" data-counter-cart=>{{ panier.getLines|length }}</span>
                                     </span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- site__mobile-header / end -->
-        <!-- site__header -->
-        <header class="site__header">
-            <div class="header">
-                <div class="header__megamenu-area megamenu-area"></div>
-                <div class="header__topbar-start-bg"></div>
-                <div class="header__topbar-start">
-                    <div class="topbar topbar--spaceship-start">
-                        <div class="topbar__item-button">
-                            <a href="" class="topbar__button">
-                                <span class="topbar__button-label text-light">Compare:</span>
-                                <span class="topbar__button-title">5</span>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="header__topbar-end-bg"></div>
-                <div class="header__topbar-end">
-                    <div class="topbar topbar--spaceship-end">
-                        <div class="topbar__menu">
-                            <button class="topbar__button topbar__button--has-arrow topbar__menu-button" type="button">
-                                <span class="topbar__button-label text-light">Language:</span>
-                                <span class="topbar__button-title">EN</span>
-                                <span class="topbar__button-arrow"><svg width="7px" height="5px">
-                                        <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z" />
+            </div>
+        </div>
+    </header>
+    <!-- site__mobile-header / end -->
+    <!-- site__header -->
+    <header class="site__header">
+        <div class="header">
+            <div class="header__megamenu-area megamenu-area"></div>
+            <div class="header__topbar-start-bg"></div>
+            <div class="header__topbar-start">
+                <div class="topbar topbar--spaceship-start">
+{#                    <div class="topbar__item-button">#}
+{#                        <a href="" class="topbar__button">#}
+{#                            <span class="topbar__button-label text-light">Compare:</span>#}
+{#                            <span class="topbar__button-title">5</span>#}
+{#                        </a>#}
+{#                    </div>#}
+                </div>
+            </div>
+            <div class="header__topbar-end-bg"></div>
+            <div class="header__topbar-end">
+                <div class="topbar topbar--spaceship-end">
+{#                    <div class="topbar__menu">#}
+{#                        <button class="topbar__button topbar__button--has-arrow topbar__menu-button" type="button">#}
+{#                            <span class="topbar__button-label text-light">Language:</span>#}
+{#                            <span class="topbar__button-title">EN</span>#}
+{#                            <span class="topbar__button-arrow"><svg width="7px" height="5px">#}
+{#                                        <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z"/>#}
+{#                                    </svg>#}
+{#                                </span>#}
+{#                        </button>#}
+{#                        <div class="topbar__menu-body">#}
+{#                            <a class="topbar__menu-item" href="#">#}
+{#                                <img src="{{ asset('images/languages/language-1.png') }}" alt=""><span>English</span>#}
+{#                            </a>#}
+{#                            <a class="topbar__menu-item" href="#">#}
+{#                                <img src="{{ asset('images/languages/language-2.png') }}" alt=""><span>French</span>#}
+{#                            </a>#}
+{#                            <a class="topbar__menu-item" href="#">#}
+{#                                <img src="{{ asset('images/languages/language-3.png') }}" alt=""><span>German</span>#}
+{#                            </a>#}
+{#                            <a class="topbar__menu-item" href="#">#}
+{#                                <img src="{{ asset('images/languages/language-4.png') }}" alt=""><span>Russian</span>#}
+{#                            </a>#}
+{#                            <a class="topbar__menu-item" href="#">#}
+{#                                <img src="{{ asset('images/languages/language-5.png') }}" alt=""><span>Italian</span>#}
+{#                            </a>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
+            </div>
+            <div class="header__navbar">
+                <div class="header__navbar-menu">
+                    <div class="main-menu">
+                        <ul class="main-menu__list">
+                            <li class="main-menu__item">
+                                <a href="{{ path('home') }}" class="main-menu__link">
+                                    Home
+                                </a>
+                            </li>
+                            <li class="main-menu__item main-menu__item--submenu--menu main-menu__item--has-submenu">
+                                <a class="main-menu__link" style="cursor:pointer;">
+                                    About
+                                    <svg width="7px" height="5px">
+                                        <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z"/>
                                     </svg>
-                                </span>
-                            </button>
-                            <div class="topbar__menu-body">
-                                <a class="topbar__menu-item" href="#">
-                                    <img src="{{ asset('images/languages/language-1.png') }}" alt=""><span>English</span>
                                 </a>
-                                <a class="topbar__menu-item" href="#">
-                                    <img src="{{ asset('images/languages/language-2.png') }}" alt=""><span>French</span>
+                                <div class="main-menu__submenu">
+                                    <ul class="menu">
+                                        <li class="menu__item">
+                                            <a href="{{ path('about') }}" class="menu__link">
+                                                About Us
+                                            </a>
+                                        </li>
+                                        <li class="menu__item">
+                                            <a href="{{ path('contact') }}" class="menu__link">
+                                                Contact Us
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="main-menu__item">
+                                <a href="{{ path('shop') }}" class="main-menu__link">
+                                    Shop
                                 </a>
-                                <a class="topbar__menu-item" href="#">
-                                    <img src="{{ asset('images/languages/language-3.png') }}" alt=""><span>German</span>
+                            </li>
+                            <li class="main-menu__item">
+                                <a href="{{ path('track-order') }}" class="main-menu__link">
+                                    Track-Order
                                 </a>
-                                <a class="topbar__menu-item" href="#">
-                                    <img src="{{ asset('images/languages/language-4.png') }}" alt=""><span>Russian</span>
+                            </li>
+                            <li class="main-menu__item">
+                                <a href="{{ path('faq') }}" class="main-menu__link">
+                                    FAQ
                                 </a>
-                                <a class="topbar__menu-item" href="#">
-                                    <img src="{{ asset('images/languages/language-5.png') }}" alt=""><span>Italian</span>
+                            </li>
+                            <li class="main-menu__item">
+                                <a href="{{ path('terms') }}" class="main-menu__link">
+                                    Terms
                                 </a>
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div class="header__navbar">
-                    <div class="header__navbar-menu">
-                        <div class="main-menu">
-                            <ul class="main-menu__list">
-                                <li class="main-menu__item">
-                                    <a href="{{ path('home') }}" class="main-menu__link">
-                                        Home
-                                    </a>
-                                </li>
-                                <li class="main-menu__item main-menu__item--submenu--menu main-menu__item--has-submenu">
-                                    <a class="main-menu__link" style="cursor:pointer;">
-                                        About
-                                        <svg width="7px" height="5px">
-                                            <path d="M0.280,0.282 C0.645,-0.084 1.238,-0.077 1.596,0.297 L3.504,2.310 L5.413,0.297 C5.770,-0.077 6.363,-0.084 6.728,0.282 C7.080,0.634 7.088,1.203 6.746,1.565 L3.504,5.007 L0.262,1.565 C-0.080,1.203 -0.072,0.634 0.280,0.282 Z" />
-                                        </svg>
-                                    </a>
-                                    <div class="main-menu__submenu">
-                                        <ul class="menu">
-                                            <li class="menu__item">
-                                                <a href="{{ path('about') }}" class="menu__link">
-                                                    About Us
-                                                </a>
-                                            </li>
-                                            <li class="menu__item">
-                                                <a href="{{ path('contact') }}" class="menu__link">
-                                                    Contact Us
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="main-menu__item">
-                                    <a href="{{ path('shop') }}" class="main-menu__link">
-                                        Shop
-                                    </a>
-                                </li>
-                                <li class="main-menu__item">
-                                    <a href="{{ path('track-order') }}" class="main-menu__link">
-                                        Track-Order
-                                    </a>
-                                </li>
-                                <li class="main-menu__item">
-                                    <a href="{{ path('faq') }}" class="main-menu__link">
-                                        FAQ
-                                    </a>
-                                </li>
-                                <li class="main-menu__item">
-                                    <a href="{{ path('terms') }}" class="main-menu__link">
-                                        Terms
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+            </div>
+            <div class="header__logo">
+                <a href="{{ path('home') }}" class="logo">
+                    <div class="logo__slogan">
+                        Quality Tires and Repair Services for Cars
                     </div>
-                </div>
-                <div class="header__logo">
-                    <a href="{{ path('home') }}" class="logo">
-                        <div class="logo__slogan">
-                            Quality Tires and Repair Services for Cars
-                        </div>
-                        <div class="logo__image">
-                            <!-- logo -->
-                            {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
-                                <img src="{{ asset('images/logo light.svg') }}" height="80%" alt="logo rwayed"/>
-                            {% else %}
-                                <img src="{{ asset('images/logo.svg') }}" height="80%" alt="logo rwayed"/>
-                            {% endif %}
-                            <!-- logo / end -->
-                        </div>
-                    </a>
-                </div>
-                <div class="header__indicators">
-                    <div class="indicator">
-                        <a href="{{ path('wishlist') }}" class="indicator__button">
+                    <div class="logo__image">
+                        <!-- logo -->
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+                            <img src="{{ asset('images/logo light.svg') }}" height="80%" alt="logo rwayed"/>
+                        {% else %}
+                            <img src="{{ asset('images/logo.svg') }}" height="80%" alt="logo rwayed"/>
+                        {% endif %}
+                        <!-- logo / end -->
+                    </div>
+                </a>
+            </div>
+            <div class="header__indicators">
+                <div class="indicator">
+                    <a href="{{ path('wishlist') }}" class="indicator__button">
                             <span class="indicator__icon">
                                 <svg width="32" height="32">
                                     <path d="M23,4c3.9,0,7,3.1,7,7c0,6.3-11.4,15.9-14,16.9C13.4,26.9,2,17.3,2,11c0-3.9,3.1-7,7-7c2.1,0,4.1,1,5.4,2.6l1.6,2l1.6-2
 	C18.9,5,20.9,4,23,4 M23,2c-2.8,0-5.4,1.3-7,3.4C14.4,3.3,11.8,2,9,2c-5,0-9,4-9,9c0,8,14,19,16,19s16-11,16-19C32,6,28,2,23,2L23,2
-	z" />
+	z"/>
                                 </svg>
                             </span>
-                        </a>
-                    </div>
-                    <div class="indicator indicator--trigger--click">
-                        <a href="{{ path('app_login') }}" class="indicator__button">
+                            {# default(0) cas de totalItems() return null #}
+                        <span class="indicator__counter">{{ totalItems()|default(0) }}</span>
+                    </a>
+                </div>
+                <div class="indicator indicator--trigger--click">
+                    <a href="{{ path('app_login') }}" class="indicator__button">
                             <span class="indicator__icon">
                                 <svg width="32" height="32">
                                     <path d="M16,18C9.4,18,4,23.4,4,30H2c0-6.2,4-11.5,9.6-13.3C9.4,15.3,8,12.8,8,10c0-4.4,3.6-8,8-8s8,3.6,8,8c0,2.8-1.5,5.3-3.6,6.7
-	C26,18.5,30,23.8,30,30h-2C28,23.4,22.6,18,16,18z M22,10c0-3.3-2.7-6-6-6s-6,2.7-6,6s2.7,6,6,6S22,13.3,22,10z" />
+	C26,18.5,30,23.8,30,30h-2C28,23.4,22.6,18,16,18z M22,10c0-3.3-2.7-6-6-6s-6,2.7-6,6s2.7,6,6,6S22,13.3,22,10z"/>
                                 </svg>
                             </span>
-                            <span class="indicator__title">Hello, {% if app.user %}{{ app.user.getPrenom }}{% else %}Log In{% endif %}</span>
-                            <span class="indicator__value">My Account</span>
-                        </a>
-                        <div class="indicator__content">
-                            <div class="account-menu">
-                                {% if not app.user %}
-                                    {% set form = login_form() %}
+                        <span class="indicator__title">Hello, {% if app.user %}{{ app.user.getPrenom }}{% else %}Log In{% endif %}</span>
+                        <span class="indicator__value">My Account</span>
+                    </a>
+                    <div class="indicator__content">
+                        <div class="account-menu">
+                            {% if not app.user %}
+                                {% set form = login_form() %}
 
-                                    {{ form_start(form, {'attr': {'class': 'account-menu__form', 'action': path('app_login')}}) }}
-                                    <input type="hidden" name="login_origin" value="login_page_header">
-                                    <div class="account-menu__form-title">
-                                        {% if login_error %}
-                                            <div class="alert alert-danger">{{ login_error.messageKey|trans(error.messageData, 'security') }}</div>
-                                        {% endif %}
+                                {{ form_start(form, {'attr': {'class': 'account-menu__form', 'action': path('app_login')}}) }}
+                                <input type="hidden" name="login_origin" value="login_page_header">
+                                <div class="account-menu__form-title">
+                                    {% if login_error %}
+                                        <div class="alert alert-danger">{{ login_error.messageKey|trans(error.messageData, 'security') }}</div>
+                                    {% endif %}
 
-                                        {% if app.session.get('authentication_error_header') %}
-                                            <div class="alert alert-danger">
-                                                {{ app.session.get('authentication_error_header') }}
-                                            </div>
-                                            {% do app.session.remove('authentication_error_header') %}
-                                        {% endif %}
-
-                                        {% for message in app.flashes('error') %}
-                                            <div class="alert alert-dange">{{ message }}</div>
-                                        {% endfor %}
-
-                                        {% for message in app.flashes('verify_email_error') %}
-                                            <div class="alert alert-dange">{{ message }}</div>
-                                        {% endfor %}
-
-                                        {% for message in app.flashes('success_header') %}
-                                            <div class="alert alert-success">{{ message }}</div>
-                                        {% endfor %}
-                                        Log In to Your Account</div>
-                                    <div class="form-group">
-                                        {{ form_widget(form.email) }}
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="account-menu__form-forgot">
-                                            {{ form_widget(form.password) }}
-                                            <a href="{{ path('app_forgot_password_request') }}" class="account-menu__form-forgot-link">Forgot?</a>
+                                    {% if app.session.get('authentication_error_header') %}
+                                        <div class="alert alert-danger">
+                                            {{ app.session.get('authentication_error_header') }}
                                         </div>
+                                        {% do app.session.remove('authentication_error_header') %}
+                                    {% endif %}
+
+                                    {% for message in app.flashes('error') %}
+                                        <div class="alert alert-dange">{{ message }}</div>
+                                    {% endfor %}
+
+                                    {% for message in app.flashes('verify_email_error') %}
+                                        <div class="alert alert-dange">{{ message }}</div>
+                                    {% endfor %}
+
+                                    {% for message in app.flashes('success_header') %}
+                                        <div class="alert alert-success">{{ message }}</div>
+                                    {% endfor %}
+                                    Log In to Your Account
+                                </div>
+                                <div class="form-group">
+                                    {{ form_widget(form.email) }}
+                                </div>
+                                <div class="form-group">
+                                    <div class="account-menu__form-forgot">
+                                        {{ form_widget(form.password) }}
+                                        <a href="{{ path('app_forgot_password_request') }}"
+                                           class="account-menu__form-forgot-link">Forgot?</a>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-check">
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
                                     <span class="input-check form-check-input">
                                         <span class="input-check__body">
                                             {{ form_widget(form.remember_me) }}
                                             <span class="input-check__box"></span>
                                             <span class="input-check__icon">
                                                 <svg width="9px" height="7px">
-                                                    <path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z" />
+                                                    <path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
                                                 </svg>
                                             </span>
                                         </span>
                                     </span>
-                                            <label class="form-check-label" for="login_form_remember_me">Remember Me</label>
-                                        </div>
+                                        <label class="form-check-label" for="login_form_remember_me">Remember Me</label>
                                     </div>
+                                </div>
 
-                                    <div class="form-group account-menu__form-button">
-                                        <button type="submit" class="btn btn-primary mt-3">Login</button>
-                                    </div>
-                                    <div class="account-menu__form-link">
-                                        <a href="{{ path('signup') }}">Create An Account</a>
-                                    </div>
-                                    {{ form_end(form) }}
-                                {% else %}
-                                    {#                            <div class="account-menu__divider"></div>#}
-                                    <a href="" class="account-menu__user">
-                                        <div class="account-menu__user-avatar">
-                                            <img src="{{ asset('images/avatars/avatar-4.jpg') }}" alt="">
-                                        </div>
-                                        <div class="account-menu__user-info">
-                                            <div class="account-menu__user-name">{{ app.user.nom }} {{ app.user.prenom }}</div>
-                                            <div class="account-menu__user-email">{{ app.user.email }}</div>
-                                            {#                                    <div class="account-menu__user-email">{{ company_email }}</div>#}
-                                        </div>
-                                    </a>
-                                    <div class="account-menu__divider"></div>
-                                    <ul class="account-menu__links">
-                                        <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
-                                        {% if is_granted('ROLE_TECHNICIEN') %}
-                                            <li><a href="{{ path('garage') }}">Garage</a></li>
+                                <div class="form-group account-menu__form-button">
+                                    <button type="submit" class="btn btn-primary mt-3">Login</button>
+                                </div>
+                                <div class="account-menu__form-link">
+                                    <a href="{{ path('signup') }}">Create An Account</a>
+                                </div>
+                                {{ form_end(form) }}
+                            {% else %}
+                                {#                            <div class="account-menu__divider"></div> #}
+                                <a href="{{ path('dashboard') }}" class="account-menu__user">
+                                    <div class="account-menu__user-avatar">
+                                        {% if app.user.sexe == 'Male' %}
+                                            <img src="{{ asset('images/profile_homme.png') }}" alt="Profile homme">
+                                        {% else %}
+                                            <img src="{{ asset('images/profile_femme.png') }}" alt="Profile femme">
                                         {% endif %}
-                                        <li><a href="{{ path('profile') }}">Edit Profile</a></li>
-                                        <li><a href="{{ path('acount-orders') }}">Order History</a></li>
-                                        <li><a href="{{ path('addresses') }}">Addresses</a></li>
-                                    </ul>
-                                    <div class="account-menu__divider"></div>
-                                    <ul class="account-menu__links">
-                                        <li><a href="{{ path('app_logout') }}">Logout</a></li>
-                                    </ul>
-                                {% endif %}
-                            </div>
+                                    </div>
+                                    <div class="account-menu__user-info">
+                                        <div class="account-menu__user-name">{{ app.user.nom }} {{ app.user.prenom }}</div>
+                                        <div class="account-menu__user-email">{{ app.user.email }}</div>
+                                        <div class="account-menu__user-email text-primary">{{ app.user.pointsFidelite }} <small><b>Loyalty Points</b></small></div>
+                                    </div>
+                                </a>
+
+                                <div class="account-menu__divider"></div>
+                                <ul class="account-menu__links">
+                                    <li><a href="{{ path('dashboard') }}">Dashboard</a></li>
+                                    {% if is_granted('ROLE_TECHNICIEN') %}
+                                        <li><a href="{{ path('garage') }}">Garage</a></li>
+                                    {% endif %}
+                                    <li><a href="{{ path('profile') }}">Edit Profile</a></li>
+                                    <li><a href="{{ path('acount-orders') }}">Order History</a></li>
+                                    <li><a href="{{ path('addresses') }}">Addresses</a></li>
+                                </ul>
+                                <div class="account-menu__divider"></div>
+                                <ul class="account-menu__links">
+                                    <li><a href="{{ path('app_logout') }}">Logout</a></li>
+                                </ul>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="indicator indicator--trigger--click">
-                        <a href="{{ url('cart') }}" class="indicator__button">
+                </div>
+                <div class="indicator indicator--trigger--click">
+                    <a href="{{ url('cart') }}" class="indicator__button">
                             <span class="indicator__icon">
                                 <svg width="32" height="32">
-                                    <circle cx="10.5" cy="27.5" r="2.5" />
-                                    <circle cx="23.5" cy="27.5" r="2.5" />
+                                    <circle cx="10.5" cy="27.5" r="2.5"/>
+                                    <circle cx="23.5" cy="27.5" r="2.5"/>
                                     <path d="M26.4,21H11.2C10,21,9,20.2,8.8,19.1L5.4,4.8C5.3,4.3,4.9,4,4.4,4H1C0.4,4,0,3.6,0,3s0.4-1,1-1h3.4C5.8,2,7,3,7.3,4.3
 	l3.4,14.3c0.1,0.2,0.3,0.4,0.5,0.4h15.2c0.2,0,0.4-0.1,0.5-0.4l3.1-10c0.1-0.2,0-0.4-0.1-0.4C29.8,8.1,29.7,8,29.5,8H14
-	c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,10C28.5,20.3,27.5,21,26.4,21z" />
+	c-0.6,0-1-0.4-1-1s0.4-1,1-1h15.5c0.8,0,1.5,0.4,2,1c0.5,0.6,0.6,1.5,0.4,2.2l-3.1,10C28.5,20.3,27.5,21,26.4,21z"/>
                                 </svg>
-                                <span class="indicator__counter">3</span>
+                                <span class="indicator__counter" id="cart-item-count">{{ panier.getLines|length }}</span>
                             </span>
-                            <span class="indicator__title">Shopping Cart</span>
-                            <span class="indicator__value">250<small>.00</small> DH</span>
-                        </a>
-                        <div class="indicator__content">
-                            <div class="dropcart">
+                        <span class="indicator__title">Shopping Cart</span>
+                        {% set price = prixTotal  | number_format(2, '.', '') %}
+                        {% set parts = price | split('.') %}
+                        <span class="indicator__value" id="cart-total-price">{{ parts[0] }}<small>.{{ parts[1] }}</small> DH</span>
+                    </a>
+                    <div class="indicator__content">
+                        <div class="dropcart">
                                 <ul class="dropcart__list">
-                                    <li class="dropcart__item">
-                                        <div class="dropcart__item-image image image--type--product">
-                                            <a class="image__body" href="">
-                                                <img class="image__tag" src="{{ asset('images/products/product-4-70x70.jpg') }}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="dropcart__item-info">
-                                            <div class="dropcart__item-name">
-                                                <a href="">Glossy Gray 19" Aluminium Wheel AR-19</a>
-                                            </div>
-                                            <ul class="dropcart__item-features">
-                                                <li>Color: Yellow</li>
-                                                <li>Material: Aluminium</li>
-                                            </ul>
-                                            <div class="dropcart__item-meta">
-                                                <div class="dropcart__item-quantity">2</div>
-                                                <div class="dropcart__item-price">$699.00</div>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="dropcart__item-remove"><svg width="10" height="10">
-                                                <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
-	C9.2,7.8,9.2,8.4,8.8,8.8z" />
-                                            </svg>
-                                        </button>
-                                    </li>
-                                    <li class="dropcart__divider" role="presentation"></li>
-                                    <li class="dropcart__item">
-                                        <div class="dropcart__item-image image image--type--product">
-                                            <a class="image__body" href="">
-                                                <img class="image__tag" src="{{ asset('images/products/product-2-70x70.jpg') }}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="dropcart__item-info">
-                                            <div class="dropcart__item-name">
-                                                <a href="">Brandix Brake Kit BDX-750Z370-S</a>
-                                            </div>
-                                            <div class="dropcart__item-meta">
-                                                <div class="dropcart__item-quantity">1</div>
-                                                <div class="dropcart__item-price">$849.00</div>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="dropcart__item-remove"><svg width="10" height="10">
-                                                <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
-	C9.2,7.8,9.2,8.4,8.8,8.8z" />
-                                            </svg>
-                                        </button>
-                                    </li>
-                                    <li class="dropcart__divider" role="presentation"></li>
-                                    <li class="dropcart__item">
-                                        <div class="dropcart__item-image image image--type--product">
-                                            <a class="image__body" href="">
-                                                <img class="image__tag" src="{{ asset('images/products/product-5-70x70.jpg') }}" alt="">
-                                            </a>
-                                        </div>
-                                        <div class="dropcart__item-info">
-                                            <div class="dropcart__item-name">
-                                                <a href="">Twin Exhaust Pipe From Brandix Z54</a>
-                                            </div>
-                                            <ul class="dropcart__item-features">
-                                                <li>Color: True Red</li>
-                                            </ul>
-                                            <div class="dropcart__item-meta">
-                                                <div class="dropcart__item-quantity">3</div>
-                                                <div class="dropcart__item-price">$1210.00</div>
-                                            </div>
-                                        </div>
-                                        <button type="button" class="dropcart__item-remove"><svg width="10" height="10">
-                                                <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
-	C9.2,7.8,9.2,8.4,8.8,8.8z" />
-                                            </svg>
-                                        </button>
-                                    </li>
-                                    <li class="dropcart__divider" role="presentation"></li>
+                                    {% if panier.getLines|length == 0 %}
+                                    <span class="dropcart__empty">Your cart is empty.</span>
+                                    {% else %}
+                                        {% for item in panier.getLines %}
+                                            <li class="dropcart__item" id="cart-item-{{ item.getId() }}">
+                                                <div class="dropcart__item-image image image--type--product">
+                                                    <a class="image__body" href="{{ path('product', {'slug': item.slug}) }}">
+                                                        <img class="image__tag"
+                                                             src="{{ minio_url(item.getImage()) }}" alt="">
+                                                    </a>
+                                                </div>
+                                                <div class="dropcart__item-info">
+                                                    <div class="dropcart__item-name">
+                                                        <a href="{{ path('product', {'slug': item.slug}) }}">{{ item.getMarque() }}</a>
+                                                    </div>
+                                                    <ul class="dropcart__item-features">
+                                                        {% if item.isWithRepair() %}
+                                                            <li>Repaired</li>
+                                                        {% else %}
+                                                            <li>No Repair</li>
+                                                        {% endif %}
+                                                    </ul>
+                                                    <div class="dropcart__item-meta">
+                                                        <div class="dropcart__item-quantity">{{ item.getQuantity() }}</div>
+                                                        <div class="dropcart__item-price">{{ item.getPrix() | number_format(2, '.', ',') }} DH</div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="dropcart__item-remove" data-id="{{ item.getId() }}" data-repair="{{ item.isWithRepair() ? 'true' : 'false' }}">
+                                                    <svg width="10" height="10">
+                                                        <path d="M8.8,8.8L8.8,8.8c-0.4,0.4-1,0.4-1.4,0L5,6.4L2.6,8.8c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L3.6,5L1.2,2.6
+        c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L5,3.6l2.4-2.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L6.4,5l2.4,2.4
+        C9.2,7.8,9.2,8.4,8.8,8.8z"/>
+                                                    </svg>
+                                                </button>
+
+                                            </li>
+                                            <li class="dropcart__divider" role="presentation"></li>
+                                        {% endfor %}
+                                    {% endif %}
                                 </ul>
-                                <div class="dropcart__totals">
+                                <div class="dropcart__totals" >
                                     <table>
                                         <tr>
                                             <th>Subtotal</th>
-                                            <td>$5877.00</td>
+                                            <td data-subtotal>{{ subTotal | number_format(2, '.', ',') }} DH</td>
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
-                                            <td>$25.00</td>
+                                            <td data-shipping>0.0 DH</td>
                                         </tr>
                                         <tr>
                                             <th>Tax</th>
-                                            <td>$0.00</td>
+                                            <td data-tax>{{ totalTax | number_format(2, '.', ',') }} DH</td>
                                         </tr>
                                         <tr>
-                                            <th>Total</th>
-                                            <td>$5902.00</td>
+                                            <th class="font-weight-bold text-primary">Total</th>
+                                            <td class="font-weight-bold text-primary" data-total>{{ prixTotal | number_format(2, '.', ',') }} DH</td>
                                         </tr>
                                     </table>
                                 </div>
                                 <div class="dropcart__actions">
                                     <a href="{{ url('cart') }}" class="btn btn-secondary">View Cart</a>
-                                    <a href="{{ url('checkout') }}" class="btn btn-primary">Checkout</a>
+                                    <a href="{{ url('checkout') }}" class="btn btn-primary btn-checkout-header" {{ panier.getLines|length == 0 ? 'disabled="disabled"' : '' }}>Checkout</a>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- site__header / end -->
+    <!-- site__body -->
+    <div class="site__body">{% block body %}{% endblock %}</div>
+    <!-- site__body / end -->
+    <!-- site__footer -->
+    <footer class="site__footer">
+        <div class="site-footer">
+            <div class="decor site-footer__decor decor--type--bottom">
+                <div class="decor__body">
+                    <div class="decor__start"></div>
+                    <div class="decor__end"></div>
+                    <div class="decor__center"></div>
+                </div>
+            </div>
+            <div class="site-footer__widgets">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-xl-4">
+                            <div class="site-footer__widget footer-contacts">
+                                <h5 class="footer-contacts__title">Contact Us</h5>
+                                <div class="footer-contacts__text">
+                                    Have a question or need assistance? Feel free to reach out to us.
+                                </div>
+                                <address class="footer-contacts__contacts">
+                                    <dl>
+                                        <dt>Phone Number</dt>
+                                        <dd>{{ company_phone }}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Email Address</dt>
+                                        <dd>{{ company_email }}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Our Location</dt>
+                                        <dd>{{ company_location }}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Working Hours</dt>
+                                        <dd>{{ company_open_times }}</dd>
+                                    </dl>
+                                </address>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 col-xl-2">
+                            <div class="site-footer__widget footer-links">
+                                <h5 class="footer-links__title">Quick Links</h5>
+                                <ul class="footer-links__list">
+                                    <li class="footer-links__item"><a href="{{ path('home') }}"
+                                                                      class="footer-links__link">Home</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('shop') }}"
+                                                                      class="footer-links__link">Shop</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('wishlist') }}"
+                                                                      class="footer-links__link">Wishlist</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('cart') }}"
+                                                                      class="footer-links__link">Cart</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('track-order') }}"
+                                                                      class="footer-links__link">Track Order</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 col-xl-2">
+                            <div class="site-footer__widget footer-links">
+                                <h5 class="footer-links__title">Support Center</h5>
+                                <ul class="footer-links__list">
+                                    <li class="footer-links__item"><a href="{{ path('about') }}"
+                                                                      class="footer-links__link">About US</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('contact') }}"
+                                                                      class="footer-links__link">Contact US</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('terms') }}"
+                                                                      class="footer-links__link">Terms</a></li>
+                                    <li class="footer-links__item"><a href="{{ path('faq') }}"
+                                                                      class="footer-links__link">FAQ</a></li>
+                                    <li class="footer-links__item"><a style="cursor:pointer;"
+                                                                      onclick="document.body.classList.toggle('show-chatbot');"
+                                                                      class="footer-links__link">AI Assistant</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <div class="site-footer__widget footer-newsletter">
+                                <h5 class="footer-newsletter__title">Newsletter</h5>
+                                <div class="footer-newsletter__text">
+                                    Enter your email address below to subscribe to our newsletter and keep up to date
+                                    with discounts and special offers.
+                                </div>
+                                {% set form = newsletter_form() %}
+                                {{ form_start(form, {'attr': {'id': 'newsletter-form', 'class': 'footer-newsletter__form', 'action': path('news_letter')}}) }}
+                                {{ form_widget(form.letter_email) }}
+                                <button type="submit" class="footer-newsletter__form-button">Subscribe</button>
+                                {{ form_end(form) }}
+                                <div id="subscription-message" class="alert mt-1" style="display:none;"></div>
+                                <!--<form action="" class="footer-newsletter__form">
+                                    <label class="sr-only" for="footer-newsletter-address">Email Address</label>
+                                    <input type="text" class="footer-newsletter__form-input" id="footer-newsletter-address" placeholder="Email Address...">
+                                    <button class="footer-newsletter__form-button">Subscribe</button>
+                                </form>-->
+                                <div class="footer-newsletter__text footer-newsletter__text--social">
+                                    Follow us on social networks
+                                </div>
+                                <div class="footer-newsletter__social-links social-links">
+                                    <ul class="social-links__list">
+                                        <li class="social-links__item social-links__item--facebook"><a
+                                                    href="javascript: void(0);" ><i
+                                                        class="fab fa-facebook-f"></i></a></li>
+                                        <li class="social-links__item social-links__item--twitter"><a
+                                                    href="javascript: void(0);"><i
+                                                        class="fab fa-twitter"></i></a></li>
+                                        <li class="social-links__item social-links__item--youtube"><a
+                                                    href="javascript: void(0);"><i
+                                                        class="fab fa-youtube"></i></a></li>
+                                        <li class="social-links__item social-links__item--instagram"><a
+                                                    href="javascript: void(0);"><i
+                                                        class="fab fa-instagram"></i></a></li>
+                                        <li class="social-links__item social-links__item--rss"><a
+                                                    href="javascript: void(0);"><i
+                                                        class="fas fa-rss"></i></a></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </header>
-        <!-- site__header / end -->
-        <!-- site__body -->
-        <div class="site__body">{% block body %}{% endblock %}</div>
-        <!-- site__body / end -->
-        <!-- site__footer -->
-        <footer class="site__footer">
-            <div class="site-footer">
-                <div class="decor site-footer__decor decor--type--bottom">
-                    <div class="decor__body">
-                        <div class="decor__start"></div>
-                        <div class="decor__end"></div>
-                        <div class="decor__center"></div>
-                    </div>
-                </div>
-                <div class="site-footer__widgets">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12 col-xl-4">
-                                <div class="site-footer__widget footer-contacts">
-                                    <h5 class="footer-contacts__title">Contact Us</h5>
-                                    <div class="footer-contacts__text">
-                                        Have a question or need assistance? Feel free to reach out to us.
-                                    </div>
-                                    <address class="footer-contacts__contacts">
-                                        <dl>
-                                            <dt>Phone Number</dt>
-                                            <dd>{{ company_phone }}</dd>
-                                        </dl>
-                                        <dl>
-                                            <dt>Email Address</dt>
-                                            <dd>{{ company_email }}</dd>
-                                        </dl>
-                                        <dl>
-                                            <dt>Our Location</dt>
-                                            <dd>{{ company_location }}</dd>
-                                        </dl>
-                                        <dl>
-                                            <dt>Working Hours</dt>
-                                            <dd>{{ company_open_times }}</dd>
-                                        </dl>
-                                    </address>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3 col-xl-2">
-                                <div class="site-footer__widget footer-links">
-                                    <h5 class="footer-links__title">Quick Links</h5>
-                                    <ul class="footer-links__list">
-                                        <li class="footer-links__item"><a href="{{ path('home') }}" class="footer-links__link">Home</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('shop') }}" class="footer-links__link">Shop</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('wishlist') }}" class="footer-links__link">Wishlist</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('cart') }}" class="footer-links__link">Cart</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('track-order') }}" class="footer-links__link">Track Order</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-6 col-md-3 col-xl-2">
-                                <div class="site-footer__widget footer-links">
-                                    <h5 class="footer-links__title">Support Center</h5>
-                                    <ul class="footer-links__list">
-                                        <li class="footer-links__item"><a href="{{ path('about') }}" class="footer-links__link">About US</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('contact') }}" class="footer-links__link">Contact US</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('terms') }}" class="footer-links__link">Terms</a></li>
-                                        <li class="footer-links__item"><a href="{{ path('faq') }}" class="footer-links__link">FAQ</a></li>
-                                        <li class="footer-links__item"><a style="cursor:pointer;" onclick="document.body.classList.toggle('show-chatbot');" class="footer-links__link">AI Assistant</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 col-xl-4">
-                                <div class="site-footer__widget footer-newsletter">
-                                    <h5 class="footer-newsletter__title">Newsletter</h5>
-                                    <div class="footer-newsletter__text">
-                                        Enter your email address below to subscribe to our newsletter and keep up to date with discounts and special offers.
-                                    </div>
-                                    {% set form = newsletter_form() %}
-                                    {{ form_start(form, {'attr': {'id': 'newsletter-form', 'class': 'footer-newsletter__form', 'action': path('news_letter')}}) }}
-                                        {{ form_widget(form.letter_email) }}
-                                        <button type="submit" class="footer-newsletter__form-button">Subscribe</button>
-                                    {{ form_end(form) }}
-                                    <div id="subscription-message" class="alert mt-1" style="display:none;"></div>
-                                    <!--<form action="" class="footer-newsletter__form">
-                                        <label class="sr-only" for="footer-newsletter-address">Email Address</label>
-                                        <input type="text" class="footer-newsletter__form-input" id="footer-newsletter-address" placeholder="Email Address...">
-                                        <button class="footer-newsletter__form-button">Subscribe</button>
-                                    </form>-->
-                                    <div class="footer-newsletter__text footer-newsletter__text--social">
-                                        Follow us on social networks
-                                    </div>
-                                    <div class="footer-newsletter__social-links social-links">
-                                        <ul class="social-links__list">
-                                            <li class="social-links__item social-links__item--facebook"><a href="https://themeforest.net/user/kos9" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                                            <li class="social-links__item social-links__item--twitter"><a href="https://themeforest.net/user/kos9" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                                            <li class="social-links__item social-links__item--youtube"><a href="https://themeforest.net/user/kos9" target="_blank"><i class="fab fa-youtube"></i></a></li>
-                                            <li class="social-links__item social-links__item--instagram"><a href="https://themeforest.net/user/kos9" target="_blank"><i class="fab fa-instagram"></i></a></li>
-                                            <li class="social-links__item social-links__item--rss"><a href="https://themeforest.net/user/kos9" target="_blank"><i class="fas fa-rss"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="site-footer__bottom">
-                    <div class="container">
-                        <div class="site-footer__bottom-row">
-                            <div class="site-footer__copyright">
-                                <!-- copyright -->
-                                &copy; {{ "now"|date("Y") }} <strong>RWAYED</strong>. All rights reserved.
-                                <!-- copyright / end -->
-                            </div>
+            <div class="site-footer__bottom">
+                <div class="container">
+                    <div class="site-footer__bottom-row">
+                        <div class="site-footer__copyright">
+                            <!-- copyright -->
+                            &copy; {{ "now"|date("Y") }} <strong>RWAYED</strong>. All rights reserved.
+                            <!-- copyright / end -->
                         </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!-- site__footer / end -->
-    </div>
-    <!-- site / end -->
-    <!-- mobile-menu -->
-    <div class="mobile-menu">
-        <div class="mobile-menu__backdrop"></div>
-        <div class="mobile-menu__body">
-            <button class="mobile-menu__close" type="button"><svg width="12" height="12">
-                    <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
+        </div>
+    </footer>
+    <!-- site__footer / end -->
+</div>
+<!-- site / end -->
+<!-- mobile-menu -->
+<div class="mobile-menu">
+    <div class="mobile-menu__backdrop"></div>
+    <div class="mobile-menu__body">
+        <button class="mobile-menu__close" type="button">
+            <svg width="12" height="12">
+                <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
 	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4
-	C11.2,9.8,11.2,10.4,10.8,10.8z" />
-                </svg>
-            </button>
-            <div class="mobile-menu__panel">
-                <div class="mobile-menu__panel-header">
-                    <div class="mobile-menu__panel-title">Menu</div>
-                </div>
-                <div class="mobile-menu__panel-body">
-                    <div class="mobile-menu__settings-list">
-                        <div class="mobile-menu__setting" data-mobile-menu-item>
-                            <button class="mobile-menu__setting-button" title="Language" data-mobile-menu-trigger>
-                                <span class="mobile-menu__setting-icon">
-                                    <img src="{{ asset('images/languages/language-1.png') }}" alt="">
-                                </span>
-                                <span class="mobile-menu__setting-title">English</span>
-                                <span class="mobile-menu__setting-arrow"><svg width="6px" height="9px">
-                                        <path d="M0.3,7.4l3-2.9l-3-2.9c-0.4-0.3-0.4-0.9,0-1.3l0,0c0.4-0.3,0.9-0.4,1.3,0L6,4.5L1.6,8.7c-0.4,0.4-0.9,0.4-1.3,0l0,0C-0.1,8.4-0.1,7.8,0.3,7.4z" />
-                                    </svg>
-                                </span>
-                            </button>
-                            <div class="mobile-menu__setting-panel" data-mobile-menu-panel>
-                                <div class="mobile-menu__panel mobile-menu__panel--hidden">
-                                    <div class="mobile-menu__panel-header">
-                                        <button class="mobile-menu__panel-back" type="button">
-                                            <svg width="7" height="11">
-                                                <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z" />
-                                            </svg>
-                                        </button>
-                                        <div class="mobile-menu__panel-title">Language</div>
-                                    </div>
-                                    <div class="mobile-menu__panel-body">
-                                        <ul class="mobile-menu__links">
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    <div class="mobile-menu__links-image">
-                                                        <img src="{{ asset('images/languages/language-1.png') }}" alt="">
-                                                    </div>
-                                                    English
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    <div class="mobile-menu__links-image">
-                                                        <img src="{{ asset('images/languages/language-2.png') }}" alt="">
-                                                    </div>
-                                                    French
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    <div class="mobile-menu__links-image">
-                                                        <img src="{{ asset('images/languages/language-3.png') }}" alt="">
-                                                    </div>
-                                                    German
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    <div class="mobile-menu__links-image">
-                                                        <img src="{{ asset('images/languages/language-4.png') }}" alt="">
-                                                    </div>
-                                                    Russian
-                                                </button>
-                                            </li>
-                                            <li data-mobile-menu-item>
-                                                <button type="button" class="" data-mobile-menu-trigger>
-                                                    <div class="mobile-menu__links-image">
-                                                        <img src="{{ asset('images/languages/language-5.png') }}" alt="">
-                                                    </div>
-                                                    Italian
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mobile-menu__divider"></div>
-                    <div class="mobile-menu__indicators">
-                        <a class="mobile-menu__indicator" href="{{ path('wishlist') }}">
+	C11.2,9.8,11.2,10.4,10.8,10.8z"/>
+            </svg>
+        </button>
+        <div class="mobile-menu__panel">
+            <div class="mobile-menu__panel-header">
+                <div class="mobile-menu__panel-title">Menu</div>
+            </div>
+            <div class="mobile-menu__panel-body">
+{#                <div class="mobile-menu__settings-list">#}
+{#                    <div class="mobile-menu__setting" data-mobile-menu-item>#}
+{#                        <button class="mobile-menu__setting-button" title="Language" data-mobile-menu-trigger>#}
+{#                                <span class="mobile-menu__setting-icon">#}
+{#                                    <img src="{{ asset('images/languages/language-1.png') }}" alt="">#}
+{#                                </span>#}
+{#                            <span class="mobile-menu__setting-title">English</span>#}
+{#                            <span class="mobile-menu__setting-arrow"><svg width="6px" height="9px">#}
+{#                                        <path d="M0.3,7.4l3-2.9l-3-2.9c-0.4-0.3-0.4-0.9,0-1.3l0,0c0.4-0.3,0.9-0.4,1.3,0L6,4.5L1.6,8.7c-0.4,0.4-0.9,0.4-1.3,0l0,0C-0.1,8.4-0.1,7.8,0.3,7.4z"/>#}
+{#                                    </svg>#}
+{#                                </span>#}
+{#                        </button>#}
+{#                        <div class="mobile-menu__setting-panel" data-mobile-menu-panel>#}
+{#                            <div class="mobile-menu__panel mobile-menu__panel--hidden">#}
+{#                                <div class="mobile-menu__panel-header">#}
+{#                                    <button class="mobile-menu__panel-back" type="button">#}
+{#                                        <svg width="7" height="11">#}
+{#                                            <path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z"/>#}
+{#                                        </svg>#}
+{#                                    </button>#}
+{#                                    <div class="mobile-menu__panel-title">Language</div>#}
+{#                                </div>#}
+{#                                <div class="mobile-menu__panel-body">#}
+{#                                    <ul class="mobile-menu__links">#}
+{#                                        <li data-mobile-menu-item>#}
+{#                                            <button type="button" class="" data-mobile-menu-trigger>#}
+{#                                                <div class="mobile-menu__links-image">#}
+{#                                                    <img src="{{ asset('images/languages/language-1.png') }}" alt="">#}
+{#                                                </div>#}
+{#                                                English#}
+{#                                            </button>#}
+{#                                        </li>#}
+{#                                        <li data-mobile-menu-item>#}
+{#                                            <button type="button" class="" data-mobile-menu-trigger>#}
+{#                                                <div class="mobile-menu__links-image">#}
+{#                                                    <img src="{{ asset('images/languages/language-2.png') }}" alt="">#}
+{#                                                </div>#}
+{#                                                French#}
+{#                                            </button>#}
+{#                                        </li>#}
+{#                                        <li data-mobile-menu-item>#}
+{#                                            <button type="button" class="" data-mobile-menu-trigger>#}
+{#                                                <div class="mobile-menu__links-image">#}
+{#                                                    <img src="{{ asset('images/languages/language-3.png') }}" alt="">#}
+{#                                                </div>#}
+{#                                                German#}
+{#                                            </button>#}
+{#                                        </li>#}
+{#                                        <li data-mobile-menu-item>#}
+{#                                            <button type="button" class="" data-mobile-menu-trigger>#}
+{#                                                <div class="mobile-menu__links-image">#}
+{#                                                    <img src="{{ asset('images/languages/language-4.png') }}" alt="">#}
+{#                                                </div>#}
+{#                                                Russian#}
+{#                                            </button>#}
+{#                                        </li>#}
+{#                                        <li data-mobile-menu-item>#}
+{#                                            <button type="button" class="" data-mobile-menu-trigger>#}
+{#                                                <div class="mobile-menu__links-image">#}
+{#                                                    <img src="{{ asset('images/languages/language-5.png') }}" alt="">#}
+{#                                                </div>#}
+{#                                                Italian#}
+{#                                            </button>#}
+{#                                        </li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="mobile-menu__divider"></div>#}
+                <div class="mobile-menu__indicators">
+                    <a class="mobile-menu__indicator" href="{{ path('wishlist') }}">
                             <span class="mobile-menu__indicator-icon">
                                 <svg width="20" height="20">
                                     <path d="M14,3c2.2,0,4,1.8,4,4c0,4-5.2,10-8,10S2,11,2,7c0-2.2,1.8-4,4-4c1,0,1.9,0.4,2.7,1L10,5.2L11.3,4C12.1,3.4,13,3,14,3 M14,1
-	c-1.5,0-2.9,0.6-4,1.5C8.9,1.6,7.5,1,6,1C2.7,1,0,3.7,0,7c0,5,6,12,10,12s10-7,10-12C20,3.7,17.3,1,14,1L14,1z" />
+	c-1.5,0-2.9,0.6-4,1.5C8.9,1.6,7.5,1,6,1C2.7,1,0,3.7,0,7c0,5,6,12,10,12s10-7,10-12C20,3.7,17.3,1,14,1L14,1z"/>
                                 </svg>
+                                <span class="mobile-menu__indicator-counter">{{ totalItems()|default(0) }}</span>
                             </span>
-                            <span class="mobile-menu__indicator-title">Wishlist</span>
-                        </a>
-                        <a class="mobile-menu__indicator" href="{{ path('dashboard') }}">
+                        <span class="mobile-menu__indicator-title">Wishlist</span>
+                    </a>
+                    <a class="mobile-menu__indicator" href="{{ path('dashboard') }}">
                             <span class="mobile-menu__indicator-icon">
                                 <svg width="20" height="20">
                                     <path d="M20,20h-2c0-4.4-3.6-8-8-8s-8,3.6-8,8H0c0-4.2,2.6-7.8,6.3-9.3C4.9,9.6,4,7.9,4,6c0-3.3,2.7-6,6-6s6,2.7,6,6
-	c0,1.9-0.9,3.6-2.3,4.7C17.4,12.2,20,15.8,20,20z M14,6c0-2.2-1.8-4-4-4S6,3.8,6,6s1.8,4,4,4S14,8.2,14,6z" />
+	c0,1.9-0.9,3.6-2.3,4.7C17.4,12.2,20,15.8,20,20z M14,6c0-2.2-1.8-4-4-4S6,3.8,6,6s1.8,4,4,4S14,8.2,14,6z"/>
                                 </svg>
                             </span>
-                            <span class="mobile-menu__indicator-title">Account</span>
-                        </a>
-                        <a class="mobile-menu__indicator" href="{{ path('cart') }}">
+                        <span class="mobile-menu__indicator-title">Account</span>
+                    </a>
+                    <a class="mobile-menu__indicator" href="{{ path('cart') }}">
                             <span class="mobile-menu__indicator-icon">
                                 <svg width="20" height="20">
-                                    <circle cx="7" cy="17" r="2" />
-                                    <circle cx="15" cy="17" r="2" />
+                                    <circle cx="7" cy="17" r="2"/>
+                                    <circle cx="15" cy="17" r="2"/>
                                     <path d="M20,4.4V5l-1.8,6.3c-0.1,0.4-0.5,0.7-1,0.7H6.7c-0.4,0-0.8-0.3-1-0.7L3.3,3.9C3.1,3.3,2.6,3,2.1,3H0.4C0.2,3,0,2.8,0,2.6
 	V1.4C0,1.2,0.2,1,0.4,1h2.5c1,0,1.8,0.6,2.1,1.6L5.1,3l2.3,6.8c0,0.1,0.2,0.2,0.3,0.2h8.6c0.1,0,0.3-0.1,0.3-0.2l1.3-4.4
-	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z" />
+	C17.9,5.2,17.7,5,17.5,5H9.4C9.2,5,9,4.8,9,4.6V3.4C9,3.2,9.2,3,9.4,3h9.2C19.4,3,20,3.6,20,4.4z"/>
                                 </svg>
-                                <span class="mobile-menu__indicator-counter">3</span>
+                                <span class="mobile-menu__indicator-counter" data-counter-cart>{{ panier.getLines|length }}</span>
                             </span>
-                            <span class="mobile-menu__indicator-title">Cart</span>
-                        </a>
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
-                            <a class="mobile-menu__indicator" href="{{ path('garage') }}">
+                        <span class="mobile-menu__indicator-title">Cart</span>
+                    </a>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') and is_granted('ROLE_TECHNICIEN') %}
+                        <a class="mobile-menu__indicator" href="{{ path('garage') }}">
                                 <span class="mobile-menu__indicator-icon">
                                     <svg width="20" height="20">
                                         <path d="M6.6,2c2,0,4.8,0,6.8,0c1,0,2.9,0.8,3.6,2.2C17.7,5.7,17.9,7,18.4,7C20,7,20,8,20,8v1h-1v7.5c0,0.8-0.7,1.5-1.5,1.5h-1
@@ -713,345 +749,355 @@
         C3.7,2.8,5.6,2,6.6,2z M13.3,4H6.7c-0.8,0-1.4,0-2,0.7c-0.5,0.6-0.8,1.5-1,2C3.6,7.1,3.5,7.9,3.7,8C4.5,8.4,6.1,9,10,9
         c4,0,5.4-0.6,6.3-1c0.2-0.1,0.2-0.8,0-1.2c-0.2-0.4-0.5-1.5-1-2C14.7,4,14.1,4,13.3,4z M4,10c-0.4-0.3-1.5-0.5-2,0
         c-0.4,0.4-0.4,1.6,0,2c0.5,0.5,4,0.4,4,0C6,11.2,4.5,10.3,4,10z M14,12c0,0.4,3.5,0.5,4,0c0.4-0.4,0.4-1.6,0-2c-0.5-0.5-1.3-0.3-2,0
-        C15.5,10.2,14,11.3,14,12z" />
+        C15.5,10.2,14,11.3,14,12z"/>
                                     </svg>
                                 </span>
-                                <span class="mobile-menu__indicator-title">Garage</span>
-                            </a>
-                        {% endif %}
+                            <span class="mobile-menu__indicator-title">Garage</span>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="mobile-menu__divider"></div>
+                <ul class="mobile-menu__links">
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('home') }}" data-mobile-menu-trigger>
+                            Home
+                        </a>
+                    </li>
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('shop') }}" data-mobile-menu-trigger>
+                            Shop
+                        </a>
+                    </li>
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('track-order') }}" data-mobile-menu-trigger>
+                            Track Order
+                        </a>
+                    </li>
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('about') }}" data-mobile-menu-trigger>
+                            About Us
+                        </a>
+                    </li>
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('contact') }}" data-mobile-menu-trigger>
+                            Contact Us
+                        </a>
+                    </li>
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('terms') }}" data-mobile-menu-trigger>
+                            Terms
+                        </a>
+                    </li>
+                    <li data-mobile-menu-item>
+                        <a href="{{ path('faq') }}" data-mobile-menu-trigger>
+                            FAQ
+                        </a>
+                    </li>
+                </ul>
+                <div class="mobile-menu__spring"></div>
+                <div class="mobile-menu__divider"></div>
+                <a class="mobile-menu__contacts" href="tel:{{ company_phone }}">
+                    <div class="mobile-menu__contacts-subtitle">Call US</div>
+                    <div class="mobile-menu__contacts-title">{{ company_phone }}</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- mobile-menu / end -->
+<!-- quickview-modal -->
+<div id="quickview-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- quickview-modal / end -->
+<!-- add-vehicle-modal -->
+<div id="add-vehicle-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="vehicle-picker-modal modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <button type="button" class="vehicle-picker-modal__close">
+                <svg width="12" height="12">
+                    <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
+	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4
+	C11.2,9.8,11.2,10.4,10.8,10.8z"/>
+                </svg>
+            </button>
+            <div class="vehicle-picker-modal__panel vehicle-picker-modal__panel--active">
+                <div class="vehicle-picker-modal__title card-title">Add A Vehicle</div>
+                <div class="vehicle-form vehicle-form--layout--modal">
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Year">
+                            <option value="none">Select Year</option>
+                            <option>2010</option>
+                            <option>2011</option>
+                            <option>2012</option>
+                            <option>2013</option>
+                            <option>2014</option>
+                            <option>2015</option>
+                            <option>2016</option>
+                            <option>2017</option>
+                            <option>2018</option>
+                            <option>2019</option>
+                            <option>2020</option>
+                        </select>
                     </div>
-                    <div class="mobile-menu__divider"></div>
-                    <ul class="mobile-menu__links">
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('home') }}" data-mobile-menu-trigger>
-                                Home
-                            </a>
-                        </li>
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('shop') }}" data-mobile-menu-trigger>
-                                Shop
-                            </a>
-                        </li>
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('track-order') }}" data-mobile-menu-trigger>
-                                Track Order
-                            </a>
-                        </li>
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('about') }}" data-mobile-menu-trigger>
-                                About Us
-                            </a>
-                        </li>
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('contact') }}" data-mobile-menu-trigger>
-                                Contact Us
-                            </a>
-                        </li>
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('terms') }}" data-mobile-menu-trigger>
-                                Terms
-                            </a>
-                        </li>
-                        <li data-mobile-menu-item>
-                            <a href="{{ path('faq') }}" data-mobile-menu-trigger>
-                                FAQ
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="mobile-menu__spring"></div>
-                    <div class="mobile-menu__divider"></div>
-                    <a class="mobile-menu__contacts" href="tel:{{ company_phone }}">
-                        <div class="mobile-menu__contacts-subtitle">Call US</div>
-                        <div class="mobile-menu__contacts-title">{{ company_phone }}</div>
-                    </a>
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Brand" disabled>
+                            <option value="none">Select Brand</option>
+                            <option>Audi</option>
+                            <option>BMW</option>
+                            <option>Ferrari</option>
+                            <option>Ford</option>
+                            <option>KIA</option>
+                            <option>Nissan</option>
+                            <option>Tesla</option>
+                            <option>Toyota</option>
+                        </select>
+                    </div>
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Model" disabled>
+                            <option value="none">Select Model</option>
+                            <option>Explorer</option>
+                            <option>Focus S</option>
+                            <option>Fusion SE</option>
+                            <option>Mustang</option>
+                        </select>
+                    </div>
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Engine" disabled>
+                            <option value="none">Select Engine</option>
+                            <option>Gas 1.6L 125 hp AT/L4</option>
+                            <option>Diesel 2.5L 200 hp AT/L5</option>
+                            <option>Diesel 3.0L 250 hp MT/L5</option>
+                        </select>
+                    </div>
+                    <div class="vehicle-form__divider">Or</div>
+                    <div class="vehicle-form__item">
+                        <input type="text" class="form-control" placeholder="Enter VIN number" aria-label="VIN number">
+                    </div>
+                </div>
+                <div class="vehicle-picker-modal__actions">
+                    <button type="button" class="btn btn-sm btn-secondary vehicle-picker-modal__close-button">Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary">Add A Vehicle</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- mobile-menu / end -->
-    <!-- quickview-modal -->
-    <div id="quickview-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-    <!-- quickview-modal / end -->
-    <!-- add-vehicle-modal -->
-    <div id="add-vehicle-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="vehicle-picker-modal modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <button type="button" class="vehicle-picker-modal__close"><svg width="12" height="12">
-                        <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
+</div>
+<!-- add-vehicle-modal / end -->
+<!-- vehicle-picker-modal -->
+<div id="vehicle-picker-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="vehicle-picker-modal modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <button type="button" class="vehicle-picker-modal__close">
+                <svg width="12" height="12">
+                    <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
 	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4
-	C11.2,9.8,11.2,10.4,10.8,10.8z" />
-                    </svg>
-                </button>
-                <div class="vehicle-picker-modal__panel vehicle-picker-modal__panel--active">
-                    <div class="vehicle-picker-modal__title card-title">Add A Vehicle</div>
-                    <div class="vehicle-form vehicle-form--layout--modal">
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Year">
-                                <option value="none">Select Year</option>
-                                <option>2010</option>
-                                <option>2011</option>
-                                <option>2012</option>
-                                <option>2013</option>
-                                <option>2014</option>
-                                <option>2015</option>
-                                <option>2016</option>
-                                <option>2017</option>
-                                <option>2018</option>
-                                <option>2019</option>
-                                <option>2020</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Brand" disabled>
-                                <option value="none">Select Brand</option>
-                                <option>Audi</option>
-                                <option>BMW</option>
-                                <option>Ferrari</option>
-                                <option>Ford</option>
-                                <option>KIA</option>
-                                <option>Nissan</option>
-                                <option>Tesla</option>
-                                <option>Toyota</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Model" disabled>
-                                <option value="none">Select Model</option>
-                                <option>Explorer</option>
-                                <option>Focus S</option>
-                                <option>Fusion SE</option>
-                                <option>Mustang</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Engine" disabled>
-                                <option value="none">Select Engine</option>
-                                <option>Gas 1.6L 125 hp AT/L4</option>
-                                <option>Diesel 2.5L 200 hp AT/L5</option>
-                                <option>Diesel 3.0L 250 hp MT/L5</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__divider">Or</div>
-                        <div class="vehicle-form__item">
-                            <input type="text" class="form-control" placeholder="Enter VIN number" aria-label="VIN number">
-                        </div>
-                    </div>
-                    <div class="vehicle-picker-modal__actions">
-                        <button type="button" class="btn btn-sm btn-secondary vehicle-picker-modal__close-button">Cancel</button>
-                        <button type="button" class="btn btn-sm btn-primary">Add A Vehicle</button>
-                    </div>
+	C11.2,9.8,11.2,10.4,10.8,10.8z"/>
+                </svg>
+            </button>
+            <div class="vehicle-picker-modal__panel vehicle-picker-modal__panel--active" data-panel="list">
+                <div class="vehicle-picker-modal__title card-title">Select Vehicle</div>
+                <div class="vehicle-picker-modal__text">
+                    Select a vehicle to find exact fit parts
                 </div>
-            </div>
-        </div>
-    </div>
-    <!-- add-vehicle-modal / end -->
-    <!-- vehicle-picker-modal -->
-    <div id="vehicle-picker-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="vehicle-picker-modal modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <button type="button" class="vehicle-picker-modal__close"><svg width="12" height="12">
-                        <path d="M10.8,10.8L10.8,10.8c-0.4,0.4-1,0.4-1.4,0L6,7.4l-3.4,3.4c-0.4,0.4-1,0.4-1.4,0l0,0c-0.4-0.4-0.4-1,0-1.4L4.6,6L1.2,2.6
-	c-0.4-0.4-0.4-1,0-1.4l0,0c0.4-0.4,1-0.4,1.4,0L6,4.6l3.4-3.4c0.4-0.4,1-0.4,1.4,0l0,0c0.4,0.4,0.4,1,0,1.4L7.4,6l3.4,3.4
-	C11.2,9.8,11.2,10.4,10.8,10.8z" />
-                    </svg>
-                </button>
-                <div class="vehicle-picker-modal__panel vehicle-picker-modal__panel--active" data-panel="list">
-                    <div class="vehicle-picker-modal__title card-title">Select Vehicle</div>
-                    <div class="vehicle-picker-modal__text">
-                        Select a vehicle to find exact fit parts
-                    </div>
-                    <div class="vehicles-list">
-                        <div class="vehicles-list__body">
-                            <label class="vehicles-list__item">
+                <div class="vehicles-list">
+                    <div class="vehicles-list__body">
+                        <label class="vehicles-list__item">
                                 <span class="vehicles-list__item-radio input-radio">
                                     <span class="input-radio__body">
                                         <input class="input-radio__input" name="header-vehicle" type="radio">
                                         <span class="input-radio__circle"></span>
                                     </span>
                                 </span>
-                                <span class="vehicles-list__item-info">
+                            <span class="vehicles-list__item-info">
                                     <span class="vehicles-list__item-name">2011 Ford Focus S</span>
                                     <span class="vehicles-list__item-details">Engine 2.0L 1742DA L4 FI Turbo</span>
                                 </span>
-                                <button type="button" class="vehicles-list__item-remove">
-                                    <svg width="16" height="16">
-                                        <path d="M2,4V2h3V1h6v1h3v2H2z M13,13c0,1.1-0.9,2-2,2H5c-1.1,0-2-0.9-2-2V5h10V13z" />
-                                    </svg>
-                                </button>
-                            </label>
-                            <label class="vehicles-list__item">
+                            <button type="button" class="vehicles-list__item-remove">
+                                <svg width="16" height="16">
+                                    <path d="M2,4V2h3V1h6v1h3v2H2z M13,13c0,1.1-0.9,2-2,2H5c-1.1,0-2-0.9-2-2V5h10V13z"/>
+                                </svg>
+                            </button>
+                        </label>
+                        <label class="vehicles-list__item">
                                 <span class="vehicles-list__item-radio input-radio">
                                     <span class="input-radio__body">
                                         <input class="input-radio__input" name="header-vehicle" type="radio">
                                         <span class="input-radio__circle"></span>
                                     </span>
                                 </span>
-                                <span class="vehicles-list__item-info">
+                            <span class="vehicles-list__item-info">
                                     <span class="vehicles-list__item-name">2019 Audi Q7 Premium</span>
                                     <span class="vehicles-list__item-details">Engine 3.0L 5626CC L6 QK</span>
                                 </span>
-                                <button type="button" class="vehicles-list__item-remove">
-                                    <svg width="16" height="16">
-                                        <path d="M2,4V2h3V1h6v1h3v2H2z M13,13c0,1.1-0.9,2-2,2H5c-1.1,0-2-0.9-2-2V5h10V13z" />
-                                    </svg>
-                                </button>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="vehicle-picker-modal__actions">
-                        <button type="button" class="btn btn-sm btn-secondary vehicle-picker-modal__close-button">Cancel</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-to-panel="form">Add A Vehicle</button>
+                            <button type="button" class="vehicles-list__item-remove">
+                                <svg width="16" height="16">
+                                    <path d="M2,4V2h3V1h6v1h3v2H2z M13,13c0,1.1-0.9,2-2,2H5c-1.1,0-2-0.9-2-2V5h10V13z"/>
+                                </svg>
+                            </button>
+                        </label>
                     </div>
                 </div>
-                <div class="vehicle-picker-modal__panel" data-panel="form">
-                    <div class="vehicle-picker-modal__title card-title">Add A Vehicle</div>
-                    <div class="vehicle-form vehicle-form--layout--modal">
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Year">
-                                <option value="none">Select Year</option>
-                                <option>2010</option>
-                                <option>2011</option>
-                                <option>2012</option>
-                                <option>2013</option>
-                                <option>2014</option>
-                                <option>2015</option>
-                                <option>2016</option>
-                                <option>2017</option>
-                                <option>2018</option>
-                                <option>2019</option>
-                                <option>2020</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Brand" disabled>
-                                <option value="none">Select Brand</option>
-                                <option>Audi</option>
-                                <option>BMW</option>
-                                <option>Ferrari</option>
-                                <option>Ford</option>
-                                <option>KIA</option>
-                                <option>Nissan</option>
-                                <option>Tesla</option>
-                                <option>Toyota</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Model" disabled>
-                                <option value="none">Select Model</option>
-                                <option>Explorer</option>
-                                <option>Focus S</option>
-                                <option>Fusion SE</option>
-                                <option>Mustang</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__item vehicle-form__item--select">
-                            <select class="form-control form-control-select2" aria-label="Engine" disabled>
-                                <option value="none">Select Engine</option>
-                                <option>Gas 1.6L 125 hp AT/L4</option>
-                                <option>Diesel 2.5L 200 hp AT/L5</option>
-                                <option>Diesel 3.0L 250 hp MT/L5</option>
-                            </select>
-                        </div>
-                        <div class="vehicle-form__divider">Or</div>
-                        <div class="vehicle-form__item">
-                            <input type="text" class="form-control" placeholder="Enter VIN number" aria-label="VIN number">
-                        </div>
+                <div class="vehicle-picker-modal__actions">
+                    <button type="button" class="btn btn-sm btn-secondary vehicle-picker-modal__close-button">Cancel
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" data-to-panel="form">Add A Vehicle</button>
+                </div>
+            </div>
+            <div class="vehicle-picker-modal__panel" data-panel="form">
+                <div class="vehicle-picker-modal__title card-title">Add A Vehicle</div>
+                <div class="vehicle-form vehicle-form--layout--modal">
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Year">
+                            <option value="none">Select Year</option>
+                            <option>2010</option>
+                            <option>2011</option>
+                            <option>2012</option>
+                            <option>2013</option>
+                            <option>2014</option>
+                            <option>2015</option>
+                            <option>2016</option>
+                            <option>2017</option>
+                            <option>2018</option>
+                            <option>2019</option>
+                            <option>2020</option>
+                        </select>
                     </div>
-                    <div class="vehicle-picker-modal__actions">
-                        <button type="button" class="btn btn-sm btn-secondary" data-to-panel="list">Back to list</button>
-                        <button type="button" class="btn btn-sm btn-primary">Add A Vehicle</button>
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Brand" disabled>
+                            <option value="none">Select Brand</option>
+                            <option>Audi</option>
+                            <option>BMW</option>
+                            <option>Ferrari</option>
+                            <option>Ford</option>
+                            <option>KIA</option>
+                            <option>Nissan</option>
+                            <option>Tesla</option>
+                            <option>Toyota</option>
+                        </select>
                     </div>
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Model" disabled>
+                            <option value="none">Select Model</option>
+                            <option>Explorer</option>
+                            <option>Focus S</option>
+                            <option>Fusion SE</option>
+                            <option>Mustang</option>
+                        </select>
+                    </div>
+                    <div class="vehicle-form__item vehicle-form__item--select">
+                        <select class="form-control form-control-select2" aria-label="Engine" disabled>
+                            <option value="none">Select Engine</option>
+                            <option>Gas 1.6L 125 hp AT/L4</option>
+                            <option>Diesel 2.5L 200 hp AT/L5</option>
+                            <option>Diesel 3.0L 250 hp MT/L5</option>
+                        </select>
+                    </div>
+                    <div class="vehicle-form__divider">Or</div>
+                    <div class="vehicle-form__item">
+                        <input type="text" class="form-control" placeholder="Enter VIN number" aria-label="VIN number">
+                    </div>
+                </div>
+                <div class="vehicle-picker-modal__actions">
+                    <button type="button" class="btn btn-sm btn-secondary" data-to-panel="list">Back to list</button>
+                    <button type="button" class="btn btn-sm btn-primary">Add A Vehicle</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- vehicle-picker-modal / end -->
-    <!-- photoswipe -->
-    <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="pswp__bg"></div>
-        <div class="pswp__scroll-wrap">
-            <div class="pswp__container">
-                <div class="pswp__item"></div>
-                <div class="pswp__item"></div>
-                <div class="pswp__item"></div>
-            </div>
-            <div class="pswp__ui pswp__ui--hidden">
-                <div class="pswp__top-bar">
-                    <div class="pswp__counter"></div>
-                    <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
-                    <!--<button class="pswp__button pswp__button&#45;&#45;share" title="Share"></button>-->
-                    <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
-                    <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
-                    <div class="pswp__preloader">
-                        <div class="pswp__preloader__icn">
-                            <div class="pswp__preloader__cut">
-                                <div class="pswp__preloader__donut"></div>
-                            </div>
+</div>
+<!-- vehicle-picker-modal / end -->
+<!-- photoswipe -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="pswp__bg"></div>
+    <div class="pswp__scroll-wrap">
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <!--<button class="pswp__button pswp__button&#45;&#45;share" title="Share"></button>-->
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
                         </div>
                     </div>
                 </div>
-                <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
-                    <div class="pswp__share-tooltip"></div>
-                </div>
-                <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
-                <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
-                <div class="pswp__caption">
-                    <div class="pswp__caption__center"></div>
-                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
             </div>
         </div>
     </div>
-    <!-- photoswipe / end -->
+</div>
+<!-- photoswipe / end -->
 
-    <!-- back to top -->
-    <div class="rbt-progress-parent">
-        <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
-            <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-        </svg>
-        <i class="fas fa-arrow-up" id="top-arrow"></i>
+<!-- back to top -->
+<div class="rbt-progress-parent">
+    <svg class="rbt-back-circle svg-inner" width="100%" height="100%" viewBox="-1 -1 102 102">
+        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
+    </svg>
+    <i class="fas fa-arrow-up" id="top-arrow"></i>
+</div>
+<!-- back to top / end -->
+
+<button class="chatbot-toggler">
+    <span class="fas fa-comment-dots"></span>
+    <span class="fas fa-times"></span>
+</button>
+<div class="chatbot">
+    <header>
+        <h2>Chatbot</h2>
+        <span class="close-btn fas fa-times"></span>
+    </header>
+    <ul class="chatbox">
+        <li class="chat incoming">
+            <span class="fas fa-robot"></span>
+            <p>Hi there 👋<br>How can I help you today?</p>
+        </li>
+    </ul>
+    <div class="chat-input">
+        <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
+        <span id="send-btn" class="fas fa-paper-plane"></span>
     </div>
-    <!-- back to top / end -->
-
-    <button class="chatbot-toggler">
-        <span class="fas fa-comment-dots"></span>
-        <span class="fas fa-times"></span>
-    </button>
-    <div class="chatbot">
-        <header>
-            <h2>Chatbot</h2>
-            <span class="close-btn fas fa-times"></span>
-        </header>
-        <ul class="chatbox">
-            <li class="chat incoming">
-                <span class="fas fa-robot"></span>
-                <p>Hi there 👋<br>How can I help you today?</p>
-            </li>
-        </ul>
-        <div class="chat-input">
-            <textarea placeholder="Enter a message..." spellcheck="false" required></textarea>
-            <span id="send-btn" class="fas fa-paper-plane"></span>
-        </div>
-    </div>
+</div>
 
 
-    <!-- scripts -->
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('vendor/owl-carousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('vendor/nouislider/nouislider.min.js') }}"></script>
-    <script src="{{ asset('vendor/photoswipe/photoswipe.min.js') }}"></script>
-    <script src="{{ asset('vendor/photoswipe/photoswipe-ui-default.min.js') }}"></script>
-    <script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
-    <script src="{{ asset('js/number.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
-
-    <script>
-        // disable prefetch for ux-turbo on link hover
-        /*document.querySelectorAll('a').forEach(function(link) {
-            link.dataset.turboPrefetch = 'false'; // Add data-prefetch="false" attribute
-        });*/
-    </script>
-    {% block javascripts %} {% endblock %}
+<!-- scripts -->
+<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('vendor/owl-carousel/owl.carousel.min.js') }}"></script>
+<script src="{{ asset('vendor/nouislider/nouislider.min.js') }}"></script>
+<script src="{{ asset('vendor/photoswipe/photoswipe.min.js') }}"></script>
+<script src="{{ asset('vendor/photoswipe/photoswipe-ui-default.min.js') }}"></script>
+<script src="{{ asset('vendor/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('js/number.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+<script src="{{ asset('js/sweetalert.js') }}"></script>
+<script src="{{ asset('js/cart-ajax.js') }}"></script>
+<script  src="{{ asset('js/address.js') }}"></script>
+<script src="{{ asset('js/wishlist.js') }}"></script>
+<script>
+    var wishlistAddUrl = '{{ path('wishlist_add', {'id': 'pneuId'}) }}';
+</script>
+<script>
+    // disable prefetch for ux-turbo on link hover
+    /*document.querySelectorAll('a').forEach(function(link) {
+        link.dataset.turboPrefetch = 'false'; // Add data-prefetch="false" attribute
+    });*/
+</script>
+{% block javascripts %} {% endblock %}
 
 </body>
 </html>

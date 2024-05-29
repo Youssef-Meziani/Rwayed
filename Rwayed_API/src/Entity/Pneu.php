@@ -5,8 +5,9 @@ namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Metadata\ApiResource;
+use App\Doctrine\Filter\NoteMoyenneFilter;
 use App\Repository\PneuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,7 +23,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     paginationClientItemsPerPage: true,
     paginationItemsPerPage: 16
 )]
-#[ApiFilter(SearchFilter::class, properties: ['slug' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['saison' => 'exact','slug' => 'exact'])]
+#[ApiFilter(RangeFilter::class, properties: ['prixUnitaire', 'scoreTotal'])]
+#[ApiFilter(NoteMoyenneFilter::class)]
 class Pneu
 {
     #[ORM\Id]
@@ -93,10 +96,15 @@ class Pneu
     #[Groups(['pneu:read'])]
     private Collection $photos;
 
+    #[ORM\OneToMany(mappedBy: 'pneu', targetEntity: Avis::class)]
+    #[Groups(['pneu:read'])]
+    private Collection $avis;
+
     public function __construct()
     {
         $this->dateAjout = new \DateTime();
         $this->photos = new ArrayCollection();
+        $this->avis = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,6 +275,14 @@ class Pneu
         $this->nombreEvaluations = $nombreEvaluations;
         return $this;
     }
+    #[Groups(['pneu:read'])]
+    public function getNoteMoyenne(): ?float
+    {
+        if ($this->nombreEvaluations === 0) {
+            return 0.0;
+        }
+        return $this->scoreTotal / $this->nombreEvaluations;
+    }
 
     /**
      * @return Collection<int, Photo>
@@ -296,6 +312,11 @@ class Pneu
         }
 
         return $this;
+    }
+
+    public function getAvis(): Collection
+    {
+        return $this->avis;
     }
 
 }

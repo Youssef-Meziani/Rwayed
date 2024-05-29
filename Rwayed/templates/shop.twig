@@ -84,19 +84,18 @@
 										<select id="view-option-sort" class="form-control form-control-sm" name="">
 											<option value="price_asc">Price - Ascending order</option>
 											<option value="price_desc">Price - Descending order</option>
-											<option value="orders_desc">Orders - Descending order</option>
 										</select>
 									</div>
-									<form id="itemsPerPageForm" action="/shop" method="POST">
-										<div class="view-options__select">
-											<label for="view-option-limit">Show:</label>
-											<select id="view-option-limit" class="form-control form-control-sm" name="itemsPerPage" onchange="this.form.submit()">
-												<option value="4" {{ itemsPerPage == 4 ? 'selected' : '' }}>4</option>
-												<option value="8" {{ itemsPerPage == 8 ? 'selected' : '' }}>8</option>
-												<option value="16" {{ itemsPerPage == 16 ? 'selected' : '' }}>16</option>
-											</select>
-										</div>
-									</form>
+{#									<form id="itemsPerPageForm" action="/shop" method="POST">#}
+{#										<div class="view-options__select">#}
+{#											<label for="view-option-limit">Show:</label>#}
+{#											<select id="view-option-limit" class="form-control form-control-sm" name="itemsPerPage" onchange="this.form.submit()">#}
+{#												<option value="4" {{ itemsPerPage == 4 ? 'selected' : '' }}>4</option>#}
+{#												<option value="8" {{ itemsPerPage == 8 ? 'selected' : '' }}>8</option>#}
+{#												<option value="16" {{ itemsPerPage == 16 ? 'selected' : '' }}>16</option>#}
+{#											</select>#}
+{#										</div>#}
+{#									</form>#}
 
 {#									<form id="itemsPerPageForm" action="/shop" method="GET">#}
 {#										<label for="view-option-limit">Show:</label>#}
@@ -108,32 +107,32 @@
 {#									</form>#}
 
 								</div>
-								<div class="view-options__body view-options__body--filters">
-									<div class="view-options__label">Active Filters</div>
-									<div class="applied-filters">
-										<ul class="applied-filters__list">
-											<li class="applied-filters__item">
-												<a href="" class="applied-filters__button applied-filters__button--filter">
-													Sales: Top Sellers
-													<svg width="9" height="9">
-														<path d="M9,8.5L8.5,9l-4-4l-4,4L0,8.5l4-4l-4-4L0.5,0l4,4l4-4L9,0.5l-4,4L9,8.5z"/>
-													</svg>
-												</a>
-											</li>
-											<li class="applied-filters__item">
-												<a href="" class="applied-filters__button applied-filters__button--filter">
-													Color: True Red
-													<svg width="9" height="9">
-														<path d="M9,8.5L8.5,9l-4-4l-4,4L0,8.5l4-4l-4-4L0.5,0l4,4l4-4L9,0.5l-4,4L9,8.5z"/>
-													</svg>
-												</a>
-											</li>
-											<li class="applied-filters__item">
-												<button type="button" class="applied-filters__button applied-filters__button--clear">Clear All</button>
-											</li>
-										</ul>
-									</div>
-								</div>
+{#								<div class="view-options__body view-options__body--filters">#}
+{#									<div class="view-options__label">Active Filters</div>#}
+{#									<div class="applied-filters">#}
+{#										<ul class="applied-filters__list">#}
+{#											<li class="applied-filters__item">#}
+{#												<a href="" class="applied-filters__button applied-filters__button--filter">#}
+{#													Sales: Top Sellers#}
+{#													<svg width="9" height="9">#}
+{#														<path d="M9,8.5L8.5,9l-4-4l-4,4L0,8.5l4-4l-4-4L0.5,0l4,4l4-4L9,0.5l-4,4L9,8.5z"/>#}
+{#													</svg>#}
+{#												</a>#}
+{#											</li>#}
+{#											<li class="applied-filters__item">#}
+{#												<a href="" class="applied-filters__button applied-filters__button--filter">#}
+{#													Color: True Red#}
+{#													<svg width="9" height="9">#}
+{#														<path d="M9,8.5L8.5,9l-4-4l-4,4L0,8.5l4-4l-4-4L0.5,0l4,4l4-4L9,0.5l-4,4L9,8.5z"/>#}
+{#													</svg>#}
+{#												</a>#}
+{#											</li>#}
+{#											<li class="applied-filters__item">#}
+{#												<button type="button" class="applied-filters__button applied-filters__button--clear">Clear All</button>#}
+{#											</li>#}
+{#										</ul>#}
+{#									</div>#}
+{#								</div>#}
 							</div>
 							<div class="products-view__list products-list products-list--grid--4" data-layout="grid" data-with-features="false">
 								<div class="products-list__head">
@@ -157,26 +156,32 @@
 										<ul class="pagination">
 											<li class="page-item {{ currentPage <= 1 ? 'disabled' : '' }}">
 												<a class="page-link page-link--with-arrow" href="{{ currentPage > 1 ? path('shop', {'page': currentPage - 1}) : '#' }}" aria-label="Previous">
-												<span class="page-link__arrow page-link__arrow--left" aria-hidden="true">
-													<svg width="7" height="11">
-														<path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z"/>
-													</svg>
-												</span>
+													<span class="page-link__arrow page-link__arrow--left" aria-hidden="true">
+														<svg width="7" height="11">
+															<path d="M6.7,0.3L6.7,0.3c-0.4-0.4-0.9-0.4-1.3,0L0,5.5l5.4,5.2c0.4,0.4,0.9,0.3,1.3,0l0,0c0.4-0.4,0.4-1,0-1.3l-4-3.9l4-3.9C7.1,1.2,7.1,0.6,6.7,0.3z"/>
+														</svg>
+													</span>
 												</a>
 											</li>
-											{% for i in 1..totalPages %}
+
+											{% set startPage = max(currentPage - 1, 1) %}
+											{% set endPage = min(startPage + 2, totalPages) %}
+											{% set startPage = max(endPage - 2, 1) %} {# Adjust if near the end #}
+
+											{% for i in startPage..endPage %}
 												<li class="page-item {{ i == currentPage ? 'active' : '' }}">
 													<a class="page-link" href="{{ path('shop', {'page': i}) }}">{{ i }}</a>
 												</li>
 											{% endfor %}
+
 											<li class="page-item {{ currentPage >= totalPages ? 'disabled' : '' }}">
 												<a class="page-link page-link--with-arrow" href="{{ currentPage < totalPages ? path('shop', {'page': currentPage + 1}) : '#' }}" aria-label="Next">
-												<span class="page-link__arrow page-link__arrow--right" aria-hidden="true">
-													<svg width="7" height="11">
-														<path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
-														C-0.1,9.8-0.1,10.4,0.3,10.7z"/>
-													</svg>
-												</span>
+													<span class="page-link__arrow page-link__arrow--right" aria-hidden="true">
+														<svg width="7" height="11">
+															<path d="M0.3,10.7L0.3,10.7c0.4,0.4,0.9,0.4,1.3,0L7,5.5L1.6,0.3C1.2-0.1,0.7,0,0.3,0.3l0,0c-0.4,0.4-0.4,1,0,1.3l4,3.9l-4,3.9
+															C-0.1,9.8-0.1,10.4,0.3,10.7z"/>
+														</svg>
+													</span>
 												</a>
 											</li>
 										</ul>
@@ -186,7 +191,6 @@
 									</div>
 								</div>
 							{% endif %}
-
 						</div>
 					</div>
 				</div>
@@ -210,304 +214,36 @@
 										<h4>Filters</h4>
 									</div>
 									<div class="widget-filters__list">
-										<div class="widget-filters__item">
-											<div class="filter filter--opened" data-collapse-item>
-												<button type="button" class="filter__title" data-collapse-trigger>
-													Categories
-													<span class="filter__arrow">
-														<svg width="12px" height="7px">
-															<path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z"/>
-														</svg>
-													</span>
-												</button>
-												<div class="filter__body" data-collapse-content>
-													<div class="filter__container">
-														<div class="filter-categories">
-															<ul class="filter-categories__list">
-																<li class="filter-categories__item filter-categories__item--parent">
-																	<span class="filter-categories__arrow">
-																		<svg width="6" height="9">
-																			<path d="M5.7,8.7L5.7,8.7c-0.4,0.4-0.9,0.4-1.3,0L0,4.5l4.4-4.2c0.4-0.4,0.9-0.3,1.3,0l0,0c0.4,0.4,0.4,1,0,1.3l-3,2.9l3,2.9
-																				C6.1,7.8,6.1,8.4,5.7,8.7z"/>
-																		</svg>
-																	</span>
-																	<a href="">Construction & Repair</a>
-																	<div class="filter-categories__counter">254</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--parent">
-																	<span class="filter-categories__arrow">
-																		<svg width="6" height="9">
-																			<path d="M5.7,8.7L5.7,8.7c-0.4,0.4-0.9,0.4-1.3,0L0,4.5l4.4-4.2c0.4-0.4,0.9-0.3,1.3,0l0,0c0.4,0.4,0.4,1,0,1.3l-3,2.9l3,2.9
-																				C6.1,7.8,6.1,8.4,5.7,8.7z"/>
-																		</svg>
-																	</span>
-																	<a href="">Instruments</a>
-																	<div class="filter-categories__counter">75</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--current">
-																	<a href="">Power Tools</a>
-																	<div class="filter-categories__counter">21</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Drills & Mixers</a>
-																	<div class="filter-categories__counter">15</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Cordless Screwdrivers</a>
-																	<div class="filter-categories__counter">2</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Screwdrivers</a>
-																	<div class="filter-categories__counter">30</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Wrenches</a>
-																	<div class="filter-categories__counter">7</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Grinding Machines</a>
-																	<div class="filter-categories__counter">5</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Milling Cutters</a>
-																	<div class="filter-categories__counter">2</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Electric Spray Guns</a>
-																	<div class="filter-categories__counter">9</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Jigsaws</a>
-																	<div class="filter-categories__counter">4</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Jackhammers</a>
-																	<div class="filter-categories__counter">0</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Planers</a>
-																	<div class="filter-categories__counter">12</div>
-																</li>
-																<li class="filter-categories__item filter-categories__item--child">
-																	<a href="">Glue Guns</a>
-																	<div class="filter-categories__counter">7</div>
-																</li>
-															</ul>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="widget-filters__item">
-											<div class="filter filter--opened" data-collapse-item>
-												<button type="button" class="filter__title" data-collapse-trigger>
-													Vehicle
-													<span class="filter__arrow">
-														<svg width="12px" height="7px">
-															<path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z"/>
-														</svg>
-													</span>
-												</button>
-												<div class="filter__body" data-collapse-content>
-													<div class="filter__container">
-														<div class="filter-vehicle">
-															<ul class="filter-vehicle__list">
-																<li class="filter-vehicle__item ">
-																	<label class="filter-vehicle__item-label">
-																		<span class="filter-list__input input-radio">
-																			<span class="input-radio__body">
-																				<input class="input-radio__input" name="filter_vehicle" type="radio">
-																				<span class="input-radio__circle"></span>
-																			</span>
-																		</span>
-																		<span class="filter-vehicle__item-title">
-																			All Parts
-																		</span>
-																		<span class="filter-vehicle__item-counter">57</span>
-																	</label>
-																</li>
-																<li class="filter-vehicle__item ">
-																	<label class="filter-vehicle__item-label">
-																		<span class="filter-list__input input-radio">
-																			<span class="input-radio__body">
-																				<input class="input-radio__input" name="filter_vehicle" type="radio" checked>
-																				<span class="input-radio__circle"></span>
-																			</span>
-																		</span>
-																		<span class="filter-vehicle__item-title">
-																			2011 Ford Focus S
-																		</span>
-																		<span class="filter-vehicle__item-counter">12</span>
-																	</label>
-																</li>
-																<li class="filter-vehicle__item ">
-																	<label class="filter-vehicle__item-label">
-																		<span class="filter-list__input input-radio">
-																			<span class="input-radio__body">
-																				<input class="input-radio__input" name="filter_vehicle" type="radio">
-																				<span class="input-radio__circle"></span>
-																			</span>
-																		</span>
-																		<span class="filter-vehicle__item-title">
-																			2015 Audi A3
-																		</span>
-																		<span class="filter-vehicle__item-counter">51</span>
-																	</label>
-																</li>
-															</ul>
-															<div class="filter-vehicle__button">
-																<button type="button" class="btn btn-xs btn-secondary">Add Vehicle</button>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="widget-filters__item">
-											<div class="filter filter--opened" data-collapse-item>
-												<button type="button" class="filter__title" data-collapse-trigger>
-													Price
-													<span class="filter__arrow">
-														<svg width="12px" height="7px">
-															<path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z"/>
-														</svg>
-													</span>
-												</button>
-												<div class="filter__body" data-collapse-content>
-													<div class="filter__container">
-														<div class="filter-price" data-min="500" data-max="1500" data-from="590" data-to="1000">
-															<div class="filter-price__slider"></div>
-															<div class="filter-price__title-button">
-																<div class="filter-price__title">$<span class="filter-price__min-value"></span>
-																	– $<span class="filter-price__max-value"></span>
+										<form id="filter-form" method="GET" action="{{ path('search') }}">
+											<div class="widget-filters__item">
+												<div class="filter filter--opened" data-collapse-item>
+													<button type="button" class="filter__title" data-collapse-trigger>
+														Price
+														<span class="filter__arrow">
+                    <svg width="12px" height="7px">
+                        <path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z"/>
+                    </svg>
+                </span>
+													</button>
+													<div class="filter__body" data-collapse-content>
+														<div class="filter__container">
+															<div class="filter-price" data-min="0" data-max="1500" data-from="590" data-to="1000">
+																<div class="filter-price__slider"></div>
+																<input type="hidden" name="price_range" id="price-range">
+																<div class="filter-price__title-button">
+																	<div class="filter-price__title">DH<span class="filter-price__min-value"></span>
+																		- DH<span class="filter-price__max-value"></span>
+																	</div>
+																	<button type="submit" class="btn btn-xs btn-secondary filter-price__button">Filter</button>
 																</div>
-																<button type="button" class="btn btn-xs btn-secondary filter-price__button">Filter</button>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-										<div class="widget-filters__item">
-											<div class="filter filter--opened" data-collapse-item>
-												<button type="button" class="filter__title" data-collapse-trigger>
-													Brand
-													<span class="filter__arrow">
-														<svg width="12px" height="7px">
-															<path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z"/>
-														</svg>
-													</span>
-												</button>
-												<div class="filter__body" data-collapse-content>
-													<div class="filter__container">
-														<div class="filter-list">
-															<div class="filter-list__list">
-																<label class="filter-list__item ">
-																	<span class="input-check filter-list__input">
-																		<span class="input-check__body">
-																			<input class="input-check__input" type="checkbox">
-																			<span class="input-check__box"></span>
-																			<span class="input-check__icon">
-																				<svg width="9px" height="7px">
-																					<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																				</svg>
-																			</span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Wakita
-																	</span>
-																	<span class="filter-list__counter">7</span>
-																</label>
-																<label class="filter-list__item ">
-																	<span class="input-check filter-list__input">
-																		<span class="input-check__body">
-																			<input class="input-check__input" type="checkbox" checked>
-																			<span class="input-check__box"></span>
-																			<span class="input-check__icon">
-																				<svg width="9px" height="7px">
-																					<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																				</svg>
-																			</span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Zosch
-																	</span>
-																	<span class="filter-list__counter">42</span>
-																</label>
-																<label class="filter-list__item  filter-list__item--disabled ">
-																	<span class="input-check filter-list__input">
-																		<span class="input-check__body">
-																			<input class="input-check__input" type="checkbox" checked disabled>
-																			<span class="input-check__box"></span>
-																			<span class="input-check__icon">
-																				<svg width="9px" height="7px">
-																					<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																				</svg>
-																			</span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		WeVALT
-																	</span>
-																</label>
-																<label class="filter-list__item  filter-list__item--disabled ">
-																	<span class="input-check filter-list__input">
-																		<span class="input-check__body">
-																			<input class="input-check__input" type="checkbox" disabled>
-																			<span class="input-check__box"></span>
-																			<span class="input-check__icon">
-																				<svg width="9px" height="7px">
-																					<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																				</svg>
-																			</span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Hammer
-																	</span>
-																</label>
-																<label class="filter-list__item ">
-																	<span class="input-check filter-list__input">
-																		<span class="input-check__body">
-																			<input class="input-check__input" type="checkbox">
-																			<span class="input-check__box"></span>
-																			<span class="input-check__icon">
-																				<svg width="9px" height="7px">
-																					<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																				</svg>
-																			</span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Mitasia
-																	</span>
-																	<span class="filter-list__counter">1</span>
-																</label>
-																<label class="filter-list__item ">
-																	<span class="input-check filter-list__input">
-																		<span class="input-check__body">
-																			<input class="input-check__input" type="checkbox">
-																			<span class="input-check__box"></span>
-																			<span class="input-check__icon">
-																				<svg width="9px" height="7px">
-																					<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																				</svg>
-																			</span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Metaggo
-																	</span>
-																	<span class="filter-list__counter">25</span>
-																</label>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
+										</form>
+
+
 										<div class="widget-filters__item">
 											<div class="filter filter--opened" data-collapse-item>
 												<button type="button" class="filter__title" data-collapse-trigger>
@@ -522,70 +258,27 @@
 													<div class="filter__container">
 														<div class="filter-list">
 															<div class="filter-list__list">
-																<label class="filter-list__item ">
-																	<span class="filter-list__input input-radio">
-																		<span class="input-radio__body">
-																			<input class="input-radio__input" name="filter_radio" type="radio">
-																			<span class="input-radio__circle"></span>
+																{% for season, count in pneusCountBySeason %}
+																	<label class="filter-list__item">
+																		<span class="filter-list__input input-radio">
+																			<span class="input-radio__body">
+																				<input class="input-radio__input season-filter" data-season="{{ season }}" name="filter_radio" type="radio">
+																				<span class="input-radio__circle"></span>
+																			</span>
 																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Spring
-																	</span>
-																	<span class="filter-list__counter">7</span>
-																</label>
-																<label class="filter-list__item ">
-																	<span class="filter-list__input input-radio">
-																		<span class="input-radio__body">
-																			<input class="input-radio__input" name="filter_radio" type="radio">
-																			<span class="input-radio__circle"></span>
+																		<span class="filter-list__title">
+																			{{ season|capitalize }}
 																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Summer
-																	</span>
-																	<span class="filter-list__counter">42</span>
-																</label>
-																<label class="filter-list__item  filter-list__item--disabled ">
-																	<span class="filter-list__input input-radio">
-																		<span class="input-radio__body">
-																			<input class="input-radio__input" name="filter_radio" type="radio" checked disabled>
-																			<span class="input-radio__circle"></span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Autumn
-																	</span>
-																</label>
-																<label class="filter-list__item  filter-list__item--disabled ">
-																	<span class="filter-list__input input-radio">
-																		<span class="input-radio__body">
-																			<input class="input-radio__input" name="filter_radio" type="radio" disabled>
-																			<span class="input-radio__circle"></span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		Winter
-																	</span>
-																</label>
-																<label class="filter-list__item ">
-																	<span class="filter-list__input input-radio">
-																		<span class="input-radio__body">
-																			<input class="input-radio__input" name="filter_radio" type="radio">
-																			<span class="input-radio__circle"></span>
-																		</span>
-																	</span>
-																	<span class="filter-list__title">
-																		All Season
-																	</span>
-																	<span class="filter-list__counter">1</span>
-																</label>
+																		<span class="filter-list__counter">{{ count }}</span>
+																	</label>
+																{% endfor %}
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
+
 										<div class="widget-filters__item">
 											<div class="filter filter--opened" data-collapse-item>
 												<button type="button" class="filter__title" data-collapse-trigger>
@@ -600,468 +293,47 @@
 													<div class="filter__container">
 														<div class="filter-rating">
 															<ul class="filter-rating__list">
-																<li class="filter-rating__item">
-																	<label class="filter-rating__item-label">
-																		<span class="input-check filter-rating__item-input">
-																			<span class="input-check__body">
-																				<input class="input-check__input" type="checkbox">
-																				<span class="input-check__box"></span>
-																				<span class="input-check__icon">
-																					<svg width="9px" height="7px">
-																						<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																					</svg>
-																				</span>
+																{% for rating in 5..1 %}
+																	<li class="filter-rating__item">
+																		<label class="filter-rating__item-label">
+																			<span class="filter-list__input input-radio">
+																			<span class="input-radio__body">
+																				<input class="input-radio__input rating-filter" data-rating="{{ rating }}" name="filter_radio_rating" type="radio">
+																				<span class="input-radio__circle"></span>
 																			</span>
 																		</span>
-																		<span class="filter-rating__item-stars">
-																			<div class="rating">
-																				<div class="rating__body">
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
+																			<span class="filter-rating__item-stars">
+																				<div class="rating">
+																					<div class="rating__body">
+																						{% for star in 1..5 %}
+																							<div class="rating__star {% if star <= rating %}rating__star--active{% endif %}"></div>
+																						{% endfor %}
+																					</div>
 																				</div>
-																			</div>
-																		</span>
-																		<span class="filter-rating__item-title sr-only">
-																			5 stars
-																		</span>
-																		<span class="filter-rating__item-counter">42</span>
-																	</label>
-																</li>
-																<li class="filter-rating__item">
-																	<label class="filter-rating__item-label">
-																		<span class="input-check filter-rating__item-input">
-																			<span class="input-check__body">
-																				<input class="input-check__input" type="checkbox">
-																				<span class="input-check__box"></span>
-																				<span class="input-check__icon">
-																					<svg width="9px" height="7px">
-																						<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																					</svg>
-																				</span>
 																			</span>
-																		</span>
-																		<span class="filter-rating__item-stars">
-																			<div class="rating">
-																				<div class="rating__body">
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star"></div>
-																				</div>
-																			</div>
-																		</span>
-																		<span class="filter-rating__item-title sr-only">
-																			4 stars
-																		</span>
-																		<span class="filter-rating__item-counter">24</span>
-																	</label>
-																</li>
-																<li class="filter-rating__item">
-																	<label class="filter-rating__item-label">
-																		<span class="input-check filter-rating__item-input">
-																			<span class="input-check__body">
-																				<input class="input-check__input" type="checkbox">
-																				<span class="input-check__box"></span>
-																				<span class="input-check__icon">
-																					<svg width="9px" height="7px">
-																						<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																					</svg>
-																				</span>
+																			<span class="filter-rating__item-title sr-only">
+																				{{ rating }} stars
 																			</span>
-																		</span>
-																		<span class="filter-rating__item-stars">
-																			<div class="rating">
-																				<div class="rating__body">
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star"></div>
-																					<div class="rating__star"></div>
-																				</div>
-																			</div>
-																		</span>
-																		<span class="filter-rating__item-title sr-only">
-																			3 stars
-																		</span>
-																		<span class="filter-rating__item-counter">19</span>
-																	</label>
-																</li>
-																<li class="filter-rating__item">
-																	<label class="filter-rating__item-label">
-																		<span class="input-check filter-rating__item-input">
-																			<span class="input-check__body">
-																				<input class="input-check__input" type="checkbox">
-																				<span class="input-check__box"></span>
-																				<span class="input-check__icon">
-																					<svg width="9px" height="7px">
-																						<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																					</svg>
-																				</span>
+																			<span class="filter-rating__item-counter">
+																				{{ pneusCountByRating[rating] }}
 																			</span>
-																		</span>
-																		<span class="filter-rating__item-stars">
-																			<div class="rating">
-																				<div class="rating__body">
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star"></div>
-																					<div class="rating__star"></div>
-																					<div class="rating__star"></div>
-																				</div>
-																			</div>
-																		</span>
-																		<span class="filter-rating__item-title sr-only">
-																			2 stars
-																		</span>
-																		<span class="filter-rating__item-counter">3</span>
-																	</label>
-																</li>
-																<li class="filter-rating__item">
-																	<label class="filter-rating__item-label">
-																		<span class="input-check filter-rating__item-input">
-																			<span class="input-check__body">
-																				<input class="input-check__input" type="checkbox">
-																				<span class="input-check__box"></span>
-																				<span class="input-check__icon">
-																					<svg width="9px" height="7px">
-																						<path d="M9,1.395L3.46,7L0,3.5L1.383,2.095L3.46,4.2L7.617,0L9,1.395Z"/>
-																					</svg>
-																				</span>
-																			</span>
-																		</span>
-																		<span class="filter-rating__item-stars">
-																			<div class="rating">
-																				<div class="rating__body">
-																					<div class="rating__star rating__star--active"></div>
-																					<div class="rating__star"></div>
-																					<div class="rating__star"></div>
-																					<div class="rating__star"></div>
-																					<div class="rating__star"></div>
-																				</div>
-																			</div>
-																		</span>
-																		<span class="filter-rating__item-title sr-only">
-																			1 star
-																		</span>
-																		<span class="filter-rating__item-counter">12</span>
-																	</label>
-																</li>
+																		</label>
+																	</li>
+																{% endfor %}
 															</ul>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-{#										<div class="widget-filters__item">#}
-{#											<div class="filter filter--opened" data-collapse-item>#}
-{#												<button type="button" class="filter__title" data-collapse-trigger>#}
-{#													Color#}
-{#													<span class="filter__arrow">#}
-{#														<svg width="12px" height="7px">#}
-{#															<path d="M0.286,0.273 L0.286,0.273 C-0.070,0.629 -0.075,1.204 0.276,1.565 L5.516,6.993 L10.757,1.565 C11.108,1.204 11.103,0.629 10.747,0.273 L10.747,0.273 C10.385,-0.089 9.796,-0.086 9.437,0.279 L5.516,4.296 L1.596,0.279 C1.237,-0.086 0.648,-0.089 0.286,0.273 Z"/>#}
-{#														</svg>#}
-{#													</span>#}
-{#												</button>#}
-{#												<div class="filter__body" data-collapse-content>#}
-{#													<div class="filter__container">#}
-{#														<div class="filter-color">#}
-{#															<div class="filter-color__list">#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  input-check-color--white  " style="color: #fff;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color   input-check-color--light " style="color: #d9d9d9;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #b3b3b3;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #808080;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #666;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #4d4d4d;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #262626;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #ff4040;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox" checked>#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #ff8126;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color   input-check-color--light " style="color: #ffd440;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color   input-check-color--light " style="color: #becc1f;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #8fcc14;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox" checked>#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #47cc5e;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #47cca0;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #47cccc;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #40bfff;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox" disabled>#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #3d6dcc;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox" checked>#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #7766cc;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #b852cc;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#																<label class="filter-color__item">#}
-{#																	<span class="filter-color__check input-check-color  " style="color: #e53981;">#}
-{#																		<label class="input-check-color__body">#}
-{#																			<input class="input-check-color__input" type="checkbox">#}
-{#																			<span class="input-check-color__box"></span>#}
-{#																			<span class="input-check-color__icon">#}
-{#																				<svg width="12px" height="9px">#}
-{#																					<path d="M12.002,1.396 L4.461,9.002 L-0.002,4.498 L1.383,3.096 L4.461,6.203 L10.617,-0.006 L12.002,1.396 Z"/>#}
-{#																				</svg>#}
-{#																			</span>#}
-{#																			<span class="input-check-color__stick"></span>#}
-{#																		</label>#}
-{#																	</span>#}
-{#																</label>#}
-{#															</div>#}
-{#														</div>#}
-{#													</div>#}
-{#												</div>#}
-{#											</div>#}
-{#										</div>#}
+
 									</div>
-									<div class="widget-filters__actions d-flex">
-										<button class="btn btn-primary btn-sm">Filter</button>
-										<button class="btn btn-secondary btn-sm">Reset</button>
-									</div>
-								</div>								
+									{% if app.request.attributes.get('_route') == 'search' %}
+										<div class="widget-filters__actions d-flex">
+											<a href="{{ path('shop') }}" class="btn btn-secondary btn-sm">Reset</a>
+										</div>
+									{% endif %}
+								</div>
 							</div>
 						</div>
 					</div>
@@ -1070,4 +342,30 @@
 			<div class="block-space block-space--layout--before-footer"></div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			// Set the selected price range
+			const selectedPriceRange = '{{ selectedPriceRange }}';
+			if (selectedPriceRange) {
+				const [from, to] = selectedPriceRange.split('..').map(Number);
+				const slider = document.querySelector('.filter-price__slider').noUiSlider;
+				slider.set([from, to]);
+			}
+
+			// Set the selected season
+			const selectedSeason = '{{ selectedSeason }}';
+			if (selectedSeason) {
+				document.querySelector(`.season-filter[data-season="${selectedSeason}"]`).checked = true;
+			}
+
+			// Set the selected rating
+			const selectedRating = '{{ selectedRating }}';
+			if (selectedRating) {
+				document.querySelector(`.rating-filter[data-rating="${selectedRating}"]`).checked = true;
+			}
+		});
+	</script>
 {% endblock %}

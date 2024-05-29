@@ -3,18 +3,14 @@
 namespace App\Security;
 
 use App\Repository\PersonneRepository;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
@@ -53,15 +49,15 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
-//        // Initialiser le tableau de badges avec les badges obligatoires
-//        $badges = [
-//            new CsrfTokenBadge(self::CSRF_TOKEN_ID, $token),
-//        ];
-//
-//        // Ajouter conditionnellement le badge RememberMe
-//        if ($rememberMe) {
-//            $badges[] = new RememberMeBadge();
-//        }
+        //        // Initialiser le tableau de badges avec les badges obligatoires
+        //        $badges = [
+        //            new CsrfTokenBadge(self::CSRF_TOKEN_ID, $token),
+        //        ];
+        //
+        //        // Ajouter conditionnellement le badge RememberMe
+        //        if ($rememberMe) {
+        //            $badges[] = new RememberMeBadge();
+        //        }
 
         return new Passport(
             new UserBadge($email, function ($userIdentifier) {
@@ -79,22 +75,47 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             new PasswordCredentials($password),
             [
                 new CsrfTokenBadge(self::CSRF_TOKEN_ID, $token),
-                new RememberMeBadge()
+                new RememberMeBadge(),
             ]
         );
     }
+
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        // $refererUrl = $request->headers->get('referer');
+        // Récupérer la session
+        $session = $request->getSession();
+
+        $refererUrl = $request->headers->get('referer');
+
+
+        $myReferer = $request->getSession()->get('referer_checkout');
+        $request->getSession()->remove('referer_checkout');
+
+        if ($myReferer !== null) {
+            return new RedirectResponse($myReferer);
+        }
+
         // Exemple de redirection basée sur des rôles avec support pour les rôles hérités
         if ($this->authorizationChecker->isGranted('ROLE_TECHNICIEN')) {
             return new RedirectResponse($this->urlGenerator->generate('home'));
         }
 
         if ($this->authorizationChecker->isGranted('ROLE_ADHERENT')) {
-            return new RedirectResponse($this->urlGenerator->generate('home'));
+            // Récupérer l'URL de la session
+            $redirectUrl = $session->get('redirect_after_login');
+            if ($redirectUrl) {
+                // Supprimer l'URL de la session après l'avoir utilisée
+                $session->remove('redirect_after_login');
+
+                return new RedirectResponse($redirectUrl);
+            }
+
+            return new RedirectResponse($refererUrl);
         }
 
         $request->getSession()->getFlashBag()->add('error', 'Your account does not have the necessary permissions to access this resource');
+
         return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
     }
 
@@ -104,16 +125,22 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $request->getSession()->remove('login_origin'); // Nettoyer après usage
 
         // Rediriger l'utilisateur vers la page appropriée
-        if ($loginOrigin === 'login_page_header') {
+        if ('login_page_header' === $loginOrigin) {
             // Stocker un message d'erreur dans la session pour le form login qui se trouve dans le header
             $request->getSession()->set('authentication_error_header', $exception->getMessage());
             $url = $request->headers->get('referer') ?? $this->urlGenerator->generate('home');
+
             return new RedirectResponse($url);
         }
+
+
+
         // Stocker un message d'erreur dans la session pour le form login
         $request->getSession()->set('authentication_error', $exception->getMessage());
+
         return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
     }
+
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);

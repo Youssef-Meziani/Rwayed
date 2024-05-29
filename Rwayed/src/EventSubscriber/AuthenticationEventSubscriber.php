@@ -6,16 +6,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Twig\Environment;
 
 class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
-    private $authenticationUtils;
-    private $twig;
-
-    public function __construct(AuthenticationUtils $authenticationUtils, \Twig\Environment $twig)
+    public function __construct(private AuthenticationUtils $authenticationUtils, private Environment $twig)
     {
-        $this->authenticationUtils = $authenticationUtils;
-        $this->twig = $twig;
     }
 
     public function onKernelRequest(RequestEvent $event)
@@ -30,7 +26,7 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
         $this->twig->addGlobal('last_username', $lastUsername);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => 'onKernelRequest',

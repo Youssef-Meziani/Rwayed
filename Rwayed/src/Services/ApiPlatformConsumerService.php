@@ -2,135 +2,204 @@
 
 namespace App\Services;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Component\HttpClient\Exception\ClientException;
-use Symfony\Component\HttpClient\Exception\ServerException;
-use Symfony\Component\HttpClient\Exception\RedirectionException;
+use App\DTO\AvisDTO;
+use App\DTO\PneuDTO;
 use App\Entity\Adherent;
+use App\Services\Query\QueryStringBuilder;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApiPlatformConsumerService
 {
     public const DEFAULT_COUNT_ITEMS_PER_PAGE = 16;
+    public const DEFAULT_COUNT_ITEMS_PER_PAGE_AVIS = 3;
 
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(HttpClientInterface $apiPlatformClient, SerializerInterface $serializer, EntityManagerInterface $entityManager)
+    private QueryStringBuilder $queryStringBuilder;
+    private $cache;
+
+    public function __construct(HttpClientInterface $apiPlatformClient, SerializerInterface $serializer, EntityManagerInterface $entityManager,QueryStringBuilder $queryStringBuilder,)
     {
         $this->client = $apiPlatformClient;
         $this->serializer = $serializer;
         $this->entityManager = $entityManager;
+        $this->queryStringBuilder = $queryStringBuilder;
+        $this->cache = new FilesystemAdapter();
     }
 
-    public function fetchPneus(int $page = 1, int $itemsPerPage = 4): array
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function fetchPneus(int $page = 1, int $itemsPerPage = self::DEFAULT_COUNT_ITEMS_PER_PAGE): array
     {
-        $response = $this->client->request('GET', 'pneus', [
-            'query' => [
+        $cacheKey = sprintf('fetch_pneus_%d_%d', $page, $itemsPerPage);
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($page, $itemsPerPage) {
+            $item->expiresAfter(300); // Cache for 5 minutes
+
+            return $this->fetchResources('pneus', [
                 'page' => $page,
                 'itemsPerPage' => $itemsPerPage,
-            ]
-        ]);
-
-        if ($response->getStatusCode() !== 200) {
-            return [];
-        }
-
-        $data = $response->getContent();
-        $decodedData = json_decode($data, true);
-
-        if (!isset($decodedData['hydra:member'])) {
-            return [];
-        }
-
-        $pneusDataJson = json_encode($decodedData['hydra:member']);
-
-        // return $this->serializer->deserialize($pneusDataJson, 'App\Entity\Pneu[]', 'json');
-        $similarPneus = $this->serializer->deserialize($pneusDataJson, 'App\DTO\PneuDTO[]', 'json');
-
-        // Mélangez les pneus similaires
-        shuffle($similarPneus);
-
-        return $similarPneus;
+            ], PneuDTO::class);
+        });
     }
 
-    public function fetchPneuById(int $id)
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function invalidateFetchPneusCache(): void
     {
-        try {
-            $response = $this->client->request('GET', 'pneus/' . $id);
-
-            if ($response->getStatusCode() !== 200) {
-                // Gérer l'erreur ou retourner null / une exception personnalisée
-                return null;
-            }
-
-            $data = $response->getContent();
-            // dd($this->serializer->deserialize($data, 'App\DTO\PneuDTO', 'json'));
-            // Pas besoin de décoder puis encoder à nouveau en JSON, désérialisez directement
-            return $this->serializer->deserialize($data, 'App\DTO\PneuDTO', 'json');
-        } catch (TransportExceptionInterface | ClientException | ServerException | RedirectionException $e) {
-            // Log l'erreur ou gérer selon les besoins
-            return null;
-        }
+        $this->cache->deleteItems(array_map(static function($page) {
+            return sprintf('fetch_pneus_%d_%d', $page, self::DEFAULT_COUNT_ITEMS_PER_PAGE);
+        }, range(1, 100)));
     }
 
-    public function fetchPneuBySlug(string $slug)
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function fetchPneuById(int $id): ?PneuDTO
     {
-        try {
-            $response = $this->client->request('GET', "pneus?slug=" . $slug);
+        $cacheKey = 'fetch_pneu_by_id_' . $id;
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($id) {
+            $item->expiresAfter(300); // Cache for 5 minutes
 
-            if ($response->getStatusCode() !== 200) {
-                return null;
-            }
+            return $this->fetchResource('pneus/'.$id, PneuDTO::class);
+        });
+    }
 
-            $data = $response->getContent();
-            $decodedData = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-            if (!isset($decodedData['hydra:member']) || count($decodedData['hydra:member']) === 0) {
-                return null;
-            }
-            // Supposant que la recherche par slug retourne un tableau d'éléments
-            $pneuDataJson = json_encode($decodedData['hydra:member'][0]);
-            return $this->serializer->deserialize($pneuDataJson, 'App\DTO\PneuDTO', 'json');
-        } catch (TransportExceptionInterface | ClientException | ServerException | RedirectionException $e) {
-            return null;
-        }
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function fetchPneuBySlug(string $slug): ?PneuDTO
+    {
+        $cacheKey = 'fetch_pneu_by_slug_' . $slug;
+        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($slug) {
+            $item->expiresAfter(300); // Cache for 5 minutes
+
+            $response = $this->fetchResources('pneus', ['slug' => $slug], PneuDTO::class);
+            return $response ? $response[0] : null;
+        });
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function searchBy(array $searchCriteria, int $page = 1, int $itemsPerPage = self::DEFAULT_COUNT_ITEMS_PER_PAGE): array
+    {
+        $queryString = $this->queryStringBuilder->addPriceRangeParameter($searchCriteria['prix'] ?? null)
+        -> addSaison($searchCriteria['saison'] ?? null)
+        -> addNoteMoyenne($searchCriteria['noteMoyenne'] ?? null);
+//        dd($queryString->getQueryString());
+        return $this->fetchResources('pneus?' . $queryString->getQueryString(),[
+            'page' => $page,
+            'itemsPerPage' => $itemsPerPage,
+        ],PneuDTO::class);
+
     }
 
 
     public function getTotalItems(): int
     {
         try {
-            $response = $this->client->request('GET', 'pneus', [
-                'query' => [
-                    // Vous pouvez spécifier des paramètres de requête ici si nécessaire
-                    // par exemple, pour filtrer les résultats
-                ]
-            ]);
-
-            if ($response->getStatusCode() === 200) {
-                $data = $response->getContent();
-                $decodedData = json_decode($data, true);
-                return $decodedData['hydra:totalItems'] ?? 0;
-            }
-            return 0;
-        } catch (\Exception $e) {
+            $response = $this->client->request('GET', 'pneus');
+            $decodedData = $response->toArray();
+            return $decodedData['hydra:totalItems'] ?? 0;
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
             return 0;
         }
     }
 
-    public function getTotalMembers(): int {
+    public function getTotalItemsInSearch(array $searchCriteria = []): int
+    {
         try {
-            $repository = $this->entityManager->getRepository(Adherent::class);
-            return $repository->createQueryBuilder('m')
-                ->select('COUNT(m.id)')
-                ->getQuery()
-                ->getSingleScalarResult();
+            $queryString = $this->queryStringBuilder
+                ->addPriceRangeParameter($searchCriteria['prix'] ?? null)
+                ->addSaison($searchCriteria['saison'] ?? null)
+                ->addNoteMoyenne($searchCriteria['noteMoyenne'] ?? null)
+                ->getQueryString();
+
+            $response = $this->client->request('GET', 'pneus?' . $queryString);
+            $decodedData = $response->toArray();
+            return $decodedData['hydra:totalItems'] ?? 0;
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            return 0;
+        }
+    }
+
+    public function getTotalMembers(): int
+    {
+        try {
+            return $this->entityManager->getRepository(Adherent::class)->count([]);
         } catch (\Exception $e) {
             return 0;
         }
     }
-    
+
+    /**
+     * @throws \JsonException
+     */
+    public function fetchAvisByPneuSlug(string $slug, int $page = 1, int $itemsPerPage = self::DEFAULT_COUNT_ITEMS_PER_PAGE_AVIS): array
+    {
+        $result = $this->fetchResourcesWithTotal('aviss', [
+            'pneu.slug' => $slug,
+            'page' => $page,
+            'itemsPerPage' => $itemsPerPage,
+        ], AvisDTO::class);
+
+        return [
+            'avis' => $result['items'],
+            'totalAvis' => $result['totalItems'],
+        ];
+    }
+
+    private function fetchResourcesWithTotal(string $endpoint, array $query, string $type): array
+    {
+        try {
+            $response = $this->client->request('GET', $endpoint, ['query' => $query]);
+            $decodedData = $response->toArray();
+
+            $items = isset($decodedData['hydra:member'])
+                ? $this->serializer->deserialize(json_encode($decodedData['hydra:member'], JSON_THROW_ON_ERROR), $type.'[]', 'json')
+                : [];
+            $totalItems = $decodedData['hydra:totalItems'] ?? 0;
+
+            return ['items' => $items, 'totalItems' => $totalItems];
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            return ['items' => [], 'totalItems' => 0];
+        }
+    }
+
+    private function fetchResource(string $endpoint, string $type)
+    {
+        try {
+            $response = $this->client->request('GET', $endpoint);
+
+            return $this->serializer->deserialize($response->getContent(), $type, 'json');
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            return null;
+        }
+    }
+
+    private function fetchResources(string $endpoint, array $query, string $type): array
+    {
+        try {
+            $response = $this->client->request('GET', $endpoint, ['query' => $query]);
+            $decodedData = $response->toArray();
+
+            return $this->serializer->deserialize(json_encode($decodedData['hydra:member'], JSON_THROW_ON_ERROR), $type.'[]', 'json');
+        } catch (ClientExceptionInterface|DecodingExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface $e) {
+            return [];
+        }
+    }
 }

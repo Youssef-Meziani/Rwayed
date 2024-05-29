@@ -1,39 +1,46 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+# parameters.yaml
+# Paramètres généraux de l'application qui ne changent pas selon l'environnement de déploiement.
 parameters:
     uploads_base_url: '%env(UPLOADS_BASE_URL)%'
     admin_email_address: '%env(ADMIN_EMAIL_ADDRESS)%'
+    google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+
+# services.yaml
+# Configuration des services de l'application.
 services:
+    # Enregistrement automatique des classes dans src/ comme services
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
     _defaults:
-        bind:
+        autowire: true      # Injecte automatiquement les dépendances dans vos services.
+        autoconfigure: true # Enregistre automatiquement vos services comme commandes, abonnés à des événements, etc.        
+        bind:               # Liaisons de paramètres spécifiques pour l'injection de dépendances
             $csrfTokenManager: '@security.csrf.token_manager'
             $apiPlatformClient: '@my.api.platform.client'
             $adminEmail: '%env(ADMIN_EMAIL_ADDRESS)%'
             $uploadsBaseUrl: '%env(UPLOADS_BASE_URL)%'
-            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+            $photoStrategy: '@App\Strategy\PneuStrategy\PhotoStrategyInterface'
+            $avisStrategy: '@App\Strategy\PneuStrategy\AvisStrategyInterface'
+
+    # Services spécifiques
     App\Services\EmailService:
         arguments:
-            $adminEmail: '%admin_email%'
-    # Définition des stratégies comme services
-    # Alias pour PhotoTransformationStrategy
-    App\Strategy\PhotoStrategyInterface: '@App\Strategy\PhotoTransformationStrategy'
-    
-    # Définition de PneuTransformationStrategy avec injection des stratégies spécifiques
-    App\Strategy\PneuTransformationStrategy:
+            $adminEmail: '%admin_email_address%'
+
+    App\EventSubscriber\PanierSubscriber:
         arguments:
-            $photoStrategy: '@App\Strategy\PhotoStrategyInterface'
-    # Configuration HttpClient pour consommer l'API Platform
-    my.api.platform.client:
-        class: Symfony\Contracts\HttpClient\HttpClientInterface
-        factory: [ 'Symfony\Component\HttpClient\HttpClient', 'create' ]
+            $twig: '@twig'
+            $panierFactory: '@App\Order\Factory\PanierFactory'
+            $orderStorage: '@App\Order\Storage\OrderSessionStorage'
+
+    App\Controller\PanierController:
         arguments:
-            $defaultOptions:
-                base_uri: '%env(API_BASE_URL)%'
+            $panierFactory: '@App\Order\Factory\PanierFactory'
+            $minioExtension: '@App\Twig\MinioExtension'
 
     App\EventSubscriber\AuthenticationEventSubscriber:
         arguments:
@@ -41,26 +48,46 @@ services:
             $twig: '@twig'
         tags:
             - { name: 'kernel.event_subscriber' }
-    # default configuration for services in this file
-    App\Services\PasswordHasherService:
+
+    App\EventSubscriber\PneuStockListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'pneu.stock', method: 'onOrderPlaced', when: 'PneuStockListener' }
+
+    App\EventSubscriber\LoyaltyPointsSubscriber:
+        tags:
+            - { name: 'kernel.event_listener', event: 'commande.placed', method: 'onCommandePlaced' }
+
+    App\EventSubscriber\AvisListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'avis.submitted', method: 'onAvisSubmitted' }
+
+    # Stratégies
+    App\Strategy\PneuStrategy\PhotoStrategyInterface: '@App\Strategy\PneuStrategy\PhotoTransformationStrategy'
+    App\Strategy\PneuStrategy\AvisStrategyInterface: '@App\Strategy\PneuStrategy\AvisTransformationStrategy'
+    App\Strategy\PneuStrategy\PneuTransformationStrategy:
         arguments:
-            $passwordHasher: '@Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface'
+            $photoStrategy: '@App\Strategy\PneuStrategy\PhotoStrategyInterface'
+            $avisStrategy: '@App\Strategy\PneuStrategy\AvisStrategyInterface'
+
+    # HttpClient personnalisé pour l'API Platform
+    my.api.platform.client:
+        class: Symfony\Contracts\HttpClient\HttpClientInterface
+        factory: ['Symfony\Component\HttpClient\HttpClient', 'create']
+        arguments:
+            $defaultOptions:
+                base_uri: '%env(API_BASE_URL)%'    
 
     # Enregistrement manuel de l'extension Twig comme service
+
     App\Twig\AppExtension:
         tags:
             - { name: twig.extension }
+            
+    App\Twig\TotalItemsExtension:
+
     App\Twig\MinioExtension:
         arguments:
             $uploadsBaseUrl: '%uploads_base_url%'
         tags:
             - { name: twig.extension }
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
 

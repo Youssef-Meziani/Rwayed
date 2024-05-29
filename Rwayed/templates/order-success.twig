@@ -18,26 +18,26 @@ C45.2,71.4,44.6,71.4,44.2,71z" />
                     <h1 class="order-success__title">Thank you</h1>
                     <div class="order-success__subtitle">Your order has been received</div>
                     <div class="order-success__actions">
-                        <a href="/" class="btn btn-sm btn-secondary">Go To Homepage</a>
+                        <a href="{{ path("home") }}" class="btn btn-sm btn-secondary">Go To Homepage</a>
                     </div>
                 </div>
                 <div class="card order-success__meta">
                     <ul class="order-success__meta-list">
                         <li class="order-success__meta-item">
-                            <span class="order-success__meta-title">Order number:</span>
-                            <span class="order-success__meta-value">#9478</span>
+                            <span class="order-success__meta-title">Order code:</span>
+                            <span class="order-success__meta-value">#{{ order.codeUnique }}</span>
                         </li>
                         <li class="order-success__meta-item">
                             <span class="order-success__meta-title">Created At:</span>
-                            <span class="order-success__meta-value">Oct 19, 2020</span>
+                            <span class="order-success__meta-value">{{ order.dateCommande|date('d M, Y') }}</span>
                         </li>
                         <li class="order-success__meta-item">
                             <span class="order-success__meta-title">Total:</span>
-                            <span class="order-success__meta-value">$1596.00</span>
+                            <span class="order-success__meta-value">${{ order.total }}</span>
                         </li>
                         <li class="order-success__meta-item">
                             <span class="order-success__meta-title">Payment Method:</span>
-                            <span class="order-success__meta-value">PayPal</span>
+                            <span class="order-success__meta-value">COD</span>
                         </li>
                     </ul>
                 </div>
@@ -45,169 +45,89 @@ C45.2,71.4,44.6,71.4,44.2,71z" />
                     <div class="order-list">
                         <table>
                             <thead class="order-list__header">
-                                <tr>
-                                    <th class="order-list__column-label" colspan="2">Product</th>
-                                    <th class="order-list__column-quantity">Quantity</th>
-                                    <th class="order-list__column-total">Total</th>
-                                </tr>
+                            <tr>
+                                <th class="order-list__column-label" colspan="2">Product</th>
+                                <th class="order-list__column-quantity">Quantity</th>
+                                <th class="order-list__column-total">Total</th>
+                            </tr>
                             </thead>
                             <tbody class="order-list__products">
+                            {% for item in order.ligneCommandes %}
                                 <tr>
                                     <td class="order-list__column-image">
                                         <div class="image image--type--product">
-                                            <a href="product-full.html" class="image__body">
-                                                <img class="image__tag" src="images/products/product-1-40x40.jpg" alt="">
+                                            <a href="{{ path('product', {'slug': item.pneu.slug}) }}" class="image__body">
+                                                <img class="image__tag" src="{{ minio_url(item.pneu.image) }}" alt="">
                                             </a>
                                         </div>
                                     </td>
                                     <td class="order-list__column-product">
-                                        <a href="product-full.html">Brandix Spark Plug Kit ASR-400</a>
-                                        <div class="order-list__options">
-                                            <ul class="order-list__options-list">
-                                                <li class="order-list__options-item">
-                                                    <span class="order-list__options-label">
-                                                        Color:
-                                                    </span>
-                                                    <span class="order-list__options-value">
-                                                        True Red
-                                                    </span>
-                                                </li>
-                                                <li class="order-list__options-item">
-                                                    <span class="order-list__options-label">
-                                                        Material:
-                                                    </span>
-                                                    <span class="order-list__options-value">
-                                                        Aluminium
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <a href="{{ path('product', {'slug': item.pneu.slug}) }}">{{ item.pneu.marque }}</a>
                                     </td>
                                     <td class="order-list__column-quantity" data-title="Quantity:">
-                                        2
+                                        {{ item.quantity }}
                                     </td>
                                     <td class="order-list__column-total">
-                                        $38.00
+                                        ${{ item.prix }}
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="order-list__column-image">
-                                        <div class="image image--type--product">
-                                            <a href="product-full.html" class="image__body">
-                                                <img class="image__tag" src="images/products/product-2-40x40.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="order-list__column-product">
-                                        <a href="product-full.html">Brandix Brake Kit BDX-750Z370-S</a>
-                                    </td>
-                                    <td class="order-list__column-quantity" data-title="Quantity:">
-                                        1
-                                    </td>
-                                    <td class="order-list__column-total">
-                                        $224.00
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="order-list__column-image">
-                                        <div class="image image--type--product">
-                                            <a href="product-full.html" class="image__body">
-                                                <img class="image__tag" src="images/products/product-3-40x40.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="order-list__column-product">
-                                        <a href="product-full.html">Left Headlight Of Brandix Z54</a>
-                                        <div class="order-list__options">
-                                            <ul class="order-list__options-list">
-                                                <li class="order-list__options-item">
-                                                    <span class="order-list__options-label">
-                                                        Color:
-                                                    </span>
-                                                    <span class="order-list__options-value">
-                                                        Green
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td class="order-list__column-quantity" data-title="Quantity:">
-                                        3
-                                    </td>
-                                    <td class="order-list__column-total">
-                                        $1047.00
-                                    </td>
-                                </tr>
+                            {% endfor %}
                             </tbody>
                             <tbody class="order-list__subtotals">
-                                <tr>
-                                    <th class="order-list__column-label" colspan="3">Subtotal</th>
-                                    <td class="order-list__column-total">$1309.00</td>
-                                </tr>
-                                <tr>
-                                    <th class="order-list__column-label" colspan="3">Shipping</th>
-                                    <td class="order-list__column-total">$25.00</td>
-                                </tr>
-                                <tr>
-                                    <th class="order-list__column-label" colspan="3">Tax</th>
-                                    <td class="order-list__column-total">$262.00</td>
-                                </tr>
+                            <tr>
+                                <th class="order-list__column-label" colspan="3">Subtotal</th>
+                                <td class="order-list__column-total">${{ totalSub }}</td>
+                            </tr>
+                            <tr>
+                                <th class="order-list__column-label" colspan="3">Shipping</th>
+                                <td class="order-list__column-total text-primary">Free</td>
+                            </tr>
+                            <tr>
+                                <th class="order-list__column-label" colspan="3">Tax</th>
+                                <td class="order-list__column-total">${{ tax }}</td>
+                            </tr>
                             </tbody>
                             <tfoot class="order-list__footer">
-                                <tr>
-                                    <th class="order-list__column-label" colspan="3">Total</th>
-                                    <td class="order-list__column-total">$1596.00</td>
-                                </tr>
+                            <tr>
+                                <th class="order-list__column-label" colspan="3">Total</th>
+                                <td class="order-list__column-total">${{ totalCredit }}</td>
+                            </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
-                <div class="order-success__addresses">
-                    <div class="order-success__address card address-card">
-                        <div class="address-card__badge tag-badge tag-badge--theme">
-                            Shipping Address
-                        </div>
-                        <div class="address-card__body">
-                            <div class="address-card__name">Ryan Ford</div>
-                            <div class="address-card__row">
-                                Random Federation<br>
-                                115302, Moscow<br>
-                                ul. Varshavskaya, 15-2-178
+                {% if billingAddress %}
+                    <div class="order-success__addresses">
+                        <div class="order-success__address card address-card">
+                            <div class="address-card__badge tag-badge tag-badge--theme">
+                                Shipping Address
                             </div>
-                            <div class="address-card__row">
-                                <div class="address-card__row-title">Phone Number</div>
-                                <div class="address-card__row-content">38 972 588-42-36</div>
-                            </div>
-                            <div class="address-card__row">
-                                <div class="address-card__row-title">Email Address</div>
-                                <div class="address-card__row-content">stroyka@example.com</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="order-success__address card address-card">
-                        <div class="address-card__badge tag-badge tag-badge--theme">
-                            Billing Address
-                        </div>
-                        <div class="address-card__body">
-                            <div class="address-card__name">Ryan Ford</div>
-                            <div class="address-card__row">
-                                Random Federation<br>
-                                115302, Moscow<br>
-                                ul. Varshavskaya, 15-2-178
-                            </div>
-                            <div class="address-card__row">
-                                <div class="address-card__row-title">Phone Number</div>
-                                <div class="address-card__row-content">38 972 588-42-36</div>
-                            </div>
-                            <div class="address-card__row">
-                                <div class="address-card__row-title">Email Address</div>
-                                <div class="address-card__row-content">stroyka@example.com</div>
+                            <div class="address-card__body">
+                                <div class="address-card__name">{{ billingAddress.adherent.nom }} {{ billingAddress.adherent.prenom }}</div>
+                                <div class="address-card__row">
+                                    {{ billingAddress.street }}<br>
+                                    {{ billingAddress.city }}<br>
+                                    {{ billingAddress.postcode }}
+                                </div>
+                                <div class="address-card__row">
+                                    <div class="address-card__row-title">Phone Number</div>
+                                    <div class="address-card__row-content">{{ billingAddress.adherent.tele }}</div>
+                                </div>
+                                <div class="address-card__row">
+                                    <div class="address-card__row-title">Email Address</div>
+                                    <div class="address-card__row-content">{{ billingAddress.adherent.email }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="block-space block-space--layout--before-footer"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/order-success.js') }}"></script>
 {% endblock %}

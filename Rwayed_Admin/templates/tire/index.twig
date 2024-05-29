@@ -4,7 +4,6 @@
 
 {% block stylesheets %}
     {{ parent() }}
-
     <!-- gridjs css -->
     <link rel="stylesheet" href="{{ asset('libs/gridjs/theme/mermaid.min.css') }}">
 
@@ -50,10 +49,8 @@
                             </div>
 
                             <div>
-
                                 <!--  Large modal example -->
-                                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
-                                     aria-hidden="true">
+                                <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -61,19 +58,15 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-
-
-                                                {{ form_start(form) }}
-
+                                                {{ form_start(form, {'attr': {'id': 'addTireForm'}}) }}
                                                 <div id="addproduct-accordion" class="custom-accordion">
                                                     <div class="card">
                                                         <a href="#addproduct-productinfo-collapse" class="text-body" data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-productinfo-collapse">
                                                             <div class="p-4">
-
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="flex-shrink-0 me-3">
                                                                         <div class="avatar">
-                                                                            <div class="avatar-title rounded-circle bg-primary-subtle  text-primary">
+                                                                            <div class="avatar-title rounded-circle bg-primary-subtle text-primary">
                                                                                 <h5 class="text-primary font-size-17 mb-0">01</h5>
                                                                             </div>
                                                                         </div>
@@ -85,12 +78,9 @@
                                                                     <div class="flex-shrink-0">
                                                                         <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                                                                     </div>
-
                                                                 </div>
-
                                                             </div>
                                                         </a>
-
                                                         <div id="addproduct-productinfo-collapse" class="collapse show" data-bs-parent="#addproduct-accordion">
                                                             <div class="p-4 border-top">
                                                                 <div class="mb-3">
@@ -104,7 +94,6 @@
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-lg-6">
-
                                                                         <div class="mb-3">
                                                                             <label for="{{ form.typeVehicule.vars.id }}" class="col-md-5 col-form-label">Type de véhicule</label>
                                                                             {{ form_widget(form.typeVehicule, { 'attr': {'class': 'form-control'} }) }}
@@ -116,7 +105,6 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-6">
-
                                                                         <div class="mb-4">
                                                                             <label for="{{ form.saison.vars.id }}" class="col-md-5 col-form-label">Saison</label>
                                                                             {{ form_widget(form.saison, { 'attr': {'class': 'form-control'} }) }}
@@ -133,7 +121,6 @@
                                                                         <div class="mb-3">
                                                                             <label for="{{ form.prixUnitaire.vars.id }}" class="col-md-5 col-form-label">Prix unitaire</label>
                                                                             {{ form_widget(form.prixUnitaire, { 'attr': {'class': 'form-control'} }) }}
-                                                                            {{ form_errors(form.prixUnitaire) }}
                                                                             {% if form.prixUnitaire.vars.errors %}
                                                                                 {% for error in form.prixUnitaire.vars.errors %}
                                                                                     <span class="text-danger">{{ error.message }}</span>
@@ -153,7 +140,6 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
                                                                 <div class="mb-0">
                                                                     <label for="{{ form.description.vars.id }}" class="col-md-5 col-form-label">Description</label>
                                                                     {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
@@ -196,14 +182,13 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <div class="card">
                                                         <a href="#addproduct-img-collapse" class="text-body collbodyd" data-bs-toggle="collapse" aria-haspopup="true" aria-expanded="false" aria-haspopup="true" aria-controls="addproduct-img-collapse">
                                                             <div class="p-4">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="flex-shrink-0 me-3">
                                                                         <div class="avatar">
-                                                                            <div class="avatar-title rounded-circle bg-primary-subtle  text-primary">
+                                                                            <div class="avatar-title rounded-circle bg-primary-subtle text-primary">
                                                                                 <h5 class="text-primary font-size-17 mb-0">02</h5>
                                                                             </div>
                                                                         </div>
@@ -218,7 +203,6 @@
                                                                 </div>
                                                             </div>
                                                         </a>
-
                                                         <div id="addproduct-img-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
                                                             <div class="p-4 border-top">
                                                                 <div class="dz-message needsclick">
@@ -233,7 +217,6 @@
                                                                             {% endif %}
                                                                         </div>
                                                                     </div>
-
                                                                     <div class="mb-3 row">
                                                                         <label for="photo_files" class="col-md-2 col-form-label">Photos</label>
                                                                         <div class="col-md-10">
@@ -255,7 +238,6 @@
                                                     </div>
                                                 </div>
                                                 {{ form_end(form) }}
-
                                             </div>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
@@ -268,7 +250,6 @@
                                 {{ message }}
                             </div>
                         {% endfor %}
-
                         {% for error in app.flashes('error') %}
                             <div class="alert alert-danger mx-4 my-2" role="alert">
                                 {{ error }}
@@ -282,7 +263,6 @@
                     <!-- end card -->
                 </div>
                 <!-- end col -->
-
             </div>
         </div>
         <!-- container-fluid -->
@@ -292,25 +272,21 @@
 {% block javascripts %}
     {{ parent() }}
 
-
-
     <!-- form mask -->
     <script src="{{ asset('libs/imask/imask.min.js') }}"></script>
     <script src="{{ asset('js/pages/form-add-pneu-mask.js') }}"></script>
     <!-- gridjs js -->
     <script src="{{ asset('libs/gridjs/gridjs.umd.js') }}"></script>
-{#    TODO : A deplacer !!  #}
     <script>
-
         function previewImages(event) {
-            var previewContainer = document.getElementById('image-preview-container'); // Ajusté pour correspondre au HTML
-            var noImageText = document.getElementById('no-image-text'); // Ajusté pour correspondre au HTML
-            var errorSpan = document.getElementById('file-error-message'); // Ajusté pour correspondre au HTML
-            previewContainer.innerHTML = ''; // Effacer les prévisualisations existantes
+            var previewContainer = document.getElementById('image-preview-container');
+            var noImageText = document.getElementById('no-image-text');
+            var errorSpan = document.getElementById('file-error-message');
+            previewContainer.innerHTML = '';
             var fileList = event.target.files;
 
             if (fileList.length > 0) {
-                noImageText.style.display = 'none'; // Cacher le texte si des images sont présentes
+                noImageText.style.display = 'none';
                 Array.from(fileList).forEach(file => {
                     var reader = new FileReader();
                     reader.onload = function(e) {
@@ -327,8 +303,8 @@
                         deleteButton.innerHTML = '&times;';
                         deleteButton.classList.add('delete-button');
                         deleteButton.onclick = function() {
-                            imgContainer.remove(); // Suppression de la prévisualisation
-                            checkForEmptyPreview(); // Vérifier si le texte "Aucune image sélectionnée" doit être affiché
+                            imgContainer.remove();
+                            checkForEmptyPreview();
                         };
 
                         imgContainer.appendChild(img);
@@ -338,25 +314,25 @@
                     reader.readAsDataURL(file);
                 });
             } else {
-                noImageText.style.display = 'block'; // Afficher le texte si aucune image n'est présente
+                noImageText.style.display = 'block';
             }
         }
+
         function checkForEmptyPreview() {
-            var previewContainer = document.getElementById('image-preview-container'); // Ajusté pour correspondre au HTML
-            var noImageText = document.getElementById('no-image-text'); // Ajusté pour correspondre au HTML
+            var previewContainer = document.getElementById('image-preview-container');
+            var noImageText = document.getElementById('no-image-text');
             noImageText.style.display = previewContainer.children.length === 0 ? 'block' : 'none';
         }
-        // Appel initial pour gérer les images existantes
+
         document.addEventListener('DOMContentLoaded', checkForEmptyPreview);
 
-        let myGrid; // Variable globale pour conserver une référence à la grille
+        let myGrid;
+
         function loadGridData() {
-            // Vérifie si une grille existe déjà et la détruit
             if (myGrid) {
                 myGrid.destroy();
             }
 
-            // Crée une nouvelle instance de la grille
             myGrid = new gridjs.Grid({
                 columns: [
                     {
@@ -390,11 +366,11 @@
                         }
                     }
                 ],
-                pagination: {limit: 5},
+                pagination: { limit: 5 },
                 sort: true,
                 search: true,
                 server: {
-                    url: '{{ path('pneus_json') }}', // Assurez-vous que ce chemin est correctement configuré
+                    url: '{{ path('pneus_json') }}',
                     then: data => data.map(pneu => [
                         pneu.image,
                         pneu.marque,
@@ -414,36 +390,49 @@
             while (target != null) {
                 if (target.id && target.id.startsWith('delete_')) {
                     const pneuSlug = target.getAttribute('data-id');
-                    SweetAlert.fire({
-                        title: 'Êtes-vous sûr?',
-                        text: "Vous ne pourrez pas revenir en arrière!",
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to go back!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Oui, supprimez-le!'
+                        confirmButtonText: 'Yes, delete it!',
+                        showLoaderOnConfirm: true,
+                        preConfirm: () => {
+                            Swal.showLoading();
+                            Swal.getCancelButton().style.display = 'none';
+                            return new Promise((resolve, reject) => {
+                                const xhr = new XMLHttpRequest();
+                                xhr.open("POST", `/tire/delete/${pneuSlug}`, true);
+                                xhr.onload = () => {
+                                    if (xhr.status >= 200 && xhr.status < 300) {
+                                        resolve(xhr.response);
+                                    } else {
+                                        reject(new Error('Deletion failed: ' + xhr.statusText));
+                                    }
+                                };
+                                xhr.onerror = () => {
+                                    reject(new Error('Network error'));
+                                };
+                                xhr.send();
+                            });
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/tire/delete/${pneuSlug}`, { method: 'POST' })
-                                .then(response => response.json())
-                                .then(data => {
-                                    if(data.success) {
-                                        SweetAlert.fire(
-                                            'Supprimé!',
-                                            'Le pneu a été supprimé.',
-                                            'success'
-                                        ).then(() => {
-                                            loadGridData(); // Rafraîchit la grille après suppression
-                                        });
-                                    } else {
-                                        SweetAlert.fire(
-                                            'Erreur!',
-                                            data.message,
-                                            'error'
-                                        );
-                                    }
-                                });
+                            Swal.fire(
+                                'Deleted!',
+                                'The tire has been removed.',
+                                'success'
+                            ).then(() => {
+                                loadGridData();
+                            });
                         }
+                    }).catch(error => {
+                        Swal.fire('Failed!', error.message, 'error');
+                    }).finally(() => {
+                        Swal.getCancelButton().style.display = 'none';
                     });
                     break;
                 }
@@ -452,9 +441,66 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            loadGridData(); // Charge les données de la grille au chargement de la page
+            loadGridData();
+            validationForm();
         });
+
+        function validationForm() {
+            const form = document.getElementById('addTireForm');
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Please wait...',
+                    text: 'Your request is being processed.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Success!',
+                            'Tire has been added successfully.',
+                            'success'
+                        ).then(() => {
+                            form.reset();
+                            const modal = document.querySelector('.bs-example-modal-lg');
+                            const bootstrapModal = bootstrap.Modal.getInstance(modal);
+                            if (bootstrapModal) {
+                                bootstrapModal.hide(); // Hide the modal
+                            }
+                            location.reload(); // Reload the page to update the UI
+                        });
+                    } else {
+                        Swal.close();
+                        const errorContainer = document.getElementById('formErrors');
+                        errorContainer.innerHTML = '';
+                        for (const [field, errors] of Object.entries(data.errors)) {
+                            const input = document.querySelector(`[name="tire[${field}]"]`);
+                            if (input) {
+                                input.classList.add('is-invalid');
+                                const errorDiv = input.nextElementSibling;
+                                if (errorDiv) {
+                                    errorDiv.innerHTML = errors.join('<br>');
+                                }
+                            }
+                        }
+                    }
+                }).catch(error => {
+                    Swal.fire('Failed!', error.message, 'error');
+                });
+            });
+        }
     </script>
-
-
 {% endblock %}

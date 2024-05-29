@@ -64,11 +64,21 @@
     // .filter-price
     */
     $(function () {
+        // Initialise le filtre de prix avec les valeurs de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const priceRange = urlParams.get('price_range');
+        let from, to;
+
+        if (priceRange) {
+            [from, to] = priceRange.split('..').map(Number);
+        } else {
+            from = $('.filter-price').data('from');
+            to = $('.filter-price').data('to');
+        }
+
         $('.filter-price').each(function (i, element) {
             const min = $(element).data('min');
             const max = $(element).data('max');
-            const from = $(element).data('from');
-            const to = $(element).data('to');
             const slider = element.querySelector('.filter-price__slider');
 
             noUiSlider.create(slider, {
@@ -89,8 +99,49 @@
             slider.noUiSlider.on('update', function (values, handle) {
                 titleValues[handle].innerHTML = values[handle];
             });
+
+            $('.filter-price__button').on('click', function () {
+                const values = slider.noUiSlider.get();
+                urlParams.set('price_range', values[0] + '..' + values[1]);
+                window.location.href = '/search?' + urlParams.toString();
+            });
+        });
+
+        // Initialise le filtre de saison avec les valeurs de l'URL
+        const selectedSeason = urlParams.get('season');
+        if (selectedSeason) {
+            document.querySelector(`.season-filter[data-season="${selectedSeason}"]`).checked = true;
+        }
+
+        // Initialise le filtre de notation avec les valeurs de l'URL
+        const selectedRating = urlParams.get('rating');
+        if (selectedRating) {
+            document.querySelector(`.rating-filter[data-rating="${selectedRating}"]`).checked = true;
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.season-filter').forEach(function (element) {
+            element.addEventListener('change', function () {
+                const season = this.dataset.season;
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('season', season);
+                window.location.href = '/search?' + urlParams.toString();
+            });
+        });
+
+        document.querySelectorAll('.rating-filter').forEach((element) => {
+            element.addEventListener('change', function () {
+                const rating = this.getAttribute('data-rating');
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('rating', rating);
+                window.location.href = '/search?' + urlParams.toString();
+            });
         });
     });
+
+
+
 
     /*
     // .product-gallery

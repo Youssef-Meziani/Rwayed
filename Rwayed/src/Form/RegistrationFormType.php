@@ -3,8 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Personne;
+use App\Enum\SexeEnum;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -30,6 +33,16 @@ class RegistrationFormType extends AbstractType
             ->add('prenom', TextType::class, [
                 'label' => 'First Name',
                 'constraints' => new NotBlank(['message' => 'Please enter your first name.']),
+            ])
+            ->add('sexe', ChoiceType::class, [
+                'label' => 'Gender',
+                'required' => true,
+                'choices' => [
+                    'Male' => SexeEnum::MALE,
+                    'Female' => SexeEnum::FEMALE,
+                ],
+                'expanded' => false,
+                'placeholder' => 'Select a gender',
             ])
             ->add('tele', TelType::class, [
                 'label' => 'Phone Number',
@@ -67,6 +80,8 @@ class RegistrationFormType extends AbstractType
                 'constraints' => new IsTrue([
                     'message' => 'You should agree to our terms.',
                 ]),
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'register',
             ]);
     }
 

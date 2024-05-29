@@ -7,18 +7,15 @@ use App\Form\LoginFormType;
 use App\Form\RegistrationFormType;
 use App\Repository\PersonneRepository;
 use App\Security\EmailVerifier;
-use App\Security\LoginFormAuthenticator;
 use App\Services\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
@@ -27,16 +24,17 @@ class SecurityController extends AbstractController
 {
     private EmailService $emailService;
 
-    public function __construct( EmailService $emailService, private EmailVerifier $emailVerifier,private VerifyEmailHelperInterface $verifyEmailHelper)
+    public function __construct(EmailService $emailService, private EmailVerifier $emailVerifier, private VerifyEmailHelperInterface $verifyEmailHelper)
     {
         $this->emailService = $emailService;
     }
+
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-         if ($this->getUser()) {
-             return $this->redirectToRoute('home');
-         }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -47,10 +45,12 @@ class SecurityController extends AbstractController
             'email' => $last_email,
         ]);
 
-        return $this->render('security/login.twig', ['loginForm' => $form->createView(),'last_email' => $last_email, 'error' => $error]);
+        return $this->render('security/login.twig', ['loginForm' => $form->createView(), 'last_email' => $last_email, 'error' => $error]);
     }
 
-
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route(path: '/signup', name: 'signup')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
@@ -87,10 +87,11 @@ class SecurityController extends AbstractController
                     'expiresAtMessageKey' => $signatureComponents->getExpirationMessageKey(),
                     'expiresAtMessageData' => $signatureComponents->getExpirationMessageData(),
                     'userId' => $user->getId(),
-                ]
+                ],
             ]);
 
             $request->getSession()->set('isVerifiedEmailSent', true);
+
             return $this->redirectToRoute('msg_confirmation_email');
         }
 
@@ -105,11 +106,12 @@ class SecurityController extends AbstractController
         if (!$request->getSession()->get('isVerifiedEmailSent')) {
             return $this->redirectToRoute('signup');
         }
+
         return $this->render('security/signup_check_email.twig');
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator,PersonneRepository $personneRepository): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, PersonneRepository $personneRepository): Response
     {
         $id = $request->query->get('id');
         // Verify the user id exists and is not null
@@ -135,6 +137,7 @@ class SecurityController extends AbstractController
         $message = 'Your email address has been verified. You can now log in.';
         $this->addFlash('success', $message);
         $this->addFlash('success_header', $message);
+
         return $this->redirectToRoute('app_login');
     }
 

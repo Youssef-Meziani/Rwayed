@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -34,6 +35,8 @@ class NewsletterSubscriptionType extends AbstractType
                         'message' => 'The email {{ value }} is not a valid email.'
                     ])
                 ]
+            ])->add('captcha', Recaptcha3Type::class, [
+                'action_name' => 'news_letter',
             ]);
     }
 }

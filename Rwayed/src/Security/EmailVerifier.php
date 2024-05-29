@@ -39,7 +39,7 @@ class EmailVerifier
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $exception) {
-            dump('Erreur lors de l\'envoi de l\'email : ' . $exception->getMessage());
+            dump('Erreur lors de l\'envoi de l\'email : '.$exception->getMessage());
         }
     }
 

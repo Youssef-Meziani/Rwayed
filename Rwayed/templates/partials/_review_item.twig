@@ -1,0 +1,23 @@
+<li class="reviews-list__item">
+    <div class="review">
+        <div class="review__body">
+            <div class="review__avatar"><img src="{{ avatarUrl }}" alt=""></div>
+            <div class="review__meta">
+                <div class="review__author">{{ author }}</div>
+                <div class="review__date">{{ date }}</div>
+            </div>
+            <div class="review__rating">
+                <div class="rating">
+                    <div class="rating__body">
+                        {% for i in 1..5 %}
+                            <div class="rating__star {{ i <= rating ? 'rating__star--active' : '' }}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="review__content typography">
+                {{ content }}
+            </div>
+        </div>
+    </div>
+</li>

@@ -1,0 +1,127 @@
+{% extends 'base-sidebar.twig' %}
+
+{% block title %} - Coupon Edit{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Edit the coupon</h4>
+                        </div>
+                        <div class="card-body">
+                            {{ form_start(couponForm, {'attr': {'id': 'addCouponForm', 'novalidate': 'novalidate'}}) }}
+                            <div class="mb-3">
+                                {{ form_label(couponForm.code) }}
+                                {{ form_widget(couponForm.code, {'attr': {'class': 'form-control'}}) }}
+                                <div class="invalid-feedback">{{ form_errors(couponForm.code) }}</div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(couponForm.description) }}
+                                {{ form_widget(couponForm.description, {'attr': {'class': 'form-control'}}) }}
+                                <div class="invalid-feedback">{{ form_errors(couponForm.description) }}</div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(couponForm.pourcentage) }}
+                                {{ form_widget(couponForm.pourcentage, {'attr': {'class': 'form-control'}}) }}
+                                <div class="invalid-feedback">{{ form_errors(couponForm.pourcentage) }}</div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(couponForm.dateExpiration) }}
+                                {{ form_widget(couponForm.dateExpiration, {'attr': {'class': 'form-control'}}) }}
+                                <div class="invalid-feedback">{{ form_errors(couponForm.dateExpiration) }}</div>
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(couponForm.status) }}
+                                {{ form_widget(couponForm.status, {'attr': {'class': 'form-control'}}) }}
+                                <div class="invalid-feedback">{{ form_errors(couponForm.status) }}</div>
+                            </div>
+                            <div id="formErrors"></div> <!-- Container for form errors -->
+                        </div>
+                        <div class="text-md-end m-2">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                        {{ form_end(couponForm) }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <!-- form mask -->
+    <script src="{{ asset('libs/imask/imask.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            validationForm();
+        });
+
+        function validationForm() {
+            const form = document.getElementById('addCouponForm');
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                Swal.fire({
+                    title: 'Please wait...',
+                    text: 'Your request is being processed.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        Swal.fire(
+                            'Success!',
+                            'Coupon has been added successfully.',
+                            'success'
+                        ).then(() => {
+                            form.reset();
+                            const modal = document.getElementById('addCouponModal');
+                            const bootstrapModal = bootstrap.Modal.getInstance(modal);
+                            if (bootstrapModal) {
+                                bootstrapModal.hide();
+                            }
+                            location.href = "{{ path('coupon_index') }}";
+                        });
+                    } else {
+                        Swal.close();
+                        const errorContainer = document.getElementById('formErrors');
+                        errorContainer.innerHTML = '';
+                        for (const [field, errors] of Object.entries(data.errors)) {
+                            const input = document.querySelector(`[name="code_promo[${field}]"]`);
+                            if (input) {
+                                input.classList.add('is-invalid');
+                                const errorDiv = input.nextElementSibling;
+                                if (errorDiv) {
+                                    errorDiv.innerHTML = errors.join('<br>');
+                                }
+                            }
+                        }
+                    }
+                }).catch(error => {
+                    Swal.fire('Failed!', error.message, 'error');
+                });
+            });
+        }
+    </script>
+{% endblock %}

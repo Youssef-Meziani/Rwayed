@@ -7,6 +7,7 @@ use App\Entity\Photo;
 use App\Entity\Pneu;
 use App\Form\PneuType;
 use App\Repository\PneuRepository;
+use App\Services\PhotoService;
 use App\Services\PneuManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,12 +25,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class PneuController extends AbstractController
 {
 
-    private $uploadsBaseUrl;
 
-    public function __construct($uploadsBaseUrl)
-    {
-        $this->uploadsBaseUrl = $uploadsBaseUrl;
-    }
+    public function __construct(private $uploadsBaseUrl, private PhotoService $photoService,)
+    {}
 
     #[Route('', name: 'pneu_index', methods: ['GET', 'POST'])]
     public function index(Request $request, PneuManager $pneuManager): Response
@@ -38,10 +36,18 @@ class PneuController extends AbstractController
         $form = $this->createForm(PneuType::class, $pneu);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $pneuManager->createPneu($pneu, $request->files->get('photo_files', []));
-            $this->addFlash('success', 'The tire was added successfully.');
-            return $this->redirectToRoute('pneu_index');
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $pneuManager->createPneu($pneu, $request->files->get('photo_files', []));
+                $this->addFlash('success', 'The tire was added successfully.');
+                return new JsonResponse(['success' => true]);
+            } else {
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errors[$error->getOrigin()->getName()][] = $error->getMessage();
+                }
+                return new JsonResponse(['success' => false, 'errors' => $errors]);
+            }
         }
 
         return $this->render('tire/index.twig', [
@@ -56,36 +62,51 @@ class PneuController extends AbstractController
         return $pneuManager->deletePneu($slug);
     }
 
-    #[Route('/edit/{slug}', name: 'pneu_edit')]
-    public function edit(Request $request, Pneu $pneu,PneuManager $pneuManager, EntityManagerInterface $entityManager): Response
+    #[Route('/edit/{slug}', name: 'pneu_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Pneu $pneu, PneuManager $pneuManager, EntityManagerInterface $entityManager): Response
     {
-
         $form = $this->createForm(PneuType::class, $pneu);
         $form->handleRequest($request);
 
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                // Remove old photos
+                foreach ($pneu->getPhotos() as $oldPhoto) {
+                    $entityManager->remove($oldPhoto);
+                    $pneu->removePhoto($oldPhoto);
+                }
+                $entityManager->flush();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($pneu->getPhotos() as $oldPhoto) {
-                $entityManager->remove($oldPhoto); // Supprime l'entité de la base de données
-                $pneu->removePhoto($oldPhoto); // Optionnel : supprime la relation entre le pneu et l'ancienne photo
-            }
-            $entityManager->flush();
-            $files = $request->files->get('photo_files');
-            if ($files) {
-                foreach ($files as $file) {
-                    $photo = new Photo();
-                    $photo->setImageFile($file);
-                    $photo->setPneu($pneu); // Associe la nouvelle photo au pneu
-                    $entityManager->persist($photo); // Prépare la nouvelle photo pour la persistance
+                // Process new photo files
+                $photoFiles = $request->files->get('photo_files');
+                if (!empty($photoFiles)) {
+                    $this->photoService->processPhotoFiles($pneu, $photoFiles);
+                }
+
+                // Update tire information
+                $pneuManager->editPneu($pneu);
+                $this->addFlash('success', 'The tire has been successfully modified.');
+
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse(['success' => true]);
+                }
+
+                return $this->redirectToRoute('pneu_index');
+            } else {
+                if ($request->isXmlHttpRequest()) {
+                    $errors = [];
+                    foreach ($form->getErrors(true) as $error) {
+                        $errors[$error->getOrigin()->getName()][] = $error->getMessage();
+                    }
+                    return new JsonResponse(['success' => false, 'errors' => $errors]);
                 }
             }
-            $pneuManager->editPneu($pneu);
-            $this->addFlash('success', 'The tire has been successfully modified.');
-            return $this->redirectToRoute('pneu_index');
         }
+
         $images = $pneu->getPhotos();
         $photo = $pneu->getImage();
         $uploadsBaseUrl = $this->getParameter('uploads_base_url');
+
         return $this->render('tire/edit.twig', [
             'pneu' => $pneu,
             'images' => $images,
