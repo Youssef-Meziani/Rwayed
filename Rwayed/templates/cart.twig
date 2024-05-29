@@ -45,11 +45,9 @@
 									</tr>
 								</thead>
 								<tbody class="cart-table__body">
-									{% for tire in panier.getLines %}
-										{# {% if tire.quantiteStock is not null %} #}
-											{{ include('partials/_cart-item.twig', {marque:tire.getMarque(),price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair(), id:tire.getId()}) }}
-										{# {% endif %} #}
-									{% endfor %}
+								{% for tire in panier.getLines %}
+									{{ include('partials/_cart-item.twig', {idPneu: tire.getId(), id: tire.getId() ~ (tire.isWithRepair() ? '_repaired' : '_not_repaired'), tire: tire, marque: tire.getMarque(), price: tire.getPrix(), quantity: tire.getQuantity(), isWithRepair: tire.isWithRepair()}) }}
+								{% endfor %}
 								</tbody>
 							{% endif %}
 						</table>
@@ -99,6 +97,7 @@
 {% endblock %}
 
 {% block javascripts %}
+	{{ parent() }}
 	 <script>
 	        document.addEventListener("DOMContentLoaded", function() {
 	            // Get all quantity input fields

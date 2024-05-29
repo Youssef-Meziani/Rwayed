@@ -82,12 +82,12 @@ class OrderSessionStorage implements OrderStorageInterface
     }
 
 
-    public function modifierLignePanier(int $id, int $qte): void
+    public function modifierLignePanier(string $key, int $qte): void
     {
         $panier = $this->recuprerPanier();
         $ligneCommande = $panier->getLines();
-        if (array_key_exists($id, $ligneCommande)) {
-            $cartItem = $ligneCommande[$id];
+        if (array_key_exists($key, $ligneCommande)) {
+            $cartItem = $ligneCommande[$key];
             $cartItem->setQuantity($qte);
             $this->enregistrerPanier($panier);
         }

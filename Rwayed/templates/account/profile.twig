@@ -17,27 +17,57 @@
                         <div class="card-body card-body--padding--2">
                             <div class="row no-gutters">
                                 <div class="col-12 col-lg-7 col-xl-6">
-                                    <form method="post" action="{{ path('profile') }}">
-                                        <div class="form-group">
-                                            <label for="profile-first-name">First Name</label>
-                                            <input type="text" class="form-control" id="profile-first-name" name="nom" placeholder="First Name" value="{{ user.nom }}">
+                                    {{ form_start(form) }}
+                                    {% for message in app.flashes('success') %}
+                                        <div class="alert alert-success" role="alert">
+                                            {{ message }}
                                         </div>
-                                        <div class="form-group">
-                                            <label for="profile-last-name">Last Name</label>
-                                            <input type="text" class="form-control" id="profile-last-name" name="prenom" placeholder="Last Name" value="{{ user.prenom }}">
+                                    {% endfor %}
+                                    {% for message in app.flashes('error') %}
+                                        <div class="alert alert-danger" role="alert">
+                                            {{ message }}
                                         </div>
-                                        <div class="form-group">
-                                            <label for="profile-email">Email Address</label>
-                                            <input type="email" class="form-control" id="profile-email" name="email" placeholder="Email Address" value="{{ user.email }}">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="profile-phone">Phone Number</label>
-                                            <input type="text" class="form-control" id="profile-phone" name="tele" placeholder="Phone Number" value="{{ user.tele }}">
-                                        </div>
-                                        <div class="form-group mb-0">
-                                            <button type="submit" class="btn btn-primary mt-3">Save</button>
-                                        </div>
-                                    </form>
+                                    {% endfor %}
+                                    <div class="form-group">
+                                        {{ form_label(form.nom) }}
+                                        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'First Name'}}) }}
+                                        {% if form.nom.vars.errors %}
+                                            {% for error in form.nom.vars.errors %}
+                                                <span class="text-danger">{{ error.message }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.prenom) }}
+                                        {{ form_widget(form.prenom, {'attr': {'class': 'form-control', 'placeholder': 'Last Name'}}) }}
+                                        {% if form.prenom.vars.errors %}
+                                            {% for error in form.prenom.vars.errors %}
+                                                <span class="text-danger">{{ error.message }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.email) }}
+                                        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Email Address'}}) }}
+                                        {% if form.email.vars.errors %}
+                                            {% for error in form.email.vars.errors %}
+                                                <span class="text-danger">{{ error.message }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_label(form.tele) }}
+                                        {{ form_widget(form.tele, {'attr': {'class': 'form-control', 'placeholder': 'Phone Number'}}) }}
+                                        {% if form.tele.vars.errors %}
+                                            {% for error in form.tele.vars.errors %}
+                                                <span class="text-danger">{{ error.message }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <button type="submit" class="btn btn-primary mt-3">Save</button>
+                                    </div>
+                                    {{ form_end(form) }}
                                 </div>
                             </div>
                         </div>

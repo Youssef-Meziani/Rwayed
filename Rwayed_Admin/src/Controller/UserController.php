@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Adherent;
+use App\Entity\Technicien;
 use App\Repository\AdherentRepository;
+use App\Repository\TechnicienRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,15 +30,8 @@ class UserController extends AbstractController
     #[Route('/client', name: 'client')]
     public function client(Request $request, AdherentRepository $adherentRepository): Response
     {
-        $page = $request->query->getInt('page', 1);
-        $limit = 10;
-        $offset = ($page - 1) * $limit;
-
-        $queryBuilder = $adherentRepository->createQueryBuilder('a');
-        $queryBuilder->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        $adherents = $queryBuilder->getQuery()->getResult();
+        // Récupérer tous les adhérents
+        $adherents = $adherentRepository->findAll();
         $totalAdherents = $adherentRepository->count([]);
 
         if ($request->isXmlHttpRequest()) {
@@ -42,13 +39,7 @@ class UserController extends AbstractController
                 'html' => $this->renderView('user/partials/adherents_list.html.twig', [
                     'adherents' => $adherents,
                     'totalAdherents' => $totalAdherents,
-                    'currentPage' => $page,
-                    'totalPages' => ceil($totalAdherents / $limit),
-                    'limit' => $limit,
                 ]),
-                'totalPages' => ceil($totalAdherents / $limit),
-                'currentPage' => $page,
-                'limit' => $limit,
                 'totalAdherents' => $totalAdherents,
             ]);
         }
@@ -56,18 +47,58 @@ class UserController extends AbstractController
         return $this->render('user/list.twig', [
             'adherents' => $adherents,
             'totalAdherents' => $totalAdherents,
-            'currentPage' => $page,
-            'totalPages' => ceil($totalAdherents / $limit),
-            'limit' => $limit,
         ]);
     }
 
-    #[Route('/technician', name: 'technician')]
-    public function technician(): Response
+    #[Route('/adherent/toggle/{id}', name: 'adherent_toggle', methods: ['POST'])]
+    public function toggleAdherent(Adherent $adherent, EntityManagerInterface $em): JsonResponse
     {
-        return $this->render('user/grid.twig', [
-            'title' => 'Technicians',
+        $adherent->toggleDesactive();
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => $adherent->isDesactive() ? 'deactivated' : 'activated',
+            'message' => $adherent->isDesactive() ? 'Adherent deactivated successfully.' : 'Adherent activated successfully.'
         ]);
+    }
+
+    #[Route('/technicians', name: 'technician')]
+    public function listTechnicians(Request $request, TechnicienRepository $technicienRepository): Response
+    {
+        // Récupérer tous les adhérents
+        $technicians = $technicienRepository->findAll();
+        $totalTechnicians = $technicienRepository->count([]);
+
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse([
+                'html' => $this->renderView('user/partials/technicians_list.html.twig', [
+                    'technicians' => $technicians,
+                    'totalTechnicians' => $totalTechnicians,
+                ])
+            ]);
+        }
+
+        return $this->render('user/grid.twig', [
+            'technicians' => $technicians,
+            'totalTechnicians' => $totalTechnicians,
+        ]);
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    #[Route('/technician/change-status/{id}', name: 'technician_change_status', methods: ['POST'])]
+    public function changeStatus(Technicien $technician, Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        if (!isset($data['status'])) {
+            return new JsonResponse(['error' => 'Invalid status'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $technician->setStatus($data['status']);
+        $em->flush();
+
+        return new JsonResponse(['success' => 'Status updated successfully']);
     }
 
     #[Route('/admin', name: 'admin')]

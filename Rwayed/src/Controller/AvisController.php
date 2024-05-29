@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Adherent;
 use App\Entity\Avis;
 use App\Entity\Pneu;
+use App\Events\AvisEvent;
 use App\Form\AvisType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormErrorIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +20,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AvisController extends AbstractController
 {
+    public function __construct(private EventDispatcherInterface $eventDispatcher,)
+    {
+    }
 
     /**
      * @throws \JsonException
@@ -56,6 +61,9 @@ class AvisController extends AbstractController
             $avis->setEmail($formAvis->get('email')->getData());
         }
         $avis->setPneu($pneu);
+        // Dispatch the AvisEvent
+        $event = new AvisEvent($avis);
+        $this->eventDispatcher->dispatch($event, AvisEvent::NAME);
         $entityManager->persist($avis);
         $entityManager->flush();
     }

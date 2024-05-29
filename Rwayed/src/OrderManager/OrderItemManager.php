@@ -17,6 +17,11 @@ final class OrderItemManager
     ) {
     }
 
+    public function getTaxRate(): float
+    {
+        return $this->taxRate;
+    }
+
     public function getTotalPrice(): float
     {
         return $this->TotalPriceItem() * (1 + $this->taxRate);

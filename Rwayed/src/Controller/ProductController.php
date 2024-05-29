@@ -40,6 +40,7 @@ class ProductController extends AbstractController
         return $this->render('partials/_quickview.twig', [
             'pneu' => $pneu,
             'id' => $id,
+            'brand' => explode(' ', $pneu->getMarque())[0],
         ]);
     }
 }
