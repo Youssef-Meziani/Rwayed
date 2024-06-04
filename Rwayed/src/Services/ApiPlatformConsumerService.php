@@ -100,7 +100,6 @@ class ApiPlatformConsumerService
         $queryString = $this->queryStringBuilder->addPriceRangeParameter($searchCriteria['prix'] ?? null)
         -> addSaison($searchCriteria['saison'] ?? null)
         -> addNoteMoyenne($searchCriteria['noteMoyenne'] ?? null);
-//        dd($queryString->getQueryString());
         return $this->fetchResources('pneus?' . $queryString->getQueryString(),[
             'page' => $page,
             'itemsPerPage' => $itemsPerPage,

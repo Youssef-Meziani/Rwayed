@@ -54,6 +54,12 @@ class Admin extends Personne
         return $this;
     }
 
+    public function toggleSuperAdmin(): self
+    {
+        $this->is_super = !$this->is_super;
+        return $this;
+    }
+
     public function getDateEmbauche(): ?\DateTimeInterface
     {
         return $this->date_embauche;

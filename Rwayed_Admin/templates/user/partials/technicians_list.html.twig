@@ -55,13 +55,17 @@
                                 {{ technician.tele }}</p>
                             <p class="mb-0 mt-2"><i class="mdi mdi-email font-size-15 align-middle pe-2 text-primary"></i>
                                 {{ technician.email }}</p>
-                            <p class="mb-0 mt-2"><i class="mdi mdi-google-maps font-size-15 align-middle pe-2 text-primary"></i>
-                                123 Street, City, Country</p>
+                            <p class="mb-0 mt-2">
+                                <i class="mdi mdi-calendar font-size-15 align-middle pe-2 text-primary"></i>
+                                {{ technician.getFormattedDateRecrutement() }}
+                            </p>
                         </div>
 
                         <div class="d-flex gap-2 pt-4">
-                            <button type="button" class="btn btn-subtle-primary btn-sm w-50"><i class="bx bx-user me-1"></i> Profile</button>
-                            <button type="button" class="btn btn-primary btn-sm w-50"><i class="bx bx-message-square-dots me-1"></i> Contact</button>
+                            <a href="{{ path('technician_profile', {'id': technician.id}) }}" class="btn btn-subtle-primary btn-sm w-50">
+                                <i class="bx bx-user me-1"></i> Profile
+                            </a>                            
+                            <button type="button" class="btn btn-primary btn-sm w-50" onclick="contactTechnician('{{ technician.id }}', '{{ technician.email }}')"><i class="bx bx-message-square-dots me-1"></i> Contact</button>
                         </div>
                     </div>
                 </div>
@@ -118,6 +122,67 @@
                                 text: 'Technician status has been updated.',
                                 icon: 'success'
                             }).then(() => location.reload());
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: `Request failed: ${error}`,
+                                icon: 'error'
+                            });
+                        });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
+
+        function contactTechnician(technicianId, email) {
+            Swal.fire({
+                title: 'Contact Technician',
+                html: `
+                    <input type="email" id="technician-email" class="swal2-input" value="${email}" readonly>
+                    <input type="text" id="contact-subject" class="swal2-input" placeholder="Subject">
+                    <textarea id="contact-message" class="swal2-textarea" placeholder="Message"></textarea>
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'Send',
+                preConfirm: () => {
+                    const subject = document.getElementById('contact-subject').value;
+                    const message = document.getElementById('contact-message').value;
+
+                    if (!subject || !message) {
+                        Swal.showValidationMessage('Please enter both subject and message.');
+                        return false;
+                    }
+
+                    Swal.fire({
+                        title: 'Sending...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    return fetch(`/technician/contact/${technicianId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ subject, message })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            Swal.fire({
+                                title: 'Sent!',
+                                text: 'Your message has been sent to the technician.',
+                                icon: 'success'
+                            });
                         })
                         .catch(error => {
                             Swal.fire({

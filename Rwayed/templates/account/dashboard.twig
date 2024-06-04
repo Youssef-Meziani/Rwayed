@@ -74,7 +74,7 @@
                                                 <td><a href="{{ path('order_details', {'codeUnique': order.codeUnique}) }}">#{{ order.codeUnique }}</a></td>
                                                 <td>{{ order.dateCommande|date('d M, Y') }}</td>
                                                 <td>{{ order.getStatutsCommandeLabel() }}</td>
-                                                <td>${{ order.total }} for {{ order.ligneCommandes|length }} item(s)</td>
+                                                <td><b>{{ order.total }} DH</b> for <b>{{ order.ligneCommandes|length }} item(s)</b></td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
