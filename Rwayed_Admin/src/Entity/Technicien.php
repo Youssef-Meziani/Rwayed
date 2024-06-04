@@ -71,4 +71,9 @@ class Technicien extends Personne
     {
         return $this->email;
     }
+
+    public function getFormattedDateRecrutement(): string
+    {
+        return $this->date_recrutement->format('F jS, Y'); // Example: January 1st, 2024
+    }
 }

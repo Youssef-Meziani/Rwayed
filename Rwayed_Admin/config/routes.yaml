@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+technician_profile:
+    path: /technician/profile/{id}
+    controller: App\Controller\UserController::profile
+    methods: GET
