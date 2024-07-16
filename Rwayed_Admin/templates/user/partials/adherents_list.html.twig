@@ -21,10 +21,6 @@
                             <thead class="table-light" style="position: sticky; top: 0; z-index: 1;">
                             <tr>
                                 <th scope="col" class="ps-4" style="width: 50px;">
-                                    <div class="form-check font-size-16">
-                                        <input type="checkbox" class="form-check-input" id="contacusercheck">
-                                        <label class="form-check-label" for="contacusercheck"></label>
-                                    </div>
                                 </th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Email</th>
@@ -37,10 +33,6 @@
                             {% for adherent in adherents %}
                                 <tr class="adherent-row">
                                     <th scope="row" class="ps-4">
-                                        <div class="form-check font-size-16">
-                                            <input type="checkbox" class="form-check-input" id="contacusercheck{{ loop.index }}">
-                                            <label class="form-check-label" for="contacusercheck{{ loop.index }}"></label>
-                                        </div>
                                     </th>
                                     <td>
                                         {% if adherent.sexe == 'Male' %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Adherent;
 use App\Entity\Technicien;
 use App\Repository\AdherentRepository;
+use App\Repository\AdminRepository;
 use App\Repository\TechnicienRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 #[IsGranted("ROLE_ADMIN")]
 class UserController extends AbstractController
@@ -102,15 +105,81 @@ class UserController extends AbstractController
     }
 
     #[Route('/admin', name: 'admin')]
-    public function admin(): Response
+    public function admin(AdminRepository $adminRepository): Response
     {
-        if ($this->security->getUser()->isIsSuper()) {
-            return $this->render('user/grid.twig', [
-                'title' => 'Admins',
+        $currentAdmin = $this->security->getUser();
+        if ($currentAdmin->isIsSuper()) {
+            $admins = $adminRepository->findOtherAdmins($currentAdmin->getId());
+            return $this->render('user/admins.twig', [
+                'admins' => $admins,
             ]);
         } else {
             throw new NotFoundHttpException();
         }
 
+    }
+
+    #[Route('/admin/toggle/{id}', name: 'admin_toggle', methods: ['POST'])]
+    public function toggleAdminStatus(int $id, AdminRepository $adminRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $admin = $adminRepository->find($id);
+
+        if (!$admin) {
+            return new JsonResponse(['message' => 'Admin not found'], 404);
+        }
+
+        $admin->toggleDesactive();
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Admin status changed successfully']);
+    }
+
+    #[Route('/admin/toggleSuper/{id}', name: 'admin_toggle_super', methods: ['POST'])]
+    public function toggleSuperAdminStatus(int $id, AdminRepository $adminRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $admin = $adminRepository->find($id);
+
+        if (!$admin) {
+            return new JsonResponse(['message' => 'Admin not found'], 404);
+        }
+
+        $admin->setIsSuper(!$admin->isIsSuper());
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Admin super status changed successfully']);
+    }
+
+    #[Route('/technician/contact/{id}', name: 'technician_contact', methods: ['POST'])]
+    public function contactTechnician(Request $request, MailerInterface $mailer, TechnicienRepository $technicienRepository, $id)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $technician = $technicienRepository->find($id);
+
+        if (!$technician) {
+            return new JsonResponse(['error' => 'Technician not found'], 404);
+        }
+
+        $subject = $data['subject'];
+        $message = $data['message'];
+        $technicianEmail = $technician->getEmail();
+
+        $email = (new Email())
+            ->from('rwayed.support@gmail.com')
+            ->to($technicianEmail)
+            ->subject($subject)
+            ->text($message);
+
+        $mailer->send($email);
+
+        return new JsonResponse(['message' => 'Email sent successfully']);
+    }
+
+    #[Route('/technician/profile/{id}', name: 'technician_profile', methods: ['GET'])]
+    public function profile(Technicien $technician): Response
+    {
+        return $this->render('user/profil.twig', [
+            'technician' => $technician,
+        ]);
     }
 }
