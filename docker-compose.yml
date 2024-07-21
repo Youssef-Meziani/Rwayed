@@ -12,9 +12,9 @@ services:
       - "80:80"
     working_dir: /var/www/html
     volumes:
-      - ./Rwayed:/var/www/html
-      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
-      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+      - ./Rwayed:/var/www/html:cached
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled:cached
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini:cached
     extra_hosts:
       - host.docker.internal:host-gateway
     depends_on:
@@ -33,9 +33,9 @@ services:
       - "81:80"
     working_dir: /var/www/html
     volumes:
-      - ./Rwayed_Admin:/var/www/html
-      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
-      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+      - ./Rwayed_Admin:/var/www/html:cached
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled:cached
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini:cached
     extra_hosts:
       - host.docker.internal:host-gateway
     depends_on:
@@ -53,9 +53,9 @@ services:
       - "82:80" # Le port 82 est utilisé ici comme exemple, assurez-vous qu'il ne soit pas en conflit
     working_dir: /var/www/html
     volumes:
-      - ./Rwayed_API:/var/www/html # Chemin vers le dossier de votre API
-      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled
-      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini
+      - ./Rwayed_API:/var/www/html:cached
+      - ./docker/server/apache/sites-enabled:/etc/apache2/sites-enabled:cached
+      - ./docker/server/php/php.ini:/usr/local/etc/php/conf.d/extra-php-config.ini:cached
     extra_hosts:
       - host.docker.internal:host-gateway
     depends_on:
